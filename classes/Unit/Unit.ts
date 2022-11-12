@@ -177,11 +177,6 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   public applyEffectFrom(source: Source, effect: Effect) {
     this.effect_list.push(effect);
   }
-
-  // public removeStatusEffect(status_effect: StatusEffect) {
-  //   const index = this.effect_list.findIndex(effect => effect === status_effect);
-  //   this.effect_list.splice(index, 1);
-  // }
 }
 
 export interface UnitInitializer extends EntityEventElementInitializer<UnitEntity> {

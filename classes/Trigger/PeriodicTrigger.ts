@@ -1,10 +1,7 @@
-import {ModifierEntity} from "../../entities";
 import PeriodicTriggerEntity from "../../entities/Trigger/PeriodicTriggerEntity";
 import {EffectEventType, EncounterEventType} from "../../enums";
-import EffectType from "../../enums/EffectType";
 import Operation from "../../modules/Operation";
 import {Encounter} from "../Battle";
-import SkillEffect from "../Effect/SkillEffect";
 import Trigger, {TriggerInitializer} from "./Trigger";
 
 export default class PeriodicTrigger extends Trigger<PeriodicTriggerEntity> {
@@ -17,30 +14,6 @@ export default class PeriodicTrigger extends Trigger<PeriodicTriggerEntity> {
 
     this.effect.on(EffectEventType.EXPIRE, this.onEffectExpire);
     this.effect.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
-  }
-
-  private getModifierList(): ModifierEntity[] {
-    const modifier_list = [...this.effect.entity.modifier_list] as ModifierEntity[];
-    switch (this.effect.entity.type) {
-      case EffectType.ENCOUNTER:
-        return modifier_list;
-      case EffectType.SKILL:
-        const {skill_unit, entity: {skill}} = this.effect as SkillEffect;
-        return [
-          ...modifier_list,
-          ...skill.modifier_list,
-          ...skill_unit.getModifierList()
-        ];
-    }
-  }
-
-  private getSourceUnit() {
-    switch (this.effect.entity.type) {
-      case EffectType.ENCOUNTER:
-        return undefined;
-      case EffectType.SKILL:
-        return (this.effect as SkillEffect).skill_unit;
-    }
   }
 
   private onEffectExpire = () => {

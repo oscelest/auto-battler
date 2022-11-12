@@ -9,7 +9,7 @@ import {
   ComboPointActionEntity,
   ComboSkillEntity,
   DamageActionEntity,
-  EncounterEffectEntity,
+  EffectEntity,
   HealActionEntity,
   NumericalModifierEntity,
   OperationEntity,
@@ -114,7 +114,7 @@ function generatePlayerUnit() {
               })
             ],
             effect_list: [
-              new EncounterEffectEntity({
+              new EffectEntity({
                 name: "Damage over Time",
                 expires: true,
                 removable: true,
@@ -173,7 +173,7 @@ function generatePlayerUnit() {
             description: "Buffs self with Empowerment",
             target: TargetType.SELF,
             effect_list: [
-              new EncounterEffectEntity({
+              new EffectEntity({
                 name: "Empowerment",
                 expires: true,
                 removable: true,

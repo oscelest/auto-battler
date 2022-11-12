@@ -1,11 +1,8 @@
-import EffectType from "../../enums/EffectType";
 import EffectAlignment from "../../enums/StatusEffect/StatusEffectAlignment";
 import {ModifierEntity} from "../Modifier";
 import {TriggerEntity} from "../Trigger";
 
-export default abstract class EffectEntity {
-
-  public type: EffectType;
+export default class EffectEntity {
 
   public name: string;
   public expires: boolean;
@@ -15,8 +12,7 @@ export default abstract class EffectEntity {
   public modifier_list: ModifierEntity[];
   public trigger_list: TriggerEntity[];
 
-  protected constructor(type: EffectType, initializer: EffectEntityInitializer) {
-    this.type = type;
+  constructor(initializer: EffectEntityInitializer) {
     this.name = initializer.name;
     this.expires = initializer.expires;
     this.removable = initializer.removable;

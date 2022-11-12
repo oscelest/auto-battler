@@ -1,7 +1,6 @@
 import {EffectEntity} from "../../entities";
 import {TriggerEntity} from "../../entities/Trigger";
 import {EffectEventType, EncounterEventType, UnitEventType} from "../../enums";
-import EffectType from "../../enums/EffectType";
 import EffectExpirationType from "../../enums/StatusEffect/EffectExpirationType";
 import StatusEffectAlignment from "../../enums/StatusEffect/StatusEffectAlignment";
 import {EntityEventElement} from "../Base";
@@ -12,10 +11,8 @@ import {Trigger} from "../Trigger";
 import {TriggerInitializer} from "../Trigger/Trigger";
 import {Unit} from "../Unit";
 import {UnitKillEvent} from "../Unit/Unit";
-import EncounterEffect, {EncounterEffectInitializer} from "./EncounterEffect";
-import SkillEffect, {SkillEffectInitializer} from "./SkillEffect";
 
-export default abstract class Effect<Entity extends EffectEntity = EffectEntity> extends EntityEventElement<Entity, EffectEventHandler> {
+export default class Effect<Entity extends EffectEntity = EffectEntity> extends EntityEventElement<Entity, EffectEventHandler> {
 
   public duration: number;
   public duration_elapsed: number;
@@ -24,7 +21,7 @@ export default abstract class Effect<Entity extends EffectEntity = EffectEntity>
   public readonly unit: Unit;
   public readonly trigger_list: Trigger[];
 
-  protected constructor(initializer: EffectInitializer<Entity>) {
+  constructor(initializer: EffectInitializer<Entity>) {
     super(initializer);
 
     this.duration = initializer.duration ?? 0;
@@ -36,15 +33,6 @@ export default abstract class Effect<Entity extends EffectEntity = EffectEntity>
 
     this.unit.on(UnitEventType.KILLED, this.onUnitDeath);
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
-  }
-
-  public static instantiate(initializer: EffectInitializer) {
-    switch (initializer.entity.type) {
-      case EffectType.ENCOUNTER:
-        return new SkillEffect(initializer as SkillEffectInitializer);
-      case EffectType.SKILL:
-        return new EncounterEffect(initializer as EncounterEffectInitializer);
-    }
   }
 
   public toString() {

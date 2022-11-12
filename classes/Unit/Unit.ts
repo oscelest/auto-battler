@@ -1,4 +1,4 @@
-import {EncounterEffectEntity, ModifierEntity, SkillEntity, UnitEntity} from "../../entities";
+import {EffectEntity, ModifierEntity, SkillEntity, UnitEntity} from "../../entities";
 import {UnitEventType} from "../../enums";
 import DamageElementType from "../../enums/Damage/DamageElementType";
 import DamageSourceType from "../../enums/Damage/DamageSourceType";
@@ -12,7 +12,6 @@ import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import Encounter from "../Battle/Encounter";
 import {Effect} from "../Effect";
 import {EffectInitializer} from "../Effect/Effect";
-import EncounterEffect from "../Effect/EncounterEffect";
 import {Skill} from "../Skill";
 import {SkillInitializer} from "../Skill/Skill";
 import Source from "../Source";
@@ -34,7 +33,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
 
     this.encounter = initializer.encounter;
     this.skill_list = initializer.skill_list?.map(entity => Skill.instantiate(entity instanceof SkillEntity ? {unit: this, entity} : entity)) ?? [];
-    this.effect_list = initializer.effect_list?.map(initializer => Effect.instantiate(initializer)) ?? [];
+    this.effect_list = initializer.effect_list?.map(initializer => new Effect(initializer)) ?? [];
   }
 
   public toString(): string {
@@ -98,7 +97,6 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     const armor = Modifier.getCategoryValue([ModifierCategory.UNIT_ATTRIBUTE_ARMOR], this.getModifierList(), this);
 
     const post_mitigation_value = Math.min(pre_mitigation_value * (100 / (100 + armor)), this.health);
-    ;
     this.health -= post_mitigation_value;
 
     if (direct && post_mitigation_value > 0) {
@@ -170,36 +168,16 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     return post_mitigation_value;
   }
 
-  public applyEffectTo(target_unit: Unit, entity: EncounterEffectEntity, source: Source, duration: number) {
+  public applyEffectTo(target_unit: Unit, entity: EffectEntity, source: Source, duration: number) {
     if (!target_unit.alive) return;
 
-    target_unit.applyEffectFrom(source, new EncounterEffect({unit: target_unit, entity, duration, source}));
+    target_unit.applyEffectFrom(source, new Effect({unit: target_unit, entity, duration, source}));
   }
 
   public applyEffectFrom(source: Source, effect: Effect) {
     this.effect_list.push(effect);
   }
 
-
-  // public applyHealTo(value: number, target: Unit) {
-  //   const max_health = this.getAttributeValue(UnitAttributeType.HEALTH);
-  //   target.health = Math.min(target.health + value, max_health);
-  //   return value;
-  // }
-  //
-  // public applyStatusEffectTo(entity: EffectEntity, modifier_list: ModifierEntity[], target_unit: Unit, source_skill: Skill) {
-  //   const duration = Modifier.getCategoryValue(ModifierCategory.STATUS_EFFECT_DURATION, modifier_list, this);
-  //   const status_effect = new StatusEffect({
-  //     entity, duration, source_skill,
-  //     source_unit: this,
-  //     onPeriodicStatusEffectTriggerActivate: this.onPeriodicEffectActivate,
-  //     onExpire: this.onStatusEffectExpire
-  //   });
-  //
-  //   this.effect_list.push(status_effect);
-  //   return status_effect;
-  // }
-  //
   // public removeStatusEffect(status_effect: StatusEffect) {
   //   const index = this.effect_list.findIndex(effect => effect === status_effect);
   //   this.effect_list.splice(index, 1);

@@ -9,7 +9,7 @@ import TargetType from "../../enums/TargetType";
 import UnitAlignmentType from "../../enums/Unit/UnitAlignmentType";
 import Modifier from "../../modules/Modifier";
 import EventElement, {EventElementInitializer} from "../Base/EventElement";
-import EncounterEffect from "../Effect/EncounterEffect";
+import {Effect} from "../Effect";
 import {Log} from "../Log";
 import {LogInitializer} from "../Log/Log";
 import Source from "../Source";
@@ -123,7 +123,7 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
   }
 
   public applyEffectTo(target_unit: Unit, entity: EffectEntity, source: Source, duration: number) {
-    target_unit.applyEffectFrom(source, new EncounterEffect({entity, unit: target_unit, duration, source}));
+    target_unit.applyEffectFrom(source, new Effect({entity, unit: target_unit, duration, source}));
   }
 
   public getTargetList(type: TargetType, modifier_list: ModifierEntity[], self_unit: Unit, source: Source): Unit[] {

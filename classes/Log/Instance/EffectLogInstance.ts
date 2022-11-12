@@ -10,6 +10,10 @@ export default class EffectLogInstance extends LogInstance<StatusEffectActionCol
     super(ActionType.EFFECT, initializer);
   }
 
+  public static getUniqueKey(source_unit: Unit, target_unit: Unit, effect: Effect, duration?: number) {
+    return `${source_unit.id}.${target_unit.id}[${effect.id}=${duration ?? "permanent"}]`;
+  }
+
   public toString() {
     return Object.values(this.collection)
       .filter(instance => instance.duration !== 0)
@@ -44,10 +48,6 @@ export default class EffectLogInstance extends LogInstance<StatusEffectActionCol
     }
 
     return this;
-  }
-
-  public static getUniqueKey(source_unit: Unit, target_unit: Unit, effect: Effect, duration?: number) {
-    return `${source_unit.id}.${target_unit.id}[${effect.id}=${duration ?? "permanent"}]`;
   }
 }
 

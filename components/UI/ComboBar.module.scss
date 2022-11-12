@@ -2,11 +2,11 @@
   display:         flex;
   flex:            0 0 auto;
   flex-flow:       column;
-  border:          1px solid black;
   justify-content: center;
   position:        relative;
   padding:         2px 5px;
   background:      linear-gradient(to bottom, #485563, #29323c);
+  border:          1px solid black;
 
   .Background {
     display:  flex;
@@ -27,9 +27,9 @@
   }
 
   .Text {
-    color:       white;
-    font-size:   14px;
-    font-weight: 300;
     z-index:     0;
+    color:       white;
+    font-weight: 300;
+    font-size:   14px;
   }
 }

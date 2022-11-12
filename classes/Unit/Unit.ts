@@ -36,16 +36,16 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     this.effect_list = initializer.effect_list?.map(initializer => new Effect(initializer)) ?? [];
   }
 
+  public get alive(): boolean {
+    return this.health <= 0;
+  }
+
   public toString(): string {
     return this.entity.name;
   }
 
   public asSource(): Source<SourceType.UNIT> {
     return new Source({type: SourceType.UNIT, value: this});
-  }
-
-  public get alive(): boolean {
-    return this.health <= 0;
   }
 
   public getLevel(): number {

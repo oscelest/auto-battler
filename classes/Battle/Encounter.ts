@@ -57,23 +57,6 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     this.loop();
   }
 
-  private loop() {
-    if (this.state !== EncounterStateType.IN_PROGRESS) return;
-
-    this.trigger(EncounterEventType.PROGRESS, {encounter: this});
-    this.tick_count++;
-    this.time_updated = new Date();
-
-    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.ENEMY && unit.health > 0).length) {
-      return this.end(true);
-    }
-    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.PLAYER && unit.health > 0).length) {
-      return this.end(false);
-    }
-
-    setTimeout(() => this.loop(), Encounter.tick_interval);
-  }
-
   public pause() {
     if (this.state !== EncounterStateType.IN_PROGRESS) return;
     this.state = EncounterStateType.PAUSED;
@@ -104,10 +87,6 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     this.log.writeLine(`Battle ${won ? "won" : "lost"} after ${total} seconds!`);
 
     console.log(this.log.toString());
-  }
-
-  private getUnitInitializer(entity: UnitEntity, alignment: UnitAlignmentType) {
-    return {entity, alignment, encounter: this};
   }
 
   public applyDamageTo(target_unit: Unit, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean) {
@@ -170,6 +149,27 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     }
 
     throw new Error(`Target type '${type}' is not valid and could not be converted to BattleUnit[]`);
+  }
+
+  private loop() {
+    if (this.state !== EncounterStateType.IN_PROGRESS) return;
+
+    this.trigger(EncounterEventType.PROGRESS, {encounter: this});
+    this.tick_count++;
+    this.time_updated = new Date();
+
+    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.ENEMY && unit.health > 0).length) {
+      return this.end(true);
+    }
+    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.PLAYER && unit.health > 0).length) {
+      return this.end(false);
+    }
+
+    setTimeout(() => this.loop(), Encounter.tick_interval);
+  }
+
+  private getUnitInitializer(entity: UnitEntity, alignment: UnitAlignmentType) {
+    return {entity, alignment, encounter: this};
   }
 }
 

@@ -35,30 +35,6 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
   }
 
-  public toString() {
-    return this.entity.name;
-  }
-
-  private onUnitDeath = ({target_unit}: UnitKillEvent) => {
-    this.unit.off(UnitEventType.KILLED, this.onUnitDeath);
-    for (let i = target_unit.effect_list.length; i >= 0; i++) {
-      if (this === target_unit.effect_list[i]) {
-        target_unit.effect_list.splice(i, 1);
-      }
-    }
-    this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DEATH});
-  };
-
-  private onEncounterProgress = () => {
-    this.duration_elapsed += Encounter.tick_interval;
-
-    if (!this.entity.expires) return;
-    this.duration -= Encounter.tick_interval;
-    if (this.duration <= 0) {
-      this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DURATION});
-    }
-  };
-
   public static getStatusEffectStackCollection(list: Effect[] = []) {
     return list.reduce(
       (result, value) => {
@@ -83,6 +59,30 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
       }
     );
   }
+
+  public toString() {
+    return this.entity.name;
+  }
+
+  private onUnitDeath = ({target_unit}: UnitKillEvent) => {
+    this.unit.off(UnitEventType.KILLED, this.onUnitDeath);
+    for (let i = target_unit.effect_list.length; i >= 0; i++) {
+      if (this === target_unit.effect_list[i]) {
+        target_unit.effect_list.splice(i, 1);
+      }
+    }
+    this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DEATH});
+  };
+
+  private onEncounterProgress = () => {
+    this.duration_elapsed += Encounter.tick_interval;
+
+    if (!this.entity.expires) return;
+    this.duration -= Encounter.tick_interval;
+    if (this.duration <= 0) {
+      this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DURATION});
+    }
+  };
 }
 
 export interface EffectInitializer<Entity extends EffectEntity = EffectEntity> extends EntityEventElementInitializer<Entity> {

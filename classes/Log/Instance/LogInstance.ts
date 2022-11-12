@@ -10,13 +10,13 @@ export default abstract class LogInstance<C extends object = object> {
     this.collection = initializer.collection ?? {};
   }
 
-  public abstract addValue(...args: any[]): this;
-
-  public abstract addInstance(instance: LogInstance): this;
-
   public static getUniqueKey(...args: any[]) {
     throw new Error(`${this.name} have not implemented getUniqueKey.`);
   }
+
+  public abstract addValue(...args: any[]): this;
+
+  public abstract addInstance(instance: LogInstance): this;
 
 }
 

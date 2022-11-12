@@ -8,6 +8,10 @@ export default class HealLogInstance extends LogInstance<HealActionCollection> {
     super(ActionType.HEAL, initializer);
   }
 
+  public static getUniqueKey(source_unit: Unit, target_unit: Unit) {
+    return `${source_unit.id}.${target_unit.id}`;
+  }
+
   public toString() {
     return Object.values(this.collection)
       .filter(instance => instance.value !== 0)
@@ -41,10 +45,6 @@ export default class HealLogInstance extends LogInstance<HealActionCollection> {
     }
 
     return this;
-  }
-
-  public static getUniqueKey(source_unit: Unit, target_unit: Unit) {
-    return `${source_unit.id}.${target_unit.id}`;
   }
 
 }

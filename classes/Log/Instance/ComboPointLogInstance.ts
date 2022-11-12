@@ -9,6 +9,10 @@ export default class ComboPointLogInstance extends LogInstance<ComboPointActionC
     super(ActionType.COMBO_POINT, initializer);
   }
 
+  public static getUniqueKey(skill: Skill, source_unit: Unit, target_unit: Unit) {
+    return `${source_unit.id}.${target_unit.id}[${skill}]`;
+  }
+
   public toString() {
     return Object.values(this.collection)
       .filter(instance => instance.value !== 0)
@@ -42,10 +46,6 @@ export default class ComboPointLogInstance extends LogInstance<ComboPointActionC
     }
 
     return this;
-  }
-
-  public static getUniqueKey(skill: Skill, source_unit: Unit, target_unit: Unit) {
-    return `${source_unit.id}.${target_unit.id}[${skill}]`;
   }
 
 }

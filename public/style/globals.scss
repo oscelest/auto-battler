@@ -8,18 +8,18 @@ html {
 
   body {
     display:   flex;
+    flex:      1 1 auto;
     padding:   0;
     margin:    0;
     font-size: 1.6rem;
     overflow:  auto;
-    flex:      1 1 auto;
 
     #__next {
       display:     flex;
       flex:        1 1 auto;
       flex-flow:   column;
-      overflow:    auto;
       font-family: Kanit, sans-serif;
+      overflow:    auto;
     }
   }
 }

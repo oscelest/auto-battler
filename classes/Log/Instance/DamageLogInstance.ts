@@ -11,6 +11,10 @@ export default class DamageLogInstance extends LogInstance<DamageActionCollectio
     super(ActionType.DAMAGE, initializer);
   }
 
+  public static getUniqueKey(source: Source, target_unit: Unit, source_type: DamageSourceType, element_type: DamageElementType) {
+    return `${source.type}-${target_unit.id}[${source_type}+${element_type}]`;
+  }
+
   public toString() {
     return Object.values(this.collection)
       .filter(instance => instance.value !== 0)
@@ -44,10 +48,6 @@ export default class DamageLogInstance extends LogInstance<DamageActionCollectio
     }
 
     return this;
-  }
-
-  public static getUniqueKey(source: Source, target_unit: Unit, source_type: DamageSourceType, element_type: DamageElementType) {
-    return `${source.type}-${target_unit.id}[${source_type}+${element_type}]`;
   }
 
 }

@@ -21,6 +21,14 @@ export default abstract class Skill<Entity extends SkillEntity = SkillEntity> ex
     this.on(SkillEventType.USE, this.onSkillUse);
   }
 
+  public get source(): Source<SourceType.SKILL> {
+    return new Source({type: SourceType.SKILL, value: this});
+  }
+
+  public get modifier_list(): ModifierEntity[] {
+    return [...this.entity.modifier_list];
+  }
+
   public static instantiate(initializer: SkillInitializer) {
     switch (initializer.entity.type) {
       case SkillType.COMBO:
@@ -32,14 +40,6 @@ export default abstract class Skill<Entity extends SkillEntity = SkillEntity> ex
 
   public toString(): string {
     return this.entity.name;
-  }
-
-  public asSource(): Source<SourceType.SKILL> {
-    return new Source({type: SourceType.SKILL, value: this});
-  }
-
-  public getModifierList(): ModifierEntity[] {
-    return [...this.entity.modifier_list];
   }
 
   private onSkillUse = ({skill, source}: SkillUseEvent) => {

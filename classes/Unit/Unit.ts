@@ -40,23 +40,15 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     return this.health <= 0;
   }
 
-  public toString(): string {
-    return this.entity.name;
-  }
-
-  public asSource(): Source<SourceType.UNIT> {
-    return new Source({type: SourceType.UNIT, value: this});
-  }
-
-  public getLevel(): number {
+  public get level(): number {
     return Math.max(1, Math.floor(1 + Math.max(0, this.entity.experience) / 100));
   }
 
-  public getAttributeValue(attribute: UnitAttributeType) {
-    return Modifier.getCategoryValue(Modifier.fromAttributeToCategoryMap[attribute], this.getModifierList(), this);
+  public get source(): Source<SourceType.UNIT> {
+    return new Source({type: SourceType.UNIT, value: this});
   }
 
-  public getModifierList(): ModifierEntity[] {
+  public get modifier_list(): ModifierEntity[] {
     return [
       ...this.entity.modifier_list,
       ...this.entity.class.modifier_list,
@@ -65,6 +57,14 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
         [] as ModifierEntity[]
       )
     ];
+  }
+
+  public toString(): string {
+    return this.entity.name;
+  }
+
+  public getAttributeValue(attribute: UnitAttributeType) {
+    return Modifier.getCategoryValue(Modifier.fromAttributeToCategoryMap[attribute], this.modifier_list, this);
   }
 
   public kill(target_unit: Unit) {
@@ -83,7 +83,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   public applyDamageTo(target_unit: Unit, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean) {
     if (!target_unit.alive) return 0;
 
-    const source = this.asSource();
+    const source = this.source;
     const post_mitigation_value = target_unit.receiveDamageFrom(source, pre_mitigation_value, damage_source, damage_element, direct);
     if (direct && post_mitigation_value > 0) {
       this.trigger(UnitEventType.DAMAGE_APPLIED, {source, target_unit, pre_mitigation_value, post_mitigation_value, damage_source, damage_element, direct});
@@ -94,7 +94,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   public receiveDamageFrom(source: Source, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean) {
     if (!this.alive) return 0;
 
-    const armor = Modifier.getCategoryValue([ModifierCategory.UNIT_ATTRIBUTE_ARMOR], this.getModifierList(), this);
+    const armor = Modifier.getCategoryValue([ModifierCategory.UNIT_ATTRIBUTE_ARMOR], this.modifier_list, this);
 
     const post_mitigation_value = Math.min(pre_mitigation_value * (100 / (100 + armor)), this.health);
     this.health -= post_mitigation_value;
@@ -113,7 +113,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     const alive = target_unit.alive;
     if (!alive && !reviving) return 0;
 
-    const source = this.asSource();
+    const source = this.source;
     const post_mitigation_value = target_unit.receiveHealingFrom(source, pre_mitigation_value, reviving);
 
     if (!alive && target_unit.alive) {
@@ -129,8 +129,9 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   public receiveHealingFrom(source: Source, pre_mitigation_value: number, reviving: boolean) {
     if (!this.alive && !reviving) return 0;
 
-    const max_heath = Modifier.getCategoryValue(ModifierCategory.UNIT_ATTRIBUTE_HEALTH, this.getModifierList(), this);
-    const heal_modifier = Modifier.getCategoryValue(ModifierCategory.HEAL, this.getModifierList(), this);
+    const modifier_list = this.modifier_list;
+    const max_heath = Modifier.getCategoryValue(ModifierCategory.UNIT_ATTRIBUTE_HEALTH, modifier_list, this);
+    const heal_modifier = Modifier.getCategoryValue(ModifierCategory.HEAL, modifier_list, this);
 
     const post_mitigation_value = Math.min(pre_mitigation_value + heal_modifier, max_heath - this.health);
     const revived = !this.alive && reviving && post_mitigation_value > 0;
@@ -149,7 +150,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   public applyComboPointTo(target_unit: Unit, pre_mitigation_value: number, chainable: boolean) {
     if (!target_unit.alive) return 0;
 
-    const source = this.asSource();
+    const source = this.source;
     const post_mitigation_value = target_unit.receiveComboPointFrom(source, pre_mitigation_value, chainable);
 
     this.trigger(UnitEventType.COMBO_POINT_APPLIED, {source, target_unit, delta: post_mitigation_value, chainable});
@@ -158,7 +159,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   public receiveComboPointFrom(source: Source, delta: number, chainable: boolean) {
     if (!this.alive) return 0;
 
-    const combo_point_modifier = Modifier.getCategoryValue(ModifierCategory.COMBO_POINT_CHANGE, this.getModifierList(), this);
+    const combo_point_modifier = Modifier.getCategoryValue(ModifierCategory.COMBO_POINT_CHANGE, this.modifier_list, this);
     const post_mitigation_value = delta + combo_point_modifier;
 
     if (post_mitigation_value > 0) {

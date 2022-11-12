@@ -20,10 +20,10 @@ module Modifier {
     switch (source.type) {
       case SourceType.UNIT:
         if (!source.unit) throw new Error();
-        return [...modifier_list, ...source.unit.getModifierList()];
+        return [...modifier_list, ...source.unit.modifier_list];
       case SourceType.SKILL:
         if (!source.skill) throw new Error();
-        return [...modifier_list, ...source.skill.getModifierList(), ...source.skill.unit.getModifierList()];
+        return [...modifier_list, ...source.skill.modifier_list, ...source.skill.unit.modifier_list];
       case SourceType.ENCOUNTER:
         return modifier_list;
     }
@@ -38,7 +38,8 @@ module Modifier {
       if (!category_list.includes(modifier.category)) continue;
 
       const {value, value_per_level} = modifier as AttributeModifierEntity;
-      const total_value = value + value_per_level * (unit?.getLevel() ?? 0);
+      const total_value = value + value_per_level * (unit?.level ?? 0);
+
       if (modifier.type === ModifierType.ATTRIBUTE) {
         if (!unit) continue;
         const {attribute} = modifier as AttributeModifierEntity;

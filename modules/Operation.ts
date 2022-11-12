@@ -48,12 +48,12 @@ module Operation {
     switch (source.type) {
       case SourceType.UNIT:
         if (!source.unit) throw new Error();
-        modifier_list = modifier_list.concat(source.unit.getModifierList());
+        modifier_list = modifier_list.concat(source.unit.modifier_list);
         return source.unit.encounter.getTargetList(target_type, modifier_list, self_unit, source);
 
       case SourceType.SKILL:
         if (!source.skill) throw new Error();
-        modifier_list = modifier_list.concat(source.skill.getModifierList(), source.skill.unit.getModifierList());
+        modifier_list = modifier_list.concat(source.skill.modifier_list, source.skill.unit.modifier_list);
         return source.skill.unit.encounter.getTargetList(target_type, modifier_list, self_unit, source);
 
       case SourceType.ENCOUNTER:

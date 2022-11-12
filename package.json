@@ -1,0 +1,42 @@
+{
+  "name":            "@noxy/auto-battler",
+  "author":          "oscelest",
+  "version":         "0.0.1",
+  "description":     "A random project that might become something. Mostly just a playground though.",
+  "license":         "MIT",
+  "private":         true,
+  "repository":      {
+    "type": "git",
+    "url":  "git@github.com:oscelest/crafting.git"
+  },
+  "bugs":            {
+    "url": "https://github.com/oscelest/crafting/issues"
+  },
+  "publishConfig":   {
+    "access": "public"
+  },
+  "scripts":         {
+    "update": "npx npm-check-updates -u && npm i",
+    "start":  "next dev"
+  },
+  "dependencies":    {
+    "@noxy/geometry":          "^0.2.1",
+    "@noxy/react-button":      "^0.2.0",
+    "@noxy/react-collapsible": "^0.5.0",
+    "@noxy/react-input-field": "^0.5.2",
+    "humanize-duration":       "^3.27.3",
+    "next":                    "^13.0.3",
+    "next-i18next":            "^12.1.0",
+    "react":                   "^18.2.0",
+    "react-dom":               "^18.2.0",
+    "uuid":                    "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/humanize-duration": "^3.27.1",
+    "@types/node":              "^18.11.9",
+    "@types/react":             "^18.0.25",
+    "@types/react-dom":         "^18.0.8",
+    "@types/uuid":              "^8.3.4",
+    "typescript":               "^4.8.4"
+  }
+}

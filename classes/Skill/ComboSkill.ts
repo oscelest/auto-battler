@@ -1,6 +1,6 @@
 import {ComboSkillEntity} from "../../entities";
 import {SkillEventType, UnitEventType} from "../../enums";
-import ModifierCategory from "../../enums/Modifier/ModifierCategory";
+import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
 import Modifier from "../../modules/Modifier";
 import {UnitComboPointEvent} from "../Unit/Unit";
 import Skill, {SkillInitializer} from "./Skill";
@@ -21,12 +21,12 @@ export default class ComboSkill extends Skill<ComboSkillEntity> {
   private readonly onUnitComboPointApplied = ({delta, source, chainable, target_unit}: UnitComboPointEvent) => {
     this.combo_point_current += delta;
     const modifier_list = [...this.modifier_list, ...target_unit.modifier_list];
-    const combo_point_max = Modifier.getCategoryValue(ModifierCategory.COMBO_POINT_MAX, modifier_list, target_unit);
+    const combo_point_max = Modifier.getCategoryValue(ModifierCategoryType.COMBO_POINT_MAX, modifier_list, target_unit);
 
     if (this.combo_point_current >= combo_point_max) {
-      const combo_point_retain = Modifier.getCategoryValue(ModifierCategory.COMBO_POINT_RETAIN, modifier_list, target_unit);
+      const combo_point_retain = Modifier.getCategoryValue(ModifierCategoryType.COMBO_POINT_RETAIN, modifier_list, target_unit);
       const combo_point_value = Math.min(combo_point_retain, combo_point_max - 1);
-      this.trigger(SkillEventType.USE, {skill: this, source: this.source});
+      this.trigger(SkillEventType.USE, {skill: this});
       if (combo_point_value > 0) target_unit.applyComboPointTo(target_unit, combo_point_value, false);
     }
   };

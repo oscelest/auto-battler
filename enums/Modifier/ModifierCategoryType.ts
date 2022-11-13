@@ -1,11 +1,11 @@
-enum ModifierCategory {
+enum ModifierCategoryType {
   COMBO_POINT_CHANGE          = "combo_point_change",
   COMBO_POINT_RETAIN          = "combo_point_retain",
   COMBO_POINT_MAX             = "combo_point_max",
-
+  
   DAMAGE                      = "damage",
   HEAL                        = "heal",
-
+  
   EFFECT_DURATION             = "status_effect_duration",
   HIT_COUNT                   = "hit_count",
 
@@ -16,4 +16,4 @@ enum ModifierCategory {
   UNIT_ATTRIBUTE_WARD         = "unit_attribute_ward",
 }
 
-export default ModifierCategory;
+export default ModifierCategoryType;

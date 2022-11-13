@@ -19,7 +19,7 @@ export default class ChargeSkill extends Skill<ChargeSkillEntity> {
     this.charge_current += Encounter.tick_interval;
     if (this.charge_current > this.entity.charge_base) {
       this.charge_current -= this.entity.charge_base;
-      this.trigger(SkillEventType.USE, {skill: this, source: this.source});
+      this.trigger(SkillEventType.USE, {skill: this});
     }
   };
 
@@ -28,6 +28,7 @@ export default class ChargeSkill extends Skill<ChargeSkillEntity> {
   };
 
   private onUnitRevived = () => {
+  
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
   };
 }

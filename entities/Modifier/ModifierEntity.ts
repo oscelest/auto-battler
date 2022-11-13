@@ -1,4 +1,4 @@
-import ModifierCategory from "../../enums/Modifier/ModifierCategory";
+import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
 import ModifierType from "../../enums/Modifier/ModifierType";
 
 export default abstract class ModifierEntity {
@@ -7,7 +7,7 @@ export default abstract class ModifierEntity {
 
   public value: number;
   public value_per_level: number;
-  public category: ModifierCategory;
+  public category: ModifierCategoryType;
 
   protected constructor(type: ModifierType, initializer: ModifierEntityInitializer) {
     this.type = type;
@@ -21,5 +21,5 @@ export default abstract class ModifierEntity {
 export interface ModifierEntityInitializer {
   value: number;
   value_per_level?: number;
-  category: ModifierCategory;
+  category: ModifierCategoryType;
 }

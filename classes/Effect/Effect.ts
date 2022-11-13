@@ -1,4 +1,4 @@
-import {EffectEntity} from "../../entities";
+import {EffectEntity, ModifierEntity} from "../../entities";
 import {TriggerEntity} from "../../entities/Trigger";
 import {EffectEventType, EncounterEventType, UnitEventType} from "../../enums";
 import EffectExpirationType from "../../enums/StatusEffect/EffectExpirationType";
@@ -23,18 +23,22 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
 
   constructor(initializer: EffectInitializer<Entity>) {
     super(initializer);
-
+  
     this.duration = initializer.duration ?? 0;
     this.duration_elapsed = initializer.duration_elapsed ?? 0;
-
+  
     this.source = initializer.source;
     this.unit = initializer.unit;
     this.trigger_list = initializer.trigger_list?.map(entity => Trigger.instantiate(entity instanceof TriggerEntity ? {entity, effect: this} : entity)) ?? [];
-
+  
     this.unit.on(UnitEventType.KILLED, this.onUnitDeath);
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
   }
-
+  
+  public get modifier_list(): ModifierEntity[] {
+    return [...this.entity.modifier_list];
+  }
+  
   public static getStatusEffectStackCollection(list: Effect[] = []) {
     return list.reduce(
       (result, value) => {
@@ -66,7 +70,8 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
 
   private onUnitDeath = ({target_unit}: UnitKillEvent) => {
     this.unit.off(UnitEventType.KILLED, this.onUnitDeath);
-    for (let i = target_unit.effect_list.length; i >= 0; i++) {
+  
+    for (let i = target_unit.effect_list.length; i >= 0; i--) {
       if (this === target_unit.effect_list[i]) {
         target_unit.effect_list.splice(i, 1);
       }

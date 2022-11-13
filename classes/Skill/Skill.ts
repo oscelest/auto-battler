@@ -12,24 +12,23 @@ import {ComboSkillInitializer} from "./ComboSkill";
 import {ChargeSkill, ComboSkill} from "./index";
 
 export default abstract class Skill<Entity extends SkillEntity = SkillEntity> extends EntityEventElement<Entity, SkillEventHandler> {
-
-  public unit: Unit;
-
+  
+  public readonly unit: Unit;
+  public readonly source: Source<SourceType.SKILL>;
+  
   protected constructor(initializer: SkillInitializer<Entity>) {
     super(initializer);
     this.unit = initializer.unit;
-    this.on(SkillEventType.USE, this.onSkillUse);
+    this.source = new Source({type: SourceType.SKILL, value: this});
+    
+    this.on(SkillEventType.USE, Skill.onSkillUse);
   }
-
-  public get source(): Source<SourceType.SKILL> {
-    return new Source({type: SourceType.SKILL, value: this});
-  }
-
+  
   public get modifier_list(): ModifierEntity[] {
     return [...this.entity.modifier_list];
   }
-
-  public static instantiate(initializer: SkillInitializer) {
+  
+  public static instantiate<T extends SkillEntity | SkillInitializer>(initializer: SkillInitializer) {
     switch (initializer.entity.type) {
       case SkillType.COMBO:
         return new ComboSkill(initializer as ComboSkillInitializer);
@@ -37,17 +36,19 @@ export default abstract class Skill<Entity extends SkillEntity = SkillEntity> ex
         return new ChargeSkill(initializer as ChargeSkillInitializer);
     }
   }
-
+  
   public toString(): string {
     return this.entity.name;
   }
-
-  private onSkillUse = ({skill, source}: SkillUseEvent) => {
+  
+  private static onSkillUse = ({skill}: SkillUseEvent) => {
+    skill.unit.encounter.log.writeBegin(skill.source);
     for (let operation of skill.entity.operation_list) {
-      Operation.execute(operation, skill.unit, source);
+      Operation.execute(operation, skill.unit, skill.source);
     }
+    skill.unit.encounter.log.writeFinish(skill.source);
   };
-
+  
 }
 
 export interface SkillInitializer<Entity extends SkillEntity = SkillEntity> extends EntityEventElementInitializer<Entity> {
@@ -56,7 +57,6 @@ export interface SkillInitializer<Entity extends SkillEntity = SkillEntity> exte
 
 export interface SkillUseEvent {
   skill: Skill;
-  source: Source;
 }
 
 type SkillEventHandler = {

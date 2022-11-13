@@ -3,7 +3,7 @@ import {EncounterEventType} from "../../enums";
 import DamageElementType from "../../enums/Damage/DamageElementType";
 import DamageSourceType from "../../enums/Damage/DamageSourceType";
 import EncounterStateType from "../../enums/EncounterStateType";
-import ModifierCategory from "../../enums/Modifier/ModifierCategory";
+import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
 import SourceType from "../../enums/SourceType";
 import TargetType from "../../enums/TargetType";
 import UnitAlignmentType from "../../enums/Unit/UnitAlignmentType";
@@ -17,16 +17,17 @@ import {Unit} from "../Unit";
 import {UnitInitializer} from "../Unit/Unit";
 
 export default class Encounter extends EventElement<EncounterEventHandler> {
-
-  public static tick_rate: number = 64;                        // 64 updates per second
+  
+  public static tick_rate: number = 30;                         // 64 updates per second
   public static tick_interval: number = 1000 / this.tick_rate; // Time between ticks in ms
-
+  
   public state: EncounterStateType;
   public tick_count: number;
   public time_started?: Date;
   public time_updated?: Date;
-
+  
   public readonly log: Log;
+  public readonly source: Source<SourceType.ENCOUNTER>;
   public readonly unit_list: Unit[];
 
   constructor(initializer: EncounterInitializer) {
@@ -35,16 +36,13 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     this.tick_count = initializer.tick_count ?? 0;
     this.time_started = initializer.time_started;
     this.time_updated = initializer.time_updated;
-
+  
     this.log = initializer.log instanceof Log ? initializer.log : new Log(initializer.log);
+    this.source = new Source({type: SourceType.ENCOUNTER, value: this});
     this.unit_list = [
       ...initializer.player_unit_list?.map(unit => new Unit(unit instanceof UnitEntity ? this.getUnitInitializer(unit, UnitAlignmentType.PLAYER) : unit)) ?? [],
       ...initializer.enemy_unit_list?.map(unit => new Unit(unit instanceof UnitEntity ? this.getUnitInitializer(unit, UnitAlignmentType.ENEMY) : unit)) ?? []
     ];
-  }
-
-  public asSource() {
-    return new Source({type: SourceType.ENCOUNTER, value: this});
   }
 
   public start() {
@@ -78,38 +76,38 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
 
   public end(won: boolean) {
     if (this.state !== EncounterStateType.IN_PROGRESS) return;
-
+  
     const started = this.time_started?.getTime() ?? Date.now();
     const current = Date.now() - started;
     const total = (current / 1000).toFixed(1);
-
+  
     this.state = EncounterStateType.COMPLETED;
     this.log.writeLine(`Battle ${won ? "won" : "lost"} after ${total} seconds!`);
-
+  
     console.log(this.log.toString());
   }
-
-  public applyDamageTo(target_unit: Unit, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean) {
-    return target_unit.receiveDamageFrom(this.asSource(), pre_mitigation_value, damage_source, damage_element, direct);
+  
+  public applyDamageTo(target_unit: Unit, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean, source: Source = this.source) {
+    return target_unit.receiveDamageFrom(source, pre_mitigation_value, damage_source, damage_element, direct);
   }
-
-  public applyHealingTo(target_unit: Unit, pre_mitigation_value: number, reviving: boolean) {
-    return target_unit.receiveHealingFrom(this.asSource(), pre_mitigation_value, reviving);
+  
+  public applyHealingTo(target_unit: Unit, pre_mitigation_value: number, reviving: boolean, source: Source = this.source) {
+    return target_unit.receiveHealingFrom(source, pre_mitigation_value, reviving);
   }
-
-  public applyComboPointTo(target_unit: Unit, pre_mitigation_value: number, chainable: boolean) {
-    return target_unit.receiveComboPointFrom(this.asSource(), pre_mitigation_value, chainable);
+  
+  public applyComboPointTo(target_unit: Unit, pre_mitigation_value: number, chainable: boolean, source: Source = this.source) {
+    return target_unit.receiveComboPointFrom(source, pre_mitigation_value, chainable);
   }
-
-  public applyEffectTo(target_unit: Unit, entity: EffectEntity, source: Source, duration: number) {
+  
+  public applyEffectTo(target_unit: Unit, entity: EffectEntity, duration: number, source: Source) {
     target_unit.applyEffectFrom(source, new Effect({entity, unit: target_unit, duration, source}));
   }
-
+  
   public getTargetList(type: TargetType, modifier_list: ModifierEntity[], self_unit: Unit, source: Source): Unit[] {
-    const hit_count = Modifier.getCategoryValue(ModifierCategory.HIT_COUNT, modifier_list, source.unit) + 1;
+    const hit_count = Modifier.getCategoryValue(ModifierCategoryType.HIT_COUNT, modifier_list, source.unit) + 1;
     if (!hit_count) return [];
     if (type === TargetType.SELF) return Array(hit_count).fill(self_unit);
-
+    
     // TODO: Skills should have priority, and it should be applied here
     const base_list = this.fromTargetTypeToList(type).filter(unit => unit.health > 0);
     if (!base_list.length) return [];
@@ -128,10 +126,27 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
       case TargetType.PLAYER_GROUP:
         return [...Array(hit_count)].reduce(result => [...result, ...base_list], []);
     }
-
+    
     throw new Error(`TargetType '${type}' with HitCount '${hit_count}' is not valid and could not be converted to BattleUnit[]`);
   }
-
+  
+  private loop() {
+    if (this.state !== EncounterStateType.IN_PROGRESS) return;
+    
+    this.trigger(EncounterEventType.PROGRESS, {encounter: this});
+    this.tick_count++;
+    this.time_updated = new Date();
+    
+    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.ENEMY && unit.health > 0).length) {
+      return this.end(true);
+    }
+    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.PLAYER && unit.health > 0).length) {
+      return this.end(false);
+    }
+    
+    setTimeout(() => this.loop(), Encounter.tick_interval);
+  }
+  
   public fromTargetTypeToList(type: TargetType): Unit[] {
     switch (type) {
       case TargetType.ANY_SINGLE:
@@ -149,23 +164,6 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     }
 
     throw new Error(`Target type '${type}' is not valid and could not be converted to BattleUnit[]`);
-  }
-
-  private loop() {
-    if (this.state !== EncounterStateType.IN_PROGRESS) return;
-
-    this.trigger(EncounterEventType.PROGRESS, {encounter: this});
-    this.tick_count++;
-    this.time_updated = new Date();
-
-    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.ENEMY && unit.health > 0).length) {
-      return this.end(true);
-    }
-    if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.PLAYER && unit.health > 0).length) {
-      return this.end(false);
-    }
-
-    setTimeout(() => this.loop(), Encounter.tick_interval);
   }
 
   private getUnitInitializer(entity: UnitEntity, alignment: UnitAlignmentType) {

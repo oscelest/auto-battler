@@ -3,6 +3,7 @@ import type {GetStaticPropsContext, NextPage} from "next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import React, {useState} from "react";
 import {Encounter} from "../classes";
+import {EncounterProgressEvent} from "../classes/Battle/Encounter";
 import BattleScene from "../components/Scene/BattleScene";
 import {
   ChargeSkillEntity,
@@ -18,10 +19,11 @@ import {
   UnitEntity
 } from "../entities";
 import {PeriodicTriggerEntity} from "../entities/Trigger";
+import {EncounterEventType} from "../enums";
 import DamageElementType from "../enums/Damage/DamageElementType";
 import DamageSourceType from "../enums/Damage/DamageSourceType";
 import EncounterStateType from "../enums/EncounterStateType";
-import ModifierCategory from "../enums/Modifier/ModifierCategory";
+import ModifierCategoryType from "../enums/Modifier/ModifierCategoryType";
 import ModifierNumericalType from "../enums/Modifier/ModifierNumericalType";
 import StatusEffectAlignment from "../enums/StatusEffect/StatusEffectAlignment";
 import TargetType from "../enums/TargetType";
@@ -38,41 +40,79 @@ export async function getStaticProps({locale}: GetStaticPropsContext) {
 }
 
 const IndexPage: NextPage = () => {
-  const [battle, setBattle] = useState<Encounter>();
-  const [, setLastUpdated] = useState<Date>(new Date());
-
+  const [encounter, setEncounter] = useState<Encounter>();
+  const [encounter_state, setEncounterState] = useState<EncounterStateType>();
+  const [tick_count, setTickCount] = useState<number>(0);
+  
   return (
     <div className={Style.Component}>
       <div className={Style.Controls}>
-        <Button onClick={clickGenerateBattleButton} disabled={battle?.state !== EncounterStateType.IN_PROGRESS}>Generate new battle</Button>
-        <Button onClick={clickStartBattleButton} disabled={battle?.state !== EncounterStateType.READY}>Start Battle</Button>
-        <Button onClick={clickCancelBattleButton} disabled={battle?.state !== EncounterStateType.IN_PROGRESS}>Cancel Battle</Button>
+        <Button onClick={clickGenerateBattleButton} disabled={encounter?.state !== EncounterStateType.IN_PROGRESS}>Generate new battle</Button>
+        <Button onClick={clickStartBattleButton} disabled={encounter?.state !== EncounterStateType.READY}>Start Battle</Button>
+        {
+          encounter_state === EncounterStateType.IN_PROGRESS &&
+          <Button onClick={clickPauseBattleButton}>Pause</Button>
+        }
+        {
+          encounter_state === EncounterStateType.PAUSED &&
+          <Button onClick={clickPauseBattleButton}>Unpause</Button>
+        }
+        {
+          encounter_state === EncounterStateType.IN_PROGRESS &&
+          <Button onClick={clickCancelBattleButton}>Cancel Battle</Button>
+        }
+        <span>Tick: {tick_count}</span>
       </div>
-      <BattleScene battle={battle}/>
+      <BattleScene battle={encounter}/>
     </div>
   );
-
+  
+  function cancel() {
+    encounter?.off(EncounterEventType.PROGRESS, onEncounterProgress);
+    encounter?.cancel();
+    setEncounter(undefined);
+    setEncounterState(EncounterStateType.CANCELLED);
+  }
+  
   function clickGenerateBattleButton() {
-    battle?.cancel();
-    setBattle(new Encounter({
-      // battle_loop: new CombatLoop({
-      //   player_unit_list: [generatePlayerUnit()],
-      //   enemy_unit_list: [generateEnemyUnit()]
-      // })
-    }));
+    cancel();
+    
+    setEncounter(
+      new Encounter({
+        player_unit_list: [generatePlayerUnit()],
+        enemy_unit_list: [generateEnemyUnit()]
+      })
+      .on(EncounterEventType.PROGRESS, onEncounterProgress)
+    );
+    setEncounterState(EncounterStateType.READY);
   }
-
+  
   function clickStartBattleButton() {
-    battle?.start();
+    encounter?.start();
+    setEncounterState(EncounterStateType.IN_PROGRESS);
+    
   }
-
+  
+  function clickPauseBattleButton() {
+    if (encounter?.state === EncounterStateType.IN_PROGRESS) {
+      encounter?.pause();
+      console.log(encounter);
+      setEncounterState(EncounterStateType.PAUSED);
+    }
+    else {
+      encounter?.unpause();
+      setEncounterState(EncounterStateType.IN_PROGRESS);
+    }
+  }
+  
   function clickCancelBattleButton() {
-    battle?.log.toString();
-    battle?.cancel();
+    encounter?.log.toString();
+    cancel();
   }
-
-  function onBattleCallback(battle: Encounter) {
-    setLastUpdated(battle.time_updated ?? new Date());
+  
+  
+  function onEncounterProgress({encounter}: EncounterProgressEvent) {
+    setTickCount(encounter.tick_count);
   }
 };
 
@@ -84,9 +124,9 @@ function generatePlayerUnit() {
     class: new UnitClassEntity({
       name: "Knight",
       modifier_list: [
-        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.UNIT_ATTRIBUTE_HEALTH, value: 100, value_per_level: 25}),
-        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.UNIT_ATTRIBUTE_ATTACK_POWER, value: 20, value_per_level: 2}),
-        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.UNIT_ATTRIBUTE_SPELL_POWER, value: 5, value_per_level: 1})
+        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.UNIT_ATTRIBUTE_HEALTH, value: 100, value_per_level: 25}),
+        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER, value: 20, value_per_level: 2}),
+        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.UNIT_ATTRIBUTE_SPELL_POWER, value: 5, value_per_level: 1})
       ]
     }),
     skill_list: [
@@ -109,7 +149,7 @@ function generatePlayerUnit() {
                 source_type: DamageSourceType.ATTACK,
                 element_type: DamageElementType.PHYSICAL,
                 modifier_list: [
-                  new ScalingModifierEntity({value: 0.5, category: ModifierCategory.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
+                  new ScalingModifierEntity({value: 0.5, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
                 ]
               })
             ],
@@ -120,7 +160,7 @@ function generatePlayerUnit() {
                 removable: true,
                 alignment: StatusEffectAlignment.NEGATIVE,
                 modifier_list: [
-                  new NumericalModifierEntity({value: 2000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.EFFECT_DURATION})
+                  new NumericalModifierEntity({value: 2000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.EFFECT_DURATION})
                 ],
                 trigger_list: [
                   new PeriodicTriggerEntity({
@@ -134,8 +174,8 @@ function generatePlayerUnit() {
                             source_type: DamageSourceType.ATTACK,
                             element_type: DamageElementType.PHYSICAL,
                             modifier_list: [
-                              new NumericalModifierEntity({value: 1 / 20, numerical_type: ModifierNumericalType.MULTIPLICATIVE, category: ModifierCategory.DAMAGE}),
-                              new NumericalModifierEntity({value: 20, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.DAMAGE})
+                              new NumericalModifierEntity({value: 1 / 20, numerical_type: ModifierNumericalType.MULTIPLICATIVE, category: ModifierCategoryType.DAMAGE}),
+                              new NumericalModifierEntity({value: 20, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.DAMAGE})
                             ]
                           })
                         ]
@@ -158,7 +198,7 @@ function generatePlayerUnit() {
             action_list: [
               new HealActionEntity({
                 modifier_list: [
-                  new ScalingModifierEntity({value: 1, category: ModifierCategory.HEAL, attribute: UnitAttributeType.SPELL_POWER})
+                  new ScalingModifierEntity({value: 1, category: ModifierCategoryType.HEAL, attribute: UnitAttributeType.SPELL_POWER})
                 ]
               })
             ]
@@ -179,8 +219,8 @@ function generatePlayerUnit() {
                 removable: true,
                 alignment: StatusEffectAlignment.POSITIVE,
                 modifier_list: [
-                  new NumericalModifierEntity({value: 5000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.EFFECT_DURATION}),
-                  new NumericalModifierEntity({value: 0.5, numerical_type: ModifierNumericalType.ADDITIVE, category: ModifierCategory.UNIT_ATTRIBUTE_ATTACK_POWER})
+                  new NumericalModifierEntity({value: 5000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.EFFECT_DURATION}),
+                  new NumericalModifierEntity({value: 0.5, numerical_type: ModifierNumericalType.ADDITIVE, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER})
                 ]
               })
             ]
@@ -200,7 +240,7 @@ function generatePlayerUnit() {
                 source_type: DamageSourceType.ATTACK,
                 element_type: DamageElementType.PHYSICAL,
                 modifier_list: [
-                  new ScalingModifierEntity({value: 1, category: ModifierCategory.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
+                  new ScalingModifierEntity({value: 1, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
                 ]
               })
             ]
@@ -219,9 +259,9 @@ function generateEnemyUnit() {
     class: new UnitClassEntity({
       name: "Rat",
       modifier_list: [
-        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.UNIT_ATTRIBUTE_HEALTH, value: 100, value_per_level: 5}),
-        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.UNIT_ATTRIBUTE_ATTACK_POWER, value: 10, value_per_level: 2}),
-        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategory.UNIT_ATTRIBUTE_SPELL_POWER, value: 5, value_per_level: 1})
+        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.UNIT_ATTRIBUTE_HEALTH, value: 100, value_per_level: 5}),
+        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER, value: 10, value_per_level: 2}),
+        new NumericalModifierEntity({numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.UNIT_ATTRIBUTE_SPELL_POWER, value: 5, value_per_level: 1})
       ]
     }),
     skill_list: [
@@ -238,7 +278,7 @@ function generateEnemyUnit() {
                 source_type: DamageSourceType.ATTACK,
                 element_type: DamageElementType.PHYSICAL,
                 modifier_list: [
-                  new ScalingModifierEntity({value: 0.5, category: ModifierCategory.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
+                  new ScalingModifierEntity({value: 0.5, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
                 ]
               })
             ]

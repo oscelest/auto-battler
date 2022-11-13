@@ -1,30 +1,51 @@
-import {LogSection} from "./index";
+import Source from "../Source";
 
 export default class Log {
-
-  private readonly section_list: LogSection[];
-
+  
+  private readonly log_lines: string[];
+  private readonly log_handle_collection: {[key: string]: string[]};
+  
   constructor(initializer: LogInitializer = {}) {
-    this.section_list = initializer.section_list ?? [];
+    this.log_lines = initializer.log_lines ?? [];
+    this.log_handle_collection = initializer.log_handle_collection ?? {};
   }
-
+  
   public toString() {
-    return this.section_list.join("\n");
+    return this.log_lines.join("\n");
   }
-
-  public write(section: LogSection) {
-    this.section_list.push(section);
+  
+  public writeLine(message: string) {
+    this.log_lines.push(message);
   }
-
-  public writeLine(title: string) {
-    this.section_list.push(new LogSection({title}));
+  
+  public writeBegin(source: Source) {
+    if (this.log_handle_collection[source.id]) {
+      console.warn(`Attempting to start writing to log from source with ID "${source.id}", but it already exists.`);
+    }
+    
+    this.log_handle_collection[source.id] = [];
   }
-
-  public writeSection(title: string, line_list?: string[]) {
-    this.section_list.push(new LogSection({title, line_list}));
+  
+  public writeFinish(source: Source) {
+    if (!this.log_handle_collection[source.id]) {
+      throw new Error(`Attempting to finish writing to log from source with ID "${source.id}", but it doesn't exist.`);
+    }
+    
+    // TODO: Push new message to actual log
+    this.log_lines.push(...this.log_handle_collection[source.id]);
+    delete this.log_handle_collection[source.id];
+  }
+  
+  public writeEntry(key: string, message: string) {
+    if (!this.log_handle_collection[key]) {
+      throw new Error(`Attempting to write entry to log with "${key}", but it doesn't exist.`);
+    }
+    
+    this.log_handle_collection[key].push(message);
   }
 }
 
 export interface LogInitializer {
-  section_list?: LogSection[];
+  log_lines?: string[];
+  log_handle_collection?: {[key: string]: string[]};
 }

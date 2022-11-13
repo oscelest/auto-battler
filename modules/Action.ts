@@ -4,7 +4,7 @@ import {ActionEntity, ComboPointActionEntity, DamageActionEntity, HealActionEnti
 import ActionType from "../enums/ActionType";
 import DamageElementType from "../enums/Damage/DamageElementType";
 import DamageSourceType from "../enums/Damage/DamageSourceType";
-import ModifierCategory from "../enums/Modifier/ModifierCategory";
+import ModifierCategoryType from "../enums/Modifier/ModifierCategoryType";
 import SourceType from "../enums/SourceType";
 import Modifier from "./Modifier";
 
@@ -24,8 +24,8 @@ module Action {
 
   function executeDamage({modifier_list, source_type, element_type, direct}: DamageActionEntity, target_unit: Unit, source: Source) {
     modifier_list = Modifier.populateModifierList(source, modifier_list);
-
-    const pre_mitigation_value = Modifier.getCategoryValue(ModifierCategory.DAMAGE, modifier_list, source.unit);
+  
+    const pre_mitigation_value = Modifier.getCategoryValue(ModifierCategoryType.DAMAGE, modifier_list, source.unit);
     const post_mitigation_value = applyDamage(source, target_unit, pre_mitigation_value, source_type, element_type, direct);
   }
 
@@ -33,21 +33,21 @@ module Action {
     switch (source.type) {
       case SourceType.UNIT:
         if (!source.unit) throw new Error();
-        return source.unit.applyDamageTo(target_unit, value, source_type, element_type, direct);
+        return source.unit.applyDamageTo(target_unit, value, source_type, element_type, direct, source);
       case SourceType.SKILL:
         if (!source.skill) throw new Error();
-        return source.skill.unit.applyDamageTo(target_unit, value, source_type, element_type, direct);
+        return source.skill.unit.applyDamageTo(target_unit, value, source_type, element_type, direct, source);
       case SourceType.ENCOUNTER:
         if (!source.encounter) throw new Error();
-        return source.encounter.applyDamageTo(target_unit, value, source_type, element_type, direct);
+        return source.encounter.applyDamageTo(target_unit, value, source_type, element_type, direct, source);
     }
     throw new Error(`Source with type '${source.type}' doesn't exist.`);
   }
 
   function executeHeal({reviving, modifier_list}: HealActionEntity, target_unit: Unit, source: Source) {
     modifier_list = Modifier.populateModifierList(source, modifier_list);
-
-    const pre_mitigation_value = Modifier.getCategoryValue(ModifierCategory.HEAL, modifier_list, source.unit);
+  
+    const pre_mitigation_value = Modifier.getCategoryValue(ModifierCategoryType.HEAL, modifier_list, source.unit);
     const post_mitigation_value = applyHealing(source, target_unit, pre_mitigation_value, reviving);
   }
 
@@ -69,8 +69,8 @@ module Action {
 
   function executeComboPointAction({base_value, chainable, modifier_list}: ComboPointActionEntity, target_unit: Unit, source: Source) {
     modifier_list = Modifier.populateModifierList(source, modifier_list);
-
-    const pre_mitigation_value = Modifier.getCategoryValue(ModifierCategory.COMBO_POINT_CHANGE, modifier_list, source.unit) + base_value;
+  
+    const pre_mitigation_value = Modifier.getCategoryValue(ModifierCategoryType.COMBO_POINT_CHANGE, modifier_list, source.unit) + base_value;
     const post_mitigation_value = applyComboPoint(source, target_unit, pre_mitigation_value, chainable);
   }
 

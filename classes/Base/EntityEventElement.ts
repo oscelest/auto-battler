@@ -1,5 +1,4 @@
-import {EventElementCollection, EventElementInitializer} from "./EventElement";
-import {EventElement} from "./index";
+import EventElement, {EventElementCollection, EventElementInitializer} from "./EventElement";
 
 export default abstract class EntityEventElement<Entity extends ClassInstance, Collection extends EventElementCollection> extends EventElement<Collection> {
 

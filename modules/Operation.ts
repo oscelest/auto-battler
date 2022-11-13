@@ -1,9 +1,9 @@
 import {Unit} from "../classes";
 import Source from "../classes/Source";
 import {EffectEntity, ModifierEntity, OperationEntity} from "../entities";
-import ModifierCategoryType from "../enums/Modifier/ModifierCategoryType";
-import SourceType from "../enums/SourceType";
-import TargetType from "../enums/TargetType";
+import ModifierCategoryType from "../enums/Encounter/Modifier/ModifierCategoryType";
+import SourceType from "../enums/Encounter/SourceType";
+import TargetType from "../enums/Encounter/TargetType";
 import Action from "./Action";
 import Modifier from "./Modifier";
 

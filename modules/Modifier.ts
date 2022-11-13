@@ -2,11 +2,11 @@ import {Unit} from "../classes";
 import Source from "../classes/Source";
 import {ModifierEntity, NumericalModifierEntity} from "../entities";
 import AttributeModifierEntity from "../entities/Modifier/AttributeModifierEntity";
-import ModifierCategoryType from "../enums/Modifier/ModifierCategoryType";
-import ModifierNumericalType from "../enums/Modifier/ModifierNumericalType";
-import ModifierType from "../enums/Modifier/ModifierType";
-import SourceType from "../enums/SourceType";
-import UnitAttributeType from "../enums/Unit/UnitAttributeType";
+import ModifierCategoryType from "../enums/Encounter/Modifier/ModifierCategoryType";
+import ModifierNumericalType from "../enums/Encounter/Modifier/ModifierNumericalType";
+import ModifierType from "../enums/Encounter/Modifier/ModifierType";
+import SourceType from "../enums/Encounter/SourceType";
+import UnitAttributeType from "../enums/Encounter/Unit/UnitAttributeType";
 
 module Modifier {
   

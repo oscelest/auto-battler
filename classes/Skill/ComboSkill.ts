@@ -1,6 +1,6 @@
 import {ComboSkillEntity} from "../../entities";
 import {SkillEventType, UnitEventType} from "../../enums";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
+import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
 import Modifier from "../../modules/Modifier";
 import {UnitComboPointEvent} from "../Unit/Unit";
 import Skill, {SkillInitializer} from "./Skill";
@@ -15,7 +15,7 @@ export default class ComboSkill extends Skill<ComboSkillEntity> {
 
     this.unit.on(UnitEventType.COMBO_POINT_APPLIED, this.onUnitComboPointApplied);
     this.unit.on(UnitEventType.KILLED, this.onUnitKilled);
-    this.unit.on(UnitEventType.REVIVED, this.onUnitRevived);
+    this.unit.on(UnitEventType.REVIVE_RECEIVED, this.onUnitRevived);
   }
 
   private readonly onUnitComboPointApplied = ({delta, source, chainable, target_unit}: UnitComboPointEvent) => {

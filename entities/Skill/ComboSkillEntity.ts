@@ -1,4 +1,4 @@
-import SkillType from "../../enums/SkillType";
+import SkillType from "../../enums/Encounter/SkillType";
 import {SkillEntity, SkillEntityInitializer} from "./index";
 
 export default class ComboSkillEntity extends SkillEntity {

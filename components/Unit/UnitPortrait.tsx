@@ -1,7 +1,7 @@
 import React, {HTMLAttributes} from "react";
 import {ChargeSkill, ComboSkill, Skill, Unit} from "../../classes";
-import SkillType from "../../enums/SkillType";
-import UnitAttributeType from "../../enums/Unit/UnitAttributeType";
+import SkillType from "../../enums/Encounter/SkillType";
+import UnitAttributeType from "../../enums/Encounter/Unit/UnitAttributeType";
 import ComboBar from "../UI/ComboBar";
 import ProgressBar from "../UI/ProgressBar";
 import StatusEffectBar from "../UI/StatusEffectBar";

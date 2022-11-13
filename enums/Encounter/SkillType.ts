@@ -1,6 +1,6 @@
 enum SkillType {
-  CHARGE = 0,
-  COMBO  = 1,
+  CHARGE = "charge",
+  COMBO  = "combo",
 }
 
 export default SkillType;

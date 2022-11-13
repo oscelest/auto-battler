@@ -1,14 +1,14 @@
-import ActionType from "../../enums/ActionType";
-import DamageElementType from "../../enums/Damage/DamageElementType";
-import DamageSourceType from "../../enums/Damage/DamageSourceType";
+import ActionType from "../../enums/Encounter/ActionType";
+import DamageElementType from "../../enums/Encounter/Damage/DamageElementType";
+import DamageSourceType from "../../enums/Encounter/Damage/DamageSourceType";
 import {ActionEntity, ActionEntityInitializer} from "./index";
 
 export default class DamageActionEntity extends ActionEntity {
-
+  
   public direct: boolean;
   public source_type: DamageSourceType;
   public element_type: DamageElementType;
-
+  
   constructor(initializer: DamageActionEntityInitializer) {
     super(ActionType.DAMAGE, initializer);
 

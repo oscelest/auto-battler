@@ -36,12 +36,13 @@ export default class Log {
     delete this.log_handle_collection[source.id];
   }
   
-  public writeEntry(key: string, message: string) {
-    if (!this.log_handle_collection[key]) {
-      throw new Error(`Attempting to write entry to log with "${key}", but it doesn't exist.`);
+  public writeEntry(source: Source, message: string) {
+    if (!this.log_handle_collection[source.id]) {
+      console.log(source);
+      throw new Error(`Attempting to write entry to log from source with ID "${source.id}", but it doesn't exist.`);
     }
     
-    this.log_handle_collection[key].push(message);
+    this.log_handle_collection[source.id].push(message);
   }
 }
 

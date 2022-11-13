@@ -1,4 +1,4 @@
-import TriggerType from "../../enums/StatusEffect/TriggerType";
+import TriggerType from "../../enums/Encounter/Effect/TriggerType";
 import {OperationEntity} from "../Operation";
 
 export default abstract class TriggerEntity {

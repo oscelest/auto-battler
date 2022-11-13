@@ -1,4 +1,4 @@
-import ActionType from "../../enums/ActionType";
+import ActionType from "../../enums/Encounter/ActionType";
 import {ModifierEntity} from "../Modifier";
 
 export default abstract class ActionEntity {

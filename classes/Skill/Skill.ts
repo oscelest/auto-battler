@@ -1,7 +1,7 @@
 import {ModifierEntity, SkillEntity} from "../../entities";
 import {SkillEventType} from "../../enums";
-import SkillType from "../../enums/SkillType";
-import SourceType from "../../enums/SourceType";
+import SkillType from "../../enums/Encounter/SkillType";
+import SourceType from "../../enums/Encounter/SourceType";
 import Operation from "../../modules/Operation";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";

@@ -1,6 +1,6 @@
 import PeriodicTriggerEntity from "../../entities/Trigger/PeriodicTriggerEntity";
 import {EffectEventType, EncounterEventType} from "../../enums";
-import SourceType from "../../enums/SourceType";
+import SourceType from "../../enums/Encounter/SourceType";
 import Operation from "../../modules/Operation";
 import {Encounter} from "../Battle";
 import Source from "../Source";

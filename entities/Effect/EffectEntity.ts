@@ -1,4 +1,4 @@
-import EffectAlignment from "../../enums/StatusEffect/StatusEffectAlignment";
+import EffectAlignmentType from "../../enums/Encounter/Effect/EffectAlignmentType";
 import {ModifierEntity} from "../Modifier";
 import {TriggerEntity} from "../Trigger";
 
@@ -7,7 +7,7 @@ export default class EffectEntity {
   public name: string;
   public expires: boolean;
   public removable: boolean;
-  public alignment: EffectAlignment;
+  public alignment: EffectAlignmentType;
 
   public modifier_list: ModifierEntity[];
   public trigger_list: TriggerEntity[];
@@ -27,8 +27,8 @@ export interface EffectEntityInitializer {
   name: string;
   expires: boolean;
   removable: boolean;
-  alignment: EffectAlignment;
-
+  alignment: EffectAlignmentType;
+  
   modifier_list?: ModifierEntity[];
   trigger_list?: TriggerEntity[];
 }

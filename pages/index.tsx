@@ -20,14 +20,14 @@ import {
 } from "../entities";
 import {PeriodicTriggerEntity} from "../entities/Trigger";
 import {EncounterEventType} from "../enums";
-import DamageElementType from "../enums/Damage/DamageElementType";
-import DamageSourceType from "../enums/Damage/DamageSourceType";
-import EncounterStateType from "../enums/EncounterStateType";
-import ModifierCategoryType from "../enums/Modifier/ModifierCategoryType";
-import ModifierNumericalType from "../enums/Modifier/ModifierNumericalType";
-import StatusEffectAlignment from "../enums/StatusEffect/StatusEffectAlignment";
-import TargetType from "../enums/TargetType";
-import UnitAttributeType from "../enums/Unit/UnitAttributeType";
+import DamageElementType from "../enums/Encounter/Damage/DamageElementType";
+import DamageSourceType from "../enums/Encounter/Damage/DamageSourceType";
+import EffectAlignmentType from "../enums/Encounter/Effect/EffectAlignmentType";
+import EncounterStateType from "../enums/Encounter/EncounterStateType";
+import ModifierCategoryType from "../enums/Encounter/Modifier/ModifierCategoryType";
+import ModifierNumericalType from "../enums/Encounter/Modifier/ModifierNumericalType";
+import TargetType from "../enums/Encounter/TargetType";
+import UnitAttributeType from "../enums/Encounter/Unit/UnitAttributeType";
 import {i18n} from "../next-i18next.config";
 import Style from "./index.module.scss";
 
@@ -158,7 +158,7 @@ function generatePlayerUnit() {
                 name: "Damage over Time",
                 expires: true,
                 removable: true,
-                alignment: StatusEffectAlignment.NEGATIVE,
+                alignment: EffectAlignmentType.NEGATIVE,
                 modifier_list: [
                   new NumericalModifierEntity({value: 2000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.EFFECT_DURATION})
                 ],
@@ -217,7 +217,7 @@ function generatePlayerUnit() {
                 name: "Empowerment",
                 expires: true,
                 removable: true,
-                alignment: StatusEffectAlignment.POSITIVE,
+                alignment: EffectAlignmentType.POSITIVE,
                 modifier_list: [
                   new NumericalModifierEntity({value: 5000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.EFFECT_DURATION}),
                   new NumericalModifierEntity({value: 0.5, numerical_type: ModifierNumericalType.ADDITIVE, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER})

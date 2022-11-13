@@ -1,6 +1,6 @@
 enum UnitAlignmentType {
-  PLAYER = 0,
-  ENEMY  = 1,
+  PLAYER = "player",
+  ENEMY  = "enemy",
 }
 
 export default UnitAlignmentType;

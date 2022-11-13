@@ -1,6 +1,6 @@
 import TriggerEntity from "../../entities/Trigger/TriggerEntity";
-import TriggerEventType from "../../enums/Event/TriggerEventType";
-import TriggerType from "../../enums/StatusEffect/TriggerType";
+import TriggerType from "../../enums/Encounter/Effect/TriggerType";
+import TriggerEventType from "../../enums/Encounter/Event/TriggerEventType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import {Effect} from "../Effect";
@@ -9,7 +9,7 @@ import {ExpirationStatusEffectTrigger, PeriodicStatusEffectTrigger} from "./inde
 import {PeriodicStatusEffectTriggerInitializer} from "./PeriodicTrigger";
 
 export default abstract class Trigger<Entity extends TriggerEntity = TriggerEntity, Event extends TriggerEvent = TriggerEvent> extends EntityEventElement<Entity, Event> {
-
+  
   public effect: Effect;
 
   protected constructor(initializer: TriggerInitializer<Entity>) {

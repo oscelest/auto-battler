@@ -1,8 +1,8 @@
 import {EffectEntity, ModifierEntity} from "../../entities";
 import {TriggerEntity} from "../../entities/Trigger";
 import {EffectEventType, EncounterEventType, UnitEventType} from "../../enums";
-import EffectExpirationType from "../../enums/StatusEffect/EffectExpirationType";
-import StatusEffectAlignment from "../../enums/StatusEffect/StatusEffectAlignment";
+import EffectAlignmentType from "../../enums/Encounter/Effect/EffectAlignmentType";
+import EffectExpirationType from "../../enums/Encounter/Effect/EffectExpirationType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import Encounter from "../Battle/Encounter";
@@ -57,9 +57,9 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
         return result;
       },
       {
-        [StatusEffectAlignment.POSITIVE]: [] as Effect[],
-        [StatusEffectAlignment.NEUTRAL]: [] as Effect[],
-        [StatusEffectAlignment.NEGATIVE]: [] as Effect[]
+        [EffectAlignmentType.POSITIVE]: [] as Effect[],
+        [EffectAlignmentType.NEUTRAL]: [] as Effect[],
+        [EffectAlignmentType.NEGATIVE]: [] as Effect[]
       }
     );
   }

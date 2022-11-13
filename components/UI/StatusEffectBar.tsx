@@ -1,6 +1,6 @@
 import React, {HTMLAttributes} from "react";
 import {Effect} from "../../classes";
-import StatusEffectAlignment from "../../enums/StatusEffect/StatusEffectAlignment";
+import EffectAlignmentType from "../../enums/Encounter/Effect/EffectAlignmentType";
 import Countdown from "./Countdown";
 import Style from "./StatusEffectBar.module.scss";
 
@@ -11,16 +11,16 @@ function StatusEffectBar(props: StatusEffectBarProps) {
 
   const classes = [Style.Component];
   if (className) classes.push(className);
-
-  if (!collection[StatusEffectAlignment.NEUTRAL].length && !collection[StatusEffectAlignment.NEGATIVE].length && !collection[StatusEffectAlignment.POSITIVE].length) {
+  
+  if (!collection[EffectAlignmentType.NEUTRAL].length && !collection[EffectAlignmentType.NEGATIVE].length && !collection[EffectAlignmentType.POSITIVE].length) {
     return null;
   }
 
   return (
     <div {...component_props} className={classes.join(" ")}>
-      {renderList(collection[StatusEffectAlignment.NEUTRAL])}
-      {renderList(collection[StatusEffectAlignment.NEGATIVE])}
-      {renderList(collection[StatusEffectAlignment.POSITIVE])}
+      {renderList(collection[EffectAlignmentType.NEUTRAL])}
+      {renderList(collection[EffectAlignmentType.NEGATIVE])}
+      {renderList(collection[EffectAlignmentType.POSITIVE])}
     </div>
   );
 

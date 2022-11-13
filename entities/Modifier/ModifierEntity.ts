@@ -1,14 +1,14 @@
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
-import ModifierType from "../../enums/Modifier/ModifierType";
+import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
+import ModifierType from "../../enums/Encounter/Modifier/ModifierType";
 
 export default abstract class ModifierEntity {
-
+  
   public type: ModifierType;
-
+  
   public value: number;
   public value_per_level: number;
   public category: ModifierCategoryType;
-
+  
   protected constructor(type: ModifierType, initializer: ModifierEntityInitializer) {
     this.type = type;
 

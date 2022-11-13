@@ -1,8 +1,8 @@
 enum UnitEventType {
   KILL                 = "kill",
   KILLED               = "killed",
-  REVIVING             = "reviving",
-  REVIVED              = "revived",
+  REVIVE_APPLIED       = "reviving",
+  REVIVE_RECEIVED      = "revived",
   DAMAGE_APPLIED       = "damage_applied",
   DAMAGE_RECEIVED      = "damage_received",
   HEALING_APPLIED      = "healing_applied",

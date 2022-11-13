@@ -1,12 +1,12 @@
 import {EffectEntity, ModifierEntity, UnitEntity} from "../../entities";
 import {EncounterEventType} from "../../enums";
-import DamageElementType from "../../enums/Damage/DamageElementType";
-import DamageSourceType from "../../enums/Damage/DamageSourceType";
-import EncounterStateType from "../../enums/EncounterStateType";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
-import SourceType from "../../enums/SourceType";
-import TargetType from "../../enums/TargetType";
-import UnitAlignmentType from "../../enums/Unit/UnitAlignmentType";
+import DamageElementType from "../../enums/Encounter/Damage/DamageElementType";
+import DamageSourceType from "../../enums/Encounter/Damage/DamageSourceType";
+import EncounterStateType from "../../enums/Encounter/EncounterStateType";
+import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
+import SourceType from "../../enums/Encounter/SourceType";
+import TargetType from "../../enums/Encounter/TargetType";
+import UnitAlignmentType from "../../enums/Encounter/Unit/UnitAlignmentType";
 import Modifier from "../../modules/Modifier";
 import EventElement, {EventElementInitializer} from "../Base/EventElement";
 import {Effect} from "../Effect";
@@ -88,19 +88,19 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
   }
   
   public applyDamageTo(target_unit: Unit, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean, source: Source = this.source) {
-    return target_unit.receiveDamageFrom(source, pre_mitigation_value, damage_source, damage_element, direct);
+    target_unit.receiveDamageFrom(source, pre_mitigation_value, damage_source, damage_element, direct);
   }
   
   public applyHealingTo(target_unit: Unit, pre_mitigation_value: number, reviving: boolean, source: Source = this.source) {
-    return target_unit.receiveHealingFrom(source, pre_mitigation_value, reviving);
+    target_unit.receiveHealingFrom(source, pre_mitigation_value, reviving);
   }
   
   public applyComboPointTo(target_unit: Unit, pre_mitigation_value: number, chainable: boolean, source: Source = this.source) {
-    return target_unit.receiveComboPointFrom(source, pre_mitigation_value, chainable);
+    target_unit.receiveComboPointFrom(source, pre_mitigation_value, chainable);
   }
   
   public applyEffectTo(target_unit: Unit, entity: EffectEntity, duration: number, source: Source) {
-    target_unit.applyEffectFrom(source, new Effect({entity, unit: target_unit, duration, source}));
+    target_unit.receiveEffectFrom(source, new Effect({entity, unit: target_unit, duration, source}));
   }
   
   public getTargetList(type: TargetType, modifier_list: ModifierEntity[], self_unit: Unit, source: Source): Unit[] {

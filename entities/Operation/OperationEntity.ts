@@ -1,4 +1,4 @@
-import TargetType from "../../enums/TargetType";
+import TargetType from "../../enums/Encounter/TargetType";
 import {ActionEntity} from "../Action";
 import {EffectEntity} from "../Effect";
 import {ModifierEntity} from "../Modifier";

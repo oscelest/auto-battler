@@ -1,7 +1,7 @@
-enum StatusEffectAlignment {
+enum EffectAlignmentType {
   POSITIVE = "positive",
   NEGATIVE = "negative",
   NEUTRAL  = "neutral",
 }
 
-export default StatusEffectAlignment;
+export default EffectAlignmentType;

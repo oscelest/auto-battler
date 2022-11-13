@@ -1,4 +1,4 @@
-import SkillType from "../../enums/SkillType";
+import SkillType from "../../enums/Encounter/SkillType";
 import {ModifierEntity} from "../Modifier";
 import {OperationEntity} from "../Operation";
 

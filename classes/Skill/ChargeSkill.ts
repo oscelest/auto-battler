@@ -12,7 +12,7 @@ export default class ChargeSkill extends Skill<ChargeSkillEntity> {
     this.charge_current = initializer.charge_current ?? 0;
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
     this.unit.on(UnitEventType.KILLED, this.onUnitKilled);
-    this.unit.on(UnitEventType.REVIVED, this.onUnitRevived);
+    this.unit.on(UnitEventType.REVIVE_RECEIVED, this.onUnitRevived);
   }
 
   private onEncounterProgress = () => {

@@ -1,5 +1,5 @@
 import {v4} from "uuid";
-import SourceType from "../enums/SourceType";
+import SourceType from "../enums/Encounter/SourceType";
 import {Encounter} from "./Battle";
 import {Effect} from "./Effect";
 import {Skill} from "./Skill";

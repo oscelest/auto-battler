@@ -1,8 +1,10 @@
+import HumanizeDuration from "humanize-duration";
 import {EffectEntity, ModifierEntity} from "../../entities";
 import {TriggerEntity} from "../../entities/Trigger";
 import {EffectEventType, EncounterEventType, UnitEventType} from "../../enums";
 import EffectAlignmentType from "../../enums/Encounter/Effect/EffectAlignmentType";
 import EffectExpirationType from "../../enums/Encounter/Effect/EffectExpirationType";
+import SourceType from "../../enums/Encounter/SourceType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import {Encounter} from "../Encounter";
@@ -16,21 +18,28 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
   
   public duration: number;
   public duration_elapsed: number;
-
+  
+  public readonly reference: Source<SourceType.EFFECT>;
   public readonly source: Source;
   public readonly unit: Unit;
   public readonly trigger_list: Trigger[];
-
+  
   constructor(initializer: EffectInitializer<Entity>) {
     super(initializer);
-  
+    
     this.duration = initializer.duration ?? 0;
     this.duration_elapsed = initializer.duration_elapsed ?? 0;
-  
+    
+    this.reference = new Source({type: SourceType.EFFECT, value: this});
     this.source = initializer.source;
     this.unit = initializer.unit;
-    this.trigger_list = initializer.trigger_list?.map(entity => Trigger.instantiate(entity instanceof TriggerEntity ? {entity, effect: this} : entity)) ?? [];
-  
+    this.trigger_list = (initializer.trigger_list ?? initializer.entity.trigger_list)?.map(entity => Trigger.instantiate(entity instanceof TriggerEntity ? {entity, effect: this} : entity)) ?? [];
+    
+    console.log(this.reference);
+    this.unit.encounter.log.writeBegin(this.reference);
+    this.unit.encounter.log.writeEntry(this.reference, `<---- ${this} expired from ${this.unit} after ${HumanizeDuration(this.duration)} ---->`);
+    
+    this.on(EffectEventType.EXPIRE, this.onExpire);
     this.unit.on(UnitEventType.KILLED, this.onUnitDeath);
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
   }
@@ -49,7 +58,7 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
       {} as {[key: string]: Effect[]}
     );
   }
-
+  
   public static getStatusEffectAlignmentCollection(list: Effect[] = []) {
     return list.reduce(
       (result, value) => {
@@ -63,28 +72,35 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
       }
     );
   }
-
+  
   public toString() {
     return this.entity.name;
   }
-
-  private onUnitDeath = ({target_unit}: UnitKillEvent) => {
-    this.unit.off(UnitEventType.KILLED, this.onUnitDeath);
   
-    for (let i = target_unit.effect_list.length; i >= 0; i--) {
-      if (this === target_unit.effect_list[i]) {
-        target_unit.effect_list.splice(i, 1);
+  private onExpire = (event: EffectExpireEvent) => {
+    this.off(EffectEventType.EXPIRE, this.onExpire);
+    
+    for (let i = this.unit.effect_list.length - 1; i >= 0; i--) {
+      if (this.id === this.unit.effect_list[i].id) {
+        this.unit.effect_list.splice(i, 1);
       }
     }
+    
+    this.unit.encounter.log.writeEntry(this.reference, `<---- ${this} expired from ${this.unit} after ${HumanizeDuration(this.duration)} ---->`);
+    this.unit.encounter.log.writeFinish(this.reference);
+  };
+  
+  private onUnitDeath = (event: UnitKillEvent) => {
+    this.unit.off(UnitEventType.KILLED, this.onUnitDeath);
+    
     this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DEATH});
   };
-
+  
   private onEncounterProgress = () => {
     this.duration_elapsed += Encounter.tick_interval;
-
+    
     if (!this.entity.expires) return;
-    this.duration -= Encounter.tick_interval;
-    if (this.duration <= 0) {
+    if (this.duration <= this.duration_elapsed) {
       this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DURATION});
     }
   };
@@ -93,7 +109,7 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
 export interface EffectInitializer<Entity extends EffectEntity = EffectEntity> extends EntityEventElementInitializer<Entity> {
   duration?: number;
   duration_elapsed?: number;
-
+  
   source: Source;
   unit: Unit;
   trigger_list?: (TriggerEntity | TriggerInitializer)[];

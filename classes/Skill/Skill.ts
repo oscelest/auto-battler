@@ -1,7 +1,9 @@
 import {ModifierEntity, SkillEntity} from "../../entities";
 import {SkillEventType} from "../../enums";
+import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
 import SkillType from "../../enums/Encounter/SkillType";
 import SourceType from "../../enums/Encounter/SourceType";
+import Modifier from "../../modules/Modifier";
 import Operation from "../../modules/Operation";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
@@ -11,12 +13,12 @@ import {ChargeSkillInitializer} from "./ChargeSkill";
 import {ComboSkillInitializer} from "./ComboSkill";
 import {ChargeSkill, ComboSkill} from "./index";
 
-export default abstract class Skill<Entity extends SkillEntity = SkillEntity> extends EntityEventElement<Entity, SkillEventHandler> {
+export default abstract class Skill extends EntityEventElement<SkillEntity, SkillEventHandler> {
   
   public readonly unit: Unit;
   public readonly source: Source<SourceType.SKILL>;
   
-  protected constructor(initializer: SkillInitializer<Entity>) {
+  protected constructor(initializer: SkillInitializer) {
     super(initializer);
     this.unit = initializer.unit;
     this.source = new Source({type: SourceType.SKILL, value: this});
@@ -27,6 +29,16 @@ export default abstract class Skill<Entity extends SkillEntity = SkillEntity> ex
   public get modifier_list(): ModifierEntity[] {
     return [...this.entity.modifier_list];
   }
+  
+  private static onSkillUse = ({skill}: SkillUseEvent) => {
+    skill.unit.encounter.log.writeBegin(skill.source);
+    skill.unit.encounter.log.writeEntry(skill.source, `<---- ${skill.unit} used ${skill} ---->`);
+    for (let operation of skill.entity.operation_list) {
+      Operation.execute(operation, skill.unit, skill.source);
+    }
+    skill.unit.encounter.log.writeEntry(skill.source, `<---- ${skill.unit} used ${skill} ---->`);
+    skill.unit.encounter.log.writeFinish(skill.source);
+  };
   
   public static instantiate<T extends SkillEntity | SkillInitializer>(initializer: SkillInitializer) {
     switch (initializer.entity.type) {
@@ -41,17 +53,13 @@ export default abstract class Skill<Entity extends SkillEntity = SkillEntity> ex
     return this.entity.name;
   }
   
-  private static onSkillUse = ({skill}: SkillUseEvent) => {
-    skill.unit.encounter.log.writeBegin(skill.source);
-    for (let operation of skill.entity.operation_list) {
-      Operation.execute(operation, skill.unit, skill.source);
-    }
-    skill.unit.encounter.log.writeFinish(skill.source);
-  };
+  public getCategoryValue(category: ModifierCategoryType, unit: Unit = this.unit) {
+    return Modifier.getCategoryValue(category, [...this.modifier_list, ...unit.modifier_list], unit);
+  }
   
 }
 
-export interface SkillInitializer<Entity extends SkillEntity = SkillEntity> extends EntityEventElementInitializer<Entity> {
+export interface SkillInitializer extends EntityEventElementInitializer<SkillEntity> {
   unit: Unit;
 }
 

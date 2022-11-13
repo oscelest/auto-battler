@@ -1,6 +1,6 @@
 import TriggerEntity from "../../entities/Trigger/TriggerEntity";
-import TriggerType from "../../enums/Encounter/Effect/TriggerType";
 import TriggerEventType from "../../enums/Encounter/Event/TriggerEventType";
+import TriggerType from "../../enums/Encounter/TriggerType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import {Effect} from "../Effect";

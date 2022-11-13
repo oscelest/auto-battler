@@ -9,6 +9,8 @@ enum UnitEventType {
   HEALING_RECEIVED     = "healing_received",
   COMBO_POINT_APPLIED  = "combo_point_applied",
   COMBO_POINT_RECEIVED = "combo_point_received",
+  EFFECT_APPLIED       = "effect_applied",
+  EFFECT_RECEIVED      = "effect_received",
 }
 
 export default UnitEventType;

@@ -1,4 +1,4 @@
-import TriggerType from "../../enums/Encounter/Effect/TriggerType";
+import TriggerType from "../../enums/Encounter/TriggerType";
 import {ModifierEntity} from "../Modifier";
 import TriggerEntity, {StatusEffectTriggerEntityInitializer} from "./TriggerEntity";
 

@@ -1,5 +1,6 @@
 import React, {HTMLAttributes} from "react";
 import {ChargeSkill, ComboSkill, Skill, Unit} from "../../classes";
+import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
 import SkillType from "../../enums/Encounter/SkillType";
 import UnitAttributeType from "../../enums/Encounter/Unit/UnitAttributeType";
 import ComboBar from "../UI/ComboBar";
@@ -37,17 +38,20 @@ function UnitPortrait(props: UnitPortraitProps) {
         const charge_background = "linear-gradient(to bottom, #00b4db, #0083b0)";
         return <ProgressBar key={index} className={Style.ChargeBar} percent={percentage}
                             background={charge_background} column_left={skill.entity.name} column_right={`${percentage.toFixed(0)}%`}/>;
+  
       case SkillType.COMBO:
         // TODO: This is not the real min and max combo
-        const {combo_point_current, entity: {combo_base}} = skill as ComboSkill;
+        const {combo_point_current} = skill as ComboSkill;
+        const combo_point_max = skill.getCategoryValue(ModifierCategoryType.COMBO_POINT_MAX);
         const combo_background = "linear-gradient(to top, #f12711, #f5af19)";
-        return <ComboBar key={index} className={Style.ComboBar} current={combo_point_current} max={combo_base}
-                         background={combo_background} column_left={skill.entity.name} column_right={`${combo_point_current} / ${combo_base}`}/>;
+        return <ComboBar key={index} className={Style.ComboBar} current={combo_point_current} max={combo_point_max}
+                         background={combo_background} column_left={skill.entity.name} column_right={`${combo_point_current} / ${combo_point_max}`}/>;
     }
   }
 
   function getChargePercentage(skill: ChargeSkill) {
-    return Math.min(Math.max(skill.charge_current / skill.entity.charge_base * 100, 0), 100);
+    const charge_max = skill.getCategoryValue(ModifierCategoryType.CHARGE_SKILL_MAX);
+    return Math.min(Math.max(skill.charge_current / charge_max * 100, 0), 100);
   }
 
 }

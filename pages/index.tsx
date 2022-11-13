@@ -6,18 +6,18 @@ import {Encounter} from "../classes";
 import {EncounterProgressEvent} from "../classes/Encounter/Encounter";
 import BattleScene from "../components/Scene/BattleScene";
 import {
-  ChargeSkillEntity,
   ComboPointActionEntity,
-  ComboSkillEntity,
   DamageActionEntity,
   EffectEntity,
   HealActionEntity,
   NumericalModifierEntity,
   OperationEntity,
   ScalingModifierEntity,
+  SkillEntity,
   UnitClassEntity,
   UnitEntity
 } from "../entities";
+import EffectActionEntity from "../entities/Action/EffectActionEntity";
 import {PeriodicTriggerEntity} from "../entities/Trigger";
 import {EncounterEventType} from "../enums";
 import DamageElementType from "../enums/Encounter/Damage/DamageElementType";
@@ -26,6 +26,7 @@ import EffectAlignmentType from "../enums/Encounter/Effect/EffectAlignmentType";
 import EncounterStateType from "../enums/Encounter/EncounterStateType";
 import ModifierCategoryType from "../enums/Encounter/Modifier/ModifierCategoryType";
 import ModifierNumericalType from "../enums/Encounter/Modifier/ModifierNumericalType";
+import SkillType from "../enums/Encounter/SkillType";
 import TargetType from "../enums/Encounter/TargetType";
 import UnitAttributeType from "../enums/Encounter/Unit/UnitAttributeType";
 import {i18n} from "../next-i18next.config";
@@ -130,9 +131,12 @@ function generatePlayerUnit() {
       ]
     }),
     skill_list: [
-      new ChargeSkillEntity({
+      new SkillEntity({
         name: "Attack",
-        charge_base: 4000,
+        type: SkillType.CHARGE,
+        modifier_list: [
+          new NumericalModifierEntity({value: 4000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.CHARGE_SKILL_MAX})
+        ],
         operation_list: [
           new OperationEntity({
             target: TargetType.SELF,
@@ -151,46 +155,50 @@ function generatePlayerUnit() {
                 modifier_list: [
                   new ScalingModifierEntity({value: 0.5, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
                 ]
-              })
-            ],
-            effect_list: [
-              new EffectEntity({
-                name: "Damage over Time",
-                expires: true,
-                removable: true,
-                alignment: EffectAlignmentType.NEGATIVE,
+              }),
+              new EffectActionEntity({
                 modifier_list: [
                   new NumericalModifierEntity({value: 2000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.EFFECT_DURATION})
                 ],
-                trigger_list: [
-                  new PeriodicTriggerEntity({
-                    interval: 1000 / 20,
-                    operation_list: [
-                      new OperationEntity({
-                        target: TargetType.SELF,
-                        action_list: [
-                          new DamageActionEntity({
-                            direct: false,
-                            source_type: DamageSourceType.ATTACK,
-                            element_type: DamageElementType.PHYSICAL,
-                            modifier_list: [
-                              new NumericalModifierEntity({value: 1 / 20, numerical_type: ModifierNumericalType.MULTIPLICATIVE, category: ModifierCategoryType.DAMAGE}),
-                              new NumericalModifierEntity({value: 20, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.DAMAGE})
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  })
-                ]
+                effect: new EffectEntity({
+                  name: "Damage over Time",
+                  expires: true,
+                  removable: true,
+                  alignment: EffectAlignmentType.NEGATIVE,
+                  modifier_list: [],
+                  trigger_list: [
+                    new PeriodicTriggerEntity({
+                      interval: 1000 / 20,
+                      operation_list: [
+                        new OperationEntity({
+                          target: TargetType.SELF,
+                          action_list: [
+                            new DamageActionEntity({
+                              direct: false,
+                              source_type: DamageSourceType.ATTACK,
+                              element_type: DamageElementType.PHYSICAL,
+                              modifier_list: [
+                                new NumericalModifierEntity({value: 1 / 20, numerical_type: ModifierNumericalType.MULTIPLICATIVE, category: ModifierCategoryType.DAMAGE}),
+                                new NumericalModifierEntity({value: 20, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.DAMAGE})
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                })
               })
             ]
           })
         ]
       }),
-      new ChargeSkillEntity({
+      new SkillEntity({
         name: "Heal",
-        charge_base: 6500,
+        type: SkillType.CHARGE,
+        modifier_list: [
+          new NumericalModifierEntity({value: 6500, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.CHARGE_SKILL_MAX})
+        ],
         operation_list: [
           new OperationEntity({
             description: "Heals self",
@@ -205,31 +213,41 @@ function generatePlayerUnit() {
           })
         ]
       }),
-      new ChargeSkillEntity({
+      new SkillEntity({
         name: "Empower",
-        charge_base: 2500,
+        type: SkillType.CHARGE,
+        modifier_list: [
+          new NumericalModifierEntity({value: 2500, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.CHARGE_SKILL_MAX})
+        ],
         operation_list: [
           new OperationEntity({
             description: "Buffs self with Empowerment",
             target: TargetType.SELF,
-            effect_list: [
-              new EffectEntity({
-                name: "Empowerment",
-                expires: true,
-                removable: true,
-                alignment: EffectAlignmentType.POSITIVE,
+            action_list: [
+              new EffectActionEntity({
                 modifier_list: [
-                  new NumericalModifierEntity({value: 5000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.EFFECT_DURATION}),
-                  new NumericalModifierEntity({value: 0.5, numerical_type: ModifierNumericalType.ADDITIVE, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER})
-                ]
+                  new NumericalModifierEntity({value: 5000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.EFFECT_DURATION})
+                ],
+                effect: new EffectEntity({
+                  name: "Empowerment",
+                  expires: true,
+                  removable: true,
+                  alignment: EffectAlignmentType.POSITIVE,
+                  modifier_list: [
+                    new NumericalModifierEntity({value: 0.5, numerical_type: ModifierNumericalType.ADDITIVE, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER})
+                  ]
+                })
               })
             ]
           })
         ]
       }),
-      new ComboSkillEntity({
+      new SkillEntity({
         name: "Finisher",
-        combo_base: 5,
+        type: SkillType.COMBO,
+        modifier_list: [
+          new NumericalModifierEntity({value: 5, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.COMBO_POINT_MAX})
+        ],
         operation_list: [
           new OperationEntity({
             description: "Consumes all combo points to deal massive area damage",
@@ -240,6 +258,7 @@ function generatePlayerUnit() {
                 source_type: DamageSourceType.ATTACK,
                 element_type: DamageElementType.PHYSICAL,
                 modifier_list: [
+                  new NumericalModifierEntity({value: 0.5, numerical_type: ModifierNumericalType.ADDITIVE, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER}),
                   new ScalingModifierEntity({value: 1, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
                 ]
               })
@@ -265,9 +284,12 @@ function generateEnemyUnit() {
       ]
     }),
     skill_list: [
-      new ChargeSkillEntity({
+      new SkillEntity({
         name: "Attack",
-        charge_base: 3000,
+        type: SkillType.CHARGE,
+        modifier_list: [
+          new NumericalModifierEntity({value: 3000, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.CHARGE_SKILL_MAX})
+        ],
         operation_list: [
           new OperationEntity({
             description: "A simple attack inflicting a damage over time effect and adding a combo point.",

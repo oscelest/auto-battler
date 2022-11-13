@@ -37,10 +37,11 @@ function StatusEffectBar(props: StatusEffectBarProps) {
 
   function renderStatusEffectIcon(list: Effect[], index: number = 0) {
     if (list.length === 1) {
-      const status_effect = list[0];
+      const effect = list[0];
+      const remaining_duration = effect.duration - effect.duration_elapsed;
       return (
         <div key={index} className={Style.StatusEffect}>
-          <Countdown className={Style.Countdown} duration={status_effect.duration ?? 0}>
+          <Countdown className={Style.Countdown} duration={remaining_duration}>
             <div className={Style.Icon}>
               ⚔
             </div>

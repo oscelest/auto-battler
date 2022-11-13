@@ -1,7 +1,6 @@
 import {Unit} from "../classes";
 import Source from "../classes/Source/Source";
-import {EffectEntity, ModifierEntity, OperationEntity} from "../entities";
-import ModifierCategoryType from "../enums/Encounter/Modifier/ModifierCategoryType";
+import {ModifierEntity, OperationEntity} from "../entities";
 import SourceType from "../enums/Encounter/SourceType";
 import TargetType from "../enums/Encounter/TargetType";
 import Action from "./Action";
@@ -12,35 +11,9 @@ module Operation {
   export function execute(operation: OperationEntity, self_unit: Unit, source: Source) {
     const target_list = getTargetList(source, operation.target, operation.modifier_list, self_unit);
     for (let target_unit of target_list) {
-      for (let effect of operation.effect_list) {
-        executeEffect(effect, target_unit, source);
-      }
       for (let action of operation.action_list) {
         Action.execute(action, target_unit, source);
       }
-    }
-  }
-  
-  export function executeEffect(effect: EffectEntity, target_unit: Unit, source: Source) {
-    const modifier_list = Modifier.populateModifierList(source, effect.modifier_list);
-    
-    const duration = Modifier.getCategoryValue(ModifierCategoryType.EFFECT_DURATION, modifier_list, source.unit);
-    applyEffect(source, target_unit, effect, duration);
-  }
-  
-  export function applyEffect(source: Source, target_unit: Unit, effect: EffectEntity, duration: number) {
-    switch (source.type) {
-      case SourceType.UNIT:
-        if (!source.unit) throw new Error();
-        return source.unit.applyEffectTo(target_unit, effect, duration, source);
-      
-      case SourceType.SKILL:
-        if (!source.skill) throw new Error();
-        return source.skill.unit.applyEffectTo(target_unit, effect, duration, source);
-      
-      case SourceType.ENCOUNTER:
-        if (!source.encounter) throw new Error();
-        return source.encounter.applyEffectTo(target_unit, effect, duration, source);
     }
   }
   

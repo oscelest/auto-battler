@@ -38,7 +38,6 @@ export default class Log {
   
   public writeEntry(source: Source, message: string) {
     if (!this.log_handle_collection[source.id]) {
-      console.log(source);
       throw new Error(`Attempting to write entry to log from source with ID "${source.id}", but it doesn't exist.`);
     }
     

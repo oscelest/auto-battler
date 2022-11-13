@@ -1,7 +1,7 @@
 import React from "react";
 import {Effect} from "../../classes";
 import Countdown from "../UI/Countdown";
-import Style from "./StatusEffectIcon.module.scss";
+import Style from "./EffectIcon.module.scss";
 
 function EffectIcon(props: EffectIconProps) {
   const {status_effect} = props;

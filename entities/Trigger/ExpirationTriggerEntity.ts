@@ -1,5 +1,5 @@
 import EffectExpirationType from "../../enums/Encounter/Effect/EffectExpirationType";
-import TriggerType from "../../enums/Encounter/Effect/TriggerType";
+import TriggerType from "../../enums/Encounter/TriggerType";
 import TriggerEntity, {StatusEffectTriggerEntityInitializer} from "./TriggerEntity";
 
 export default class ExpirationTriggerEntity extends TriggerEntity {

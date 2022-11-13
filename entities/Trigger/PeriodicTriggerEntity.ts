@@ -1,4 +1,4 @@
-import TriggerType from "../../enums/Encounter/Effect/TriggerType";
+import TriggerType from "../../enums/Encounter/TriggerType";
 import TriggerEntity, {StatusEffectTriggerEntityInitializer} from "./TriggerEntity";
 
 export default class PeriodicTriggerEntity extends TriggerEntity {

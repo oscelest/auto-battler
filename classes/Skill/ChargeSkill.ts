@@ -1,6 +1,6 @@
 import {ChargeSkillEntity} from "../../entities";
 import {EncounterEventType, SkillEventType, UnitEventType} from "../../enums";
-import {Encounter} from "../Battle";
+import {Encounter} from "../Encounter";
 import Skill, {SkillInitializer} from "./Skill";
 
 export default class ChargeSkill extends Skill<ChargeSkillEntity> {

@@ -5,15 +5,15 @@ import EffectAlignmentType from "../../enums/Encounter/Effect/EffectAlignmentTyp
 import EffectExpirationType from "../../enums/Encounter/Effect/EffectExpirationType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
-import Encounter from "../Battle/Encounter";
-import Source from "../Source";
+import Encounter from "../Encounter/Encounter";
+import Source from "../Source/Source";
 import {Trigger} from "../Trigger";
 import {TriggerInitializer} from "../Trigger/Trigger";
 import {Unit} from "../Unit";
 import {UnitKillEvent} from "../Unit/Unit";
 
 export default class Effect<Entity extends EffectEntity = EffectEntity> extends EntityEventElement<Entity, EffectEventHandler> {
-
+  
   public duration: number;
   public duration_elapsed: number;
 

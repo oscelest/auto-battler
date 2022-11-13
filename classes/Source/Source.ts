@@ -1,9 +1,9 @@
 import {v4} from "uuid";
-import SourceType from "../enums/Encounter/SourceType";
-import {Encounter} from "./Battle";
-import {Effect} from "./Effect";
-import {Skill} from "./Skill";
-import {Unit} from "./Unit";
+import SourceType from "../../enums/Encounter/SourceType";
+import {Effect} from "../Effect";
+import {Encounter} from "../Encounter";
+import {Skill} from "../Skill";
+import {Unit} from "../Unit";
 
 export default class Source<Type extends keyof SourceMap = SourceType> {
   

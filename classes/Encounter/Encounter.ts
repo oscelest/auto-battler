@@ -12,7 +12,7 @@ import EventElement, {EventElementInitializer} from "../Base/EventElement";
 import {Effect} from "../Effect";
 import {Log} from "../Log";
 import {LogInitializer} from "../Log/Log";
-import Source from "../Source";
+import Source from "../Source/Source";
 import {Unit} from "../Unit";
 import {UnitInitializer} from "../Unit/Unit";
 

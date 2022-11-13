@@ -5,7 +5,7 @@ import SourceType from "../../enums/Encounter/SourceType";
 import Operation from "../../modules/Operation";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
-import Source from "../Source";
+import Source from "../Source/Source";
 import {Unit} from "../Unit";
 import {ChargeSkillInitializer} from "./ChargeSkill";
 import {ComboSkillInitializer} from "./ComboSkill";

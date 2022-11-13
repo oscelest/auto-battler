@@ -1,5 +1,5 @@
 import {Unit} from "../classes";
-import Source from "../classes/Source";
+import Source from "../classes/Source/Source";
 import {EffectEntity, ModifierEntity, OperationEntity} from "../entities";
 import ModifierCategoryType from "../enums/Encounter/Modifier/ModifierCategoryType";
 import SourceType from "../enums/Encounter/SourceType";

@@ -1,5 +1,5 @@
 import {Unit} from "../classes";
-import Source from "../classes/Source";
+import Source from "../classes/Source/Source";
 import {ActionEntity, ComboPointActionEntity, DamageActionEntity, HealActionEntity} from "../entities";
 import ActionType from "../enums/Encounter/ActionType";
 import DamageElementType from "../enums/Encounter/Damage/DamageElementType";

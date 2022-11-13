@@ -3,7 +3,7 @@ import type {GetStaticPropsContext, NextPage} from "next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import React, {useState} from "react";
 import {Encounter} from "../classes";
-import {EncounterProgressEvent} from "../classes/Battle/Encounter";
+import {EncounterProgressEvent} from "../classes/Encounter/Encounter";
 import BattleScene from "../components/Scene/BattleScene";
 import {
   ChargeSkillEntity,

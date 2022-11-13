@@ -1,4 +1,4 @@
-import Source from "../Source";
+import Source from "../Source/Source";
 
 export default class Log {
   

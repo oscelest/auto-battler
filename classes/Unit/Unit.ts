@@ -9,12 +9,12 @@ import UnitAttributeType from "../../enums/Encounter/Unit/UnitAttributeType";
 import Modifier from "../../modules/Modifier";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
-import Encounter from "../Battle/Encounter";
 import {Effect} from "../Effect";
 import {EffectInitializer} from "../Effect/Effect";
+import Encounter from "../Encounter/Encounter";
 import {Skill} from "../Skill";
 import {SkillInitializer} from "../Skill/Skill";
-import Source from "../Source";
+import Source from "../Source/Source";
 
 export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandler> {
   

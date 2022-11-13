@@ -5,8 +5,8 @@ import EffectAlignmentType from "../../enums/Encounter/Effect/EffectAlignmentTyp
 import EffectExpirationType from "../../enums/Encounter/Effect/EffectExpirationType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
-import Encounter from "../Encounter/Encounter";
-import Source from "../Source/Source";
+import {Encounter} from "../Encounter";
+import {Source} from "../Source";
 import {Trigger} from "../Trigger";
 import {TriggerInitializer} from "../Trigger/Trigger";
 import {Unit} from "../Unit";

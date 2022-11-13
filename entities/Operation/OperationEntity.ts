@@ -10,7 +10,7 @@ export default class OperationEntity {
   public action_list: ActionEntity[];
   
   constructor(initializer: OperationEntityInitializer) {
-    this.description = initializer.description;
+    this.description = initializer.description ?? "";
     this.target = initializer.target;
     this.modifier_list = initializer.modifier_list ?? [];
     this.action_list = initializer.action_list ?? [];

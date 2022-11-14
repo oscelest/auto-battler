@@ -150,8 +150,8 @@ function generatePlayerUnit() {
             action_list: [
               new DamageActionEntity({
                 direct: true,
-                source_type: DamageSourceType.ATTACK,
-                element_type: DamageElementType.PHYSICAL,
+                damage_source: DamageSourceType.ATTACK,
+                damage_element: DamageElementType.PHYSICAL,
                 modifier_list: [
                   new ScalingModifierEntity({value: 0.5, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
                 ]
@@ -175,8 +175,8 @@ function generatePlayerUnit() {
                           action_list: [
                             new DamageActionEntity({
                               direct: false,
-                              source_type: DamageSourceType.ATTACK,
-                              element_type: DamageElementType.PHYSICAL,
+                              damage_source: DamageSourceType.ATTACK,
+                              damage_element: DamageElementType.PHYSICAL,
                               modifier_list: [
                                 new NumericalModifierEntity({value: 1 / 20, numerical_type: ModifierNumericalType.MULTIPLICATIVE, category: ModifierCategoryType.DAMAGE}),
                                 new NumericalModifierEntity({value: 20, numerical_type: ModifierNumericalType.FLAT, category: ModifierCategoryType.DAMAGE})
@@ -255,8 +255,8 @@ function generatePlayerUnit() {
             action_list: [
               new DamageActionEntity({
                 direct: true,
-                source_type: DamageSourceType.ATTACK,
-                element_type: DamageElementType.PHYSICAL,
+                damage_source: DamageSourceType.ATTACK,
+                damage_element: DamageElementType.PHYSICAL,
                 modifier_list: [
                   new NumericalModifierEntity({value: 0.5, numerical_type: ModifierNumericalType.ADDITIVE, category: ModifierCategoryType.UNIT_ATTRIBUTE_ATTACK_POWER}),
                   new ScalingModifierEntity({value: 1, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
@@ -297,8 +297,8 @@ function generateEnemyUnit() {
             action_list: [
               new DamageActionEntity({
                 direct: true,
-                source_type: DamageSourceType.ATTACK,
-                element_type: DamageElementType.PHYSICAL,
+                damage_source: DamageSourceType.ATTACK,
+                damage_element: DamageElementType.PHYSICAL,
                 modifier_list: [
                   new ScalingModifierEntity({value: 0.5, category: ModifierCategoryType.DAMAGE, attribute: UnitAttributeType.ATTACK_POWER})
                 ]

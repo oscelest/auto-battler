@@ -1,4 +1,3 @@
-import HumanizeDuration from "humanize-duration";
 import {EffectEntity, ModifierEntity, SkillEntity, UnitEntity} from "../../entities";
 import {UnitEventType} from "../../enums";
 import DamageElementType from "../../enums/Encounter/Damage/DamageElementType";
@@ -13,6 +12,9 @@ import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import {Effect} from "../Effect";
 import {EffectInitializer} from "../Effect/Effect";
 import Encounter from "../Encounter/Encounter";
+import DamageLogEntry from "../Log/LogEntry/DamageLogEntry";
+import EffectLogEntry from "../Log/LogEntry/EffectLogEntry";
+import HealLogEntry from "../Log/LogEntry/HealLogEntry";
 import {Skill} from "../Skill";
 import {SkillInitializer} from "../Skill/Skill";
 import Source from "../Source/Source";
@@ -82,82 +84,82 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     this.trigger(UnitEventType.KILLED, {target_unit: this, source});
   }
   
-  public applyDamageTo(target_unit: Unit, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean, source: Source = this.reference): void {
+  public applyDamageTo(target_unit: Unit, action: UnitDamageAction, source: Source = this.reference): void {
     if (!target_unit.alive) return;
     
-    const post_mitigation_value = target_unit.receiveDamageFrom(source, pre_mitigation_value, damage_source, damage_element, direct);
-    if (post_mitigation_value > 0) {
-      this.trigger(UnitEventType.DAMAGE_APPLIED, {source, target_unit, pre_mitigation_value, post_mitigation_value, damage_source, damage_element, direct});
+    const received_value = target_unit.receiveDamageFrom(source, action);
+    if (received_value > 0) {
+      this.trigger(UnitEventType.DAMAGE_APPLIED, {...action, target_unit, source, received_value});
     }
   }
   
-  public receiveDamageFrom(source: Source, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean): number {
+  public receiveDamageFrom(source: Source, action: UnitDamageAction): number {
     if (!this.alive) return 0;
     
     const armor = Modifier.getCategoryValue([ModifierCategoryType.UNIT_ATTRIBUTE_ARMOR], this.modifier_list, this);
     
-    const post_mitigation_value = Math.min(pre_mitigation_value * (100 / (100 + armor)), this.health);
-    this.health -= post_mitigation_value;
+    const received_value = Math.min(action.applied_value * (100 / (100 + armor)), this.health);
+    this.health -= received_value;
     
-    if (post_mitigation_value > 0) {
-      this.trigger(UnitEventType.DAMAGE_RECEIVED, {target_unit: this, source, pre_mitigation_value, post_mitigation_value, damage_source, damage_element, direct});
+    if (received_value > 0) {
+      this.trigger(UnitEventType.DAMAGE_RECEIVED, {...action, target_unit: this, source, received_value});
     }
     if (!this.alive) {
       this.die(source);
     }
     
-    return post_mitigation_value;
+    return received_value;
   }
   
-  public applyHealingTo(target_unit: Unit, pre_mitigation_value: number, reviving: boolean, source: Source = this.reference): void {
+  public applyHealingTo(target_unit: Unit, action: UnitHealAction, source: Source = this.reference): void {
     const currently_alive = target_unit.alive;
-    if (!currently_alive && !reviving) return;
+    if (!currently_alive && !action.reviving) return;
     
-    const post_mitigation_value = target_unit.receiveHealingFrom(source, pre_mitigation_value, reviving);
+    const received_value = target_unit.receiveHealingFrom(source, action);
     if (!currently_alive && target_unit.alive) {
       this.trigger(UnitEventType.REVIVE_APPLIED, {source, target_unit});
     }
-    if (post_mitigation_value > 0) {
-      this.trigger(UnitEventType.HEALING_APPLIED, {source, target_unit, pre_mitigation_value, post_mitigation_value, reviving});
+    if (received_value > 0) {
+      this.trigger(UnitEventType.HEALING_APPLIED, {...action, target_unit, source, received_value});
     }
   }
   
-  public receiveHealingFrom(source: Source, pre_mitigation_value: number, reviving: boolean): number {
-    if (!this.alive && !reviving) return 0;
+  public receiveHealingFrom(source: Source, action: UnitHealAction): number {
+    if (!this.alive && !action.reviving) return 0;
     
     const modifier_list = this.modifier_list;
     const max_heath = Modifier.getCategoryValue(ModifierCategoryType.UNIT_ATTRIBUTE_HEALTH, modifier_list, this);
     const heal_modifier = Modifier.getCategoryValue(ModifierCategoryType.HEAL, modifier_list, this);
     
-    const post_mitigation_value = Math.min(pre_mitigation_value + heal_modifier, max_heath - this.health);
-    const revived = !this.alive && reviving && post_mitigation_value > 0;
-    this.health += post_mitigation_value;
+    const received_value = Math.min(action.applied_value + heal_modifier, max_heath - this.health);
+    const revived = !this.alive && action.reviving && received_value > 0;
+    this.health += received_value;
     
     if (revived) {
       this.trigger(UnitEventType.REVIVE_RECEIVED, {source, target_unit: this});
     }
-    if (post_mitigation_value > 0) {
-      this.trigger(UnitEventType.HEALING_RECEIVED, {source, target_unit: this, pre_mitigation_value, post_mitigation_value, reviving});
+    if (received_value > 0) {
+      this.trigger(UnitEventType.HEALING_RECEIVED, {...action, source, target_unit: this, received_value});
     }
     
-    return post_mitigation_value;
+    return received_value;
   }
   
-  public applyComboPointTo(target_unit: Unit, delta: number, chainable: boolean, source: Source = this.reference) {
+  public applyComboPointTo(target_unit: Unit, received_value: number, chainable: boolean, source: Source = this.reference) {
     if (!target_unit.alive) return;
     
-    target_unit.receiveComboPointFrom(source, delta, chainable);
+    target_unit.receiveComboPointFrom(source, received_value, chainable);
     
-    if (delta > 0) {
-      this.trigger(UnitEventType.COMBO_POINT_APPLIED, {source, target_unit, delta, chainable});
+    if (received_value > 0) {
+      this.trigger(UnitEventType.COMBO_POINT_APPLIED, {source, target_unit, received_value, chainable});
     }
   }
   
-  public receiveComboPointFrom(source: Source, delta: number, chainable: boolean) {
+  public receiveComboPointFrom(source: Source, received_value: number, chainable: boolean) {
     if (!this.alive) return;
     
-    if (delta > 0) {
-      this.trigger(UnitEventType.COMBO_POINT_RECEIVED, {source, target_unit: this, delta, chainable});
+    if (received_value > 0) {
+      this.trigger(UnitEventType.COMBO_POINT_RECEIVED, {source, target_unit: this, received_value, chainable});
     }
   }
   
@@ -194,17 +196,16 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     this.attachEvents();
   };
   
-  private onDamageReceived = ({damage_element, damage_source, source, pre_mitigation_value, post_mitigation_value}: UnitDamageEvent) => {
-    console.log("Damage taken from", source);
-    this.encounter.log.writeEntry(source, `${source.unit} dealt ${post_mitigation_value} (← ${pre_mitigation_value}) ${damage_source} ${damage_element} damage to ${this}.`);
+  private onDamageReceived = ({source, received_value, target_unit, periodic, damage_element, damage_source}: UnitDamageEvent) => {
+    this.encounter.log.writeEntry(source, new DamageLogEntry({value: received_value, target_unit, periodic, damage_source, damage_element}));
   };
   
-  private onHealingReceived = ({source, pre_mitigation_value, post_mitigation_value}: UnitHealEvent) => {
-    this.encounter.log.writeEntry(source, `${source.unit} heals ${post_mitigation_value} (← ${pre_mitigation_value}) damage from ${this}.`);
+  private onHealingReceived = ({source, received_value, target_unit, periodic, reviving}: UnitHealEvent) => {
+    this.encounter.log.writeEntry(source, new HealLogEntry({value: received_value, target_unit, periodic, reviving}));
   };
   
-  private onEffectReceived = ({source, effect}: UnitEffectEvent) => {
-    this.encounter.log.writeEntry(source, `${source.unit} applies ${effect} to ${this} for ${HumanizeDuration(effect.duration)}.`);
+  private onEffectReceived = ({source, effect, target_unit}: UnitEffectEvent) => {
+    this.encounter.log.writeEntry(source, new EffectLogEntry({effect, target_unit}));
   };
 }
 
@@ -217,39 +218,41 @@ export interface UnitInitializer extends EntityEventElementInitializer<UnitEntit
   effect_list?: EffectInitializer[];
 }
 
-export interface UnitKillEvent {
-  source: Source;
-  target_unit: Unit;
-}
-
-export interface UnitDamageEvent {
-  target_unit: Unit;
-  source: Source;
-  pre_mitigation_value: number;
-  post_mitigation_value: number;
+export interface UnitDamageAction {
+  applied_value: number;
   damage_source: DamageSourceType;
   damage_element: DamageElementType;
   direct: boolean;
+  periodic: boolean;
 }
 
-export interface UnitHealEvent {
-  target_unit: Unit;
-  source: Source;
-  pre_mitigation_value: number;
-  post_mitigation_value: number;
+export interface UnitHealAction {
+  applied_value: number;
+  direct: boolean;
+  periodic: boolean;
   reviving: boolean;
 }
 
-export interface UnitComboPointEvent {
-  target_unit: Unit;
+export interface UnitEvent {
   source: Source;
-  delta: number;
+  target_unit: Unit;
+}
+
+export interface UnitKillEvent extends UnitEvent {}
+
+interface UnitValueEvent extends UnitEvent {
+  received_value: number;
+}
+
+export interface UnitDamageEvent extends UnitDamageAction, UnitValueEvent {}
+
+export interface UnitHealEvent extends UnitHealAction, UnitValueEvent {}
+
+export interface UnitComboPointEvent extends UnitValueEvent {
   chainable: boolean;
 }
 
-export interface UnitEffectEvent {
-  target_unit: Unit;
-  source: Source;
+export interface UnitEffectEvent extends UnitEvent {
   effect: Effect;
 }
 

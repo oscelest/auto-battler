@@ -1,7 +1,5 @@
 import {EffectEntity, ModifierEntity, UnitEntity} from "../../entities";
 import {EncounterEventType} from "../../enums";
-import DamageElementType from "../../enums/Encounter/Damage/DamageElementType";
-import DamageSourceType from "../../enums/Encounter/Damage/DamageSourceType";
 import EncounterStateType from "../../enums/Encounter/EncounterStateType";
 import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
 import SourceType from "../../enums/Encounter/SourceType";
@@ -14,7 +12,7 @@ import {Log} from "../Log";
 import {LogInitializer} from "../Log/Log";
 import Source from "../Source/Source";
 import {Unit} from "../Unit";
-import {UnitInitializer} from "../Unit/Unit";
+import {UnitDamageAction, UnitHealAction, UnitInitializer} from "../Unit/Unit";
 
 export default class Encounter extends EventElement<EncounterEventHandler> {
   
@@ -80,28 +78,28 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     const started = this.time_started?.getTime() ?? Date.now();
     const current = Date.now() - started;
     const total = (current / 1000).toFixed(1);
-    
+  
     this.state = EncounterStateType.COMPLETED;
     this.log.writeLine(`Battle ${won ? "won" : "lost"} after ${total} seconds!`);
-    
+  
     console.log(this.log.toString());
-    
+  
     this.trigger(EncounterEventType.PROGRESS, {encounter: this});
   }
   
-  public applyDamageTo(target_unit: Unit, pre_mitigation_value: number, damage_source: DamageSourceType, damage_element: DamageElementType, direct: boolean, source: Source = this.reference) {
-    target_unit.receiveDamageFrom(source, pre_mitigation_value, damage_source, damage_element, direct);
+  public applyDamageTo(target_unit: Unit, action: UnitDamageAction, source: Source = this.reference) {
+    target_unit.receiveDamageFrom(source, action);
   }
   
-  public applyHealingTo(target_unit: Unit, pre_mitigation_value: number, reviving: boolean, source: Source = this.reference) {
-    target_unit.receiveHealingFrom(source, pre_mitigation_value, reviving);
+  public applyHealingTo(target_unit: Unit, action: UnitHealAction, source: Source = this.reference) {
+    target_unit.receiveHealingFrom(source, action);
   }
   
   public applyComboPointTo(target_unit: Unit, pre_mitigation_value: number, chainable: boolean, source: Source = this.reference) {
     target_unit.receiveComboPointFrom(source, pre_mitigation_value, chainable);
   }
   
-  public applyEffectTo(target_unit: Unit, entity: EffectEntity, duration: number, source: Source) {
+  public applyEffectTo(target_unit: Unit, entity: EffectEntity, duration: number, source: Source = this.reference) {
     target_unit.receiveEffectFrom(source, new Effect({entity, unit: target_unit, duration, source}));
   }
   

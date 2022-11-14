@@ -1,28 +1,43 @@
-import LogEntry from "./LogEntry";
+import {Source} from "../Source";
+import LogEntry from "./LogEntry/LogEntry";
 
 export default class LogInstance {
   
-  private readonly log_entry_collection: {[key: string]: LogEntry[]};
+  private readonly source: Source;
+  private readonly log_entry_list: LogEntry[];
   
-  constructor(initializer: LogInitializer = {}) {
-    this.log_entry_collection = initializer.log_entry_collection ?? {};
+  constructor(initializer: LogInstanceInitializer) {
+    this.source = initializer.source;
+    this.log_entry_list = initializer.log_entry_list ?? [];
   }
   
   public toString() {
     return "";
   }
   
-  public write(entry: LogEntry) {
-    this.getList(entry.getUniqueKey()).push(entry);
+  public toObject() {
+    const collection = {} as {[key: string]: LogEntry};
+    
+    for (let entry of this.log_entry_list) {
+      const key = entry.getUniqueKey();
+      if (!collection[key]) {
+        collection[key] = entry;
+      }
+      else {
+        collection[key].incrementBy(entry);
+      }
+    }
+    
+    return collection;
   }
   
-  private getList(key: string) {
-    return this.log_entry_collection[key] ?? (this.log_entry_collection[key] = []);
+  public write(entry: LogEntry) {
+    this.log_entry_list.push(entry);
   }
   
 }
 
-export interface LogInitializer {
-  log_lines?: string[];
-  log_entry_collection?: {[key: string]: LogEntry[]};
+export interface LogInstanceInitializer {
+  source: Source;
+  log_entry_list?: LogEntry[];
 }

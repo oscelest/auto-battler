@@ -16,8 +16,8 @@ export default class ComboSkill extends Skill {
     this.unit.on(UnitEventType.REVIVE_RECEIVED, this.onUnitRevived);
   }
   
-  private readonly onUnitComboPointApplied = ({delta, source, target_unit}: UnitComboPointEvent) => {
-    this.combo_point_current += delta;
+  private readonly onUnitComboPointApplied = ({received_value, source, target_unit}: UnitComboPointEvent) => {
+    this.combo_point_current += received_value;
     
     const combo_point_max = this.getCategoryValue(ModifierCategoryType.COMBO_POINT_MAX, target_unit);
     if (this.combo_point_current >= combo_point_max) {

@@ -20,12 +20,12 @@ export default class Log {
     this.log_lines.push(message);
   }
   
-  public writeBegin(source: Source) {
+  public writeBegin(source: Source, title: string) {
     if (this.log_instance_collection[source.id]) {
       console.warn(`Attempting to start writing to log from source with ID "${source.id}", but it already exists.`);
     }
   
-    this.log_instance_collection[source.id] = new LogInstance({source});
+    this.log_instance_collection[source.id] = new LogInstance({source, title});
   }
   
   public writeFinish(source: Source) {

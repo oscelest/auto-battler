@@ -5,7 +5,6 @@ import LogEntry, {LogEntryInitializer} from "./LogEntry";
 
 export default class EffectLogEntry extends LogEntry {
   
-  public count: number;
   public effect: Effect;
   public periodic: boolean;
   public target_unit: Unit;
@@ -13,7 +12,6 @@ export default class EffectLogEntry extends LogEntry {
   public constructor(initializer: EffectHealLogEntryInitializer) {
     super(LogEntryType.EFFECT, initializer);
     
-    this.count = initializer.count ?? 1;
     this.effect = initializer.effect;
     this.periodic = initializer.periodic ?? false;
     this.target_unit = initializer.target_unit;
@@ -32,7 +30,6 @@ export default class EffectLogEntry extends LogEntry {
 }
 
 export interface EffectHealLogEntryInitializer extends LogEntryInitializer {
-  count?: number;
   effect: Effect;
   periodic?: boolean;
   target_unit: Unit;

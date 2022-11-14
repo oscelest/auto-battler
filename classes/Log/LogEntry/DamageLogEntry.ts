@@ -7,7 +7,6 @@ import LogEntry, {LogEntryInitializer} from "./LogEntry";
 export default class DamageLogEntry extends LogEntry {
   
   public value: number;
-  public count: number;
   public periodic: boolean;
   public target_unit: Unit;
   public source_type: DamageSourceType;
@@ -17,7 +16,6 @@ export default class DamageLogEntry extends LogEntry {
     super(LogEntryType.DAMAGE, initializer);
     
     this.value = initializer.value;
-    this.count = initializer.count ?? 1;
     this.periodic = initializer.periodic ?? false;
     this.target_unit = initializer.target_unit;
     this.source_type = initializer.damage_source;
@@ -38,7 +36,6 @@ export default class DamageLogEntry extends LogEntry {
 
 export interface DamageLogEntryInitializer extends LogEntryInitializer {
   value: number;
-  count?: number;
   periodic?: boolean;
   target_unit: Unit;
   damage_source: DamageSourceType;

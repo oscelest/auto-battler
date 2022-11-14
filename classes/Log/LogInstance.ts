@@ -3,10 +3,13 @@ import LogEntry from "./LogEntry/LogEntry";
 
 export default class LogInstance {
   
+  public readonly title: string;
+  
   private readonly source: Source;
   private readonly log_entry_list: LogEntry[];
   
   constructor(initializer: LogInstanceInitializer) {
+    this.title = initializer.title;
     this.source = initializer.source;
     this.log_entry_list = initializer.log_entry_list ?? [];
   }
@@ -38,6 +41,7 @@ export default class LogInstance {
 }
 
 export interface LogInstanceInitializer {
+  title: string;
   source: Source;
   log_entry_list?: LogEntry[];
 }

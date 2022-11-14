@@ -31,7 +31,7 @@ export default abstract class Skill extends EntityEventElement<SkillEntity, Skil
   }
   
   private static onSkillUse = ({skill}: SkillUseEvent) => {
-    skill.unit.encounter.log.writeBegin(skill.source);
+    skill.unit.encounter.log.writeBegin(skill.source, `${skill.unit} used ${skill}`);
     for (let operation of skill.entity.operation_list) {
       Operation.execute(operation, skill.unit, skill.source);
     }

@@ -1,3 +1,4 @@
+import HumanizeDuration from "humanize-duration";
 import {EffectEntity, ModifierEntity} from "../../entities";
 import {TriggerEntity} from "../../entities/Trigger";
 import {EffectEventType, EncounterEventType, UnitEventType} from "../../enums";
@@ -34,7 +35,7 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
     this.unit = initializer.unit;
     this.trigger_list = (initializer.trigger_list ?? initializer.entity.trigger_list)?.map(entity => Trigger.instantiate(entity instanceof TriggerEntity ? {entity, effect: this} : entity)) ?? [];
     
-    this.unit.encounter.log.writeBegin(this.reference);
+    this.unit.encounter.log.writeBegin(this.reference, `${this.source} applied ${this} to ${this.unit} for ${HumanizeDuration(this.duration)}`);
     
     this.on(EffectEventType.EXPIRE, this.onExpire);
     this.unit.on(UnitEventType.KILLED, this.onUnitDeath);

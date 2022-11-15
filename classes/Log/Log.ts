@@ -12,10 +12,6 @@ export default class Log {
     this.log_instance_collection = initializer.log_instance_collection ?? {};
   }
   
-  public toString() {
-    return this.log_lines.join("\n");
-  }
-  
   public writeLine(message: string) {
     this.log_lines.push(message);
   }

@@ -1,5 +1,6 @@
 import {SkillEventType} from "../../enums";
 import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
+import {ComboPointLogEntry} from "../Log";
 import {Source} from "../Source";
 import {UnitComboPointAction} from "../Unit/Unit";
 import Skill, {SkillInitializer} from "./Skill";
@@ -24,6 +25,7 @@ export default class ComboSkill extends Skill {
     
     this.combo_point_current += received_value;
     if (received_value !== 0) {
+      this.unit.encounter.log.writeEntry(source, new ComboPointLogEntry({...action, target_skill: this, received_value, source}));
       this.trigger(SkillEventType.COMBO_POINT_RECEIVED, {...action, skill: this, received_value});
     }
   }

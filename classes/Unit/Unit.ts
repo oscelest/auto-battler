@@ -1,5 +1,5 @@
 import {EffectEntity, ModifierEntity, SkillEntity, UnitEntity} from "../../entities";
-import {UnitEventType} from "../../enums";
+import {SkillEventType, UnitEventType} from "../../enums";
 import DamageElementType from "../../enums/Encounter/Damage/DamageElementType";
 import DamageSourceType from "../../enums/Encounter/Damage/DamageSourceType";
 import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
@@ -16,7 +16,7 @@ import DamageLogEntry from "../Log/LogEntry/DamageLogEntry";
 import EffectLogEntry from "../Log/LogEntry/EffectLogEntry";
 import HealLogEntry from "../Log/LogEntry/HealLogEntry";
 import {ComboSkill, Skill} from "../Skill";
-import {SkillInitializer} from "../Skill/Skill";
+import {SkillComboPointEvent, SkillInitializer} from "../Skill/Skill";
 import Source from "../Source/Source";
 
 export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandler> {
@@ -149,23 +149,16 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     if (!target_unit.alive) return;
     
     target_unit.receiveComboPointFrom(source, action);
-    
-    // if (received_value > 0) {
-    //   this.trigger(UnitEventType.COMBO_POINT_APPLIED, {source, target_unit, received_value, chainable});
-    // }
   }
   
   public receiveComboPointFrom(source: Source, action: UnitComboPointAction) {
     if (!this.alive) return;
     
     for (let skill of this.skill_list) {
-      if (!(skill instanceof ComboSkill)) continue;
-      skill.receiveComboPointFrom(source, action);
+      if (skill instanceof ComboSkill) {
+        skill.receiveComboPointFrom(source, action);
+      }
     }
-    
-    // if (received_value > 0) {
-    //   this.trigger(UnitEventType.COMBO_POINT_RECEIVED, {source, target_unit: this, received_value, chainable});
-    // }
   }
   
   public applyEffectTo(target_unit: Unit, entity: EffectEntity, duration: number, source: Source = this.reference) {
@@ -185,12 +178,22 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     this.on(UnitEventType.DAMAGE_RECEIVED, this.onDamageReceived);
     this.on(UnitEventType.HEALING_RECEIVED, this.onHealingReceived);
     this.on(UnitEventType.EFFECT_RECEIVED, this.onEffectReceived);
+  
+    for (let skill of this.skill_list) {
+      if (skill instanceof ComboSkill) skill.on(SkillEventType.COMBO_POINT_RECEIVED, this.onSkillComboPointReceived);
+    }
   }
   
   private detachEvents() {
     this.off(UnitEventType.DAMAGE_RECEIVED, this.onDamageReceived);
     this.off(UnitEventType.HEALING_RECEIVED, this.onHealingReceived);
     this.off(UnitEventType.EFFECT_RECEIVED, this.onEffectReceived);
+  
+    for (let skill of this.skill_list) {
+      if (skill instanceof ComboSkill) {
+        skill.off(SkillEventType.COMBO_POINT_RECEIVED, this.onSkillComboPointReceived);
+      }
+    }
   }
   
   private onUnitKilled = () => {
@@ -201,16 +204,20 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     this.attachEvents();
   };
   
-  private onDamageReceived = ({source, received_value, target_unit, periodic, damage_element, damage_source}: UnitDamageEvent) => {
-    this.encounter.log.writeEntry(source, new DamageLogEntry({value: received_value, target_unit, periodic, damage_source, damage_element}));
+  private onDamageReceived = (event: UnitDamageEvent) => {
+    this.encounter.log.writeEntry(event.source, new DamageLogEntry(event));
   };
   
-  private onHealingReceived = ({source, received_value, target_unit, periodic, reviving}: UnitHealEvent) => {
-    this.encounter.log.writeEntry(source, new HealLogEntry({value: received_value, target_unit, periodic, reviving}));
+  private onHealingReceived = (event: UnitHealEvent) => {
+    this.encounter.log.writeEntry(event.source, new HealLogEntry(event));
   };
   
-  private onEffectReceived = ({source, effect, target_unit}: UnitEffectEvent) => {
-    this.encounter.log.writeEntry(source, new EffectLogEntry({effect, target_unit}));
+  private onEffectReceived = (event: UnitEffectEvent) => {
+    this.encounter.log.writeEntry(event.source, new EffectLogEntry(event));
+  };
+  
+  private onSkillComboPointReceived = (event: SkillComboPointEvent) => {
+    this.trigger(UnitEventType.SKILL_COMBO_POINT_RECEIVED, {...event, unit: this});
   };
 }
 
@@ -259,8 +266,8 @@ export interface UnitDamageEvent extends UnitDamageAction, UnitValueEvent {}
 
 export interface UnitHealEvent extends UnitHealAction, UnitValueEvent {}
 
-export interface UnitComboPointEvent extends UnitValueEvent {
-  chainable: boolean;
+export interface UnitComboPointEvent extends SkillComboPointEvent {
+  unit: Unit;
 }
 
 export interface UnitEffectEvent extends UnitEvent {
@@ -276,8 +283,7 @@ type UnitEventHandler = {
   [UnitEventType.DAMAGE_APPLIED]: (event: UnitDamageEvent) => void
   [UnitEventType.HEALING_RECEIVED]: (event: UnitHealEvent) => void
   [UnitEventType.HEALING_APPLIED]: (event: UnitHealEvent) => void
-  [UnitEventType.COMBO_POINT_APPLIED]: (event: UnitComboPointEvent) => void
-  [UnitEventType.COMBO_POINT_RECEIVED]: (event: UnitComboPointEvent) => void
   [UnitEventType.EFFECT_APPLIED]: (event: UnitEffectEvent) => void
   [UnitEventType.EFFECT_RECEIVED]: (event: UnitEffectEvent) => void
+  [UnitEventType.SKILL_COMBO_POINT_RECEIVED]: (event: UnitComboPointEvent) => void
 }

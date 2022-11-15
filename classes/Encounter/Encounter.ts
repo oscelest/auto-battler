@@ -12,7 +12,7 @@ import {Log} from "../Log";
 import {LogInitializer} from "../Log/Log";
 import Source from "../Source/Source";
 import {Unit} from "../Unit";
-import {UnitDamageAction, UnitHealAction, UnitInitializer} from "../Unit/Unit";
+import {UnitComboPointAction, UnitDamageAction, UnitHealAction, UnitInitializer} from "../Unit/Unit";
 
 export default class Encounter extends EventElement<EncounterEventHandler> {
   
@@ -95,8 +95,8 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     target_unit.receiveHealingFrom(source, action);
   }
   
-  public applyComboPointTo(target_unit: Unit, pre_mitigation_value: number, chainable: boolean, source: Source = this.reference) {
-    target_unit.receiveComboPointFrom(source, pre_mitigation_value, chainable);
+  public applyComboPointTo(target_unit: Unit, action: UnitComboPointAction, source: Source = this.reference) {
+    target_unit.receiveComboPointFrom(source, action);
   }
   
   public applyEffectTo(target_unit: Unit, entity: EffectEntity, duration: number, source: Source = this.reference) {
@@ -111,7 +111,7 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     // TODO: Skills should have priority, and it should be applied here
     const base_list = this.fromTargetTypeToList(type).filter(unit => unit.health > 0);
     if (!base_list.length) return [];
-  
+    
     switch (type) {
       case TargetType.ANY_SINGLE:
       case TargetType.ENEMY_SINGLE:

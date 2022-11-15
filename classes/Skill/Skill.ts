@@ -65,7 +65,15 @@ export interface SkillUseEvent {
   skill: Skill;
 }
 
+export interface SkillComboPointEvent {
+  skill: Skill;
+  received_value: number;
+  retained: boolean;
+  periodic: boolean;
+}
+
 type SkillEventHandler = {
   [SkillEventType.USE]: (event: SkillUseEvent) => void
+  [SkillEventType.COMBO_POINT_RECEIVED]: (event: SkillComboPointEvent) => void
 }
 

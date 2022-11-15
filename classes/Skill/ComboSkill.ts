@@ -1,6 +1,7 @@
-import {SkillEventType, UnitEventType} from "../../enums";
+import {SkillEventType} from "../../enums";
 import ModifierCategoryType from "../../enums/Encounter/Modifier/ModifierCategoryType";
-import {UnitComboPointEvent} from "../Unit/Unit";
+import {Source} from "../Source";
+import {UnitComboPointAction} from "../Unit/Unit";
 import Skill, {SkillInitializer} from "./Skill";
 
 export default class ComboSkill extends Skill {
@@ -11,34 +12,35 @@ export default class ComboSkill extends Skill {
     super(initializer);
     this.combo_point_current = initializer.combo_current ?? 0;
     
-    this.unit.on(UnitEventType.COMBO_POINT_APPLIED, this.onUnitComboPointApplied);
-    this.unit.on(UnitEventType.KILLED, this.onUnitKilled);
-    this.unit.on(UnitEventType.REVIVE_RECEIVED, this.onUnitRevived);
+    this.on(SkillEventType.COMBO_POINT_RECEIVED, this.onComboPointReceived);
   }
   
-  private readonly onUnitComboPointApplied = ({received_value, source, target_unit}: UnitComboPointEvent) => {
-    this.combo_point_current += received_value;
+  public get combo_point_max() {
+    return this.getCategoryValue(ModifierCategoryType.COMBO_POINT_MAX, this.unit);
+  }
+  
+  public receiveComboPointFrom(source: Source, action: UnitComboPointAction) {
+    const received_value = Math.max(-this.combo_point_current, Math.min(action.applied_value, Math.max(0, this.combo_point_max - this.combo_point_current)));
     
-    const combo_point_max = this.getCategoryValue(ModifierCategoryType.COMBO_POINT_MAX, target_unit);
+    this.combo_point_current += received_value;
+    if (received_value !== 0) {
+      this.trigger(SkillEventType.COMBO_POINT_RECEIVED, {...action, skill: this, received_value});
+    }
+  }
+  
+  private readonly onComboPointReceived = () => {
+    const combo_point_max = this.combo_point_max;
     if (this.combo_point_current >= combo_point_max) {
-      const combo_point_retain = this.getCategoryValue(ModifierCategoryType.COMBO_POINT_MAX, target_unit);
-      const combo_point_value = Math.min(combo_point_retain, combo_point_max - 1);
+      
+      const combo_point_retain = this.getCategoryValue(ModifierCategoryType.COMBO_POINT_RETAIN, this.unit);
+      const applied_value = Math.min(combo_point_retain, combo_point_max - 1);
       
       this.trigger(SkillEventType.USE, {skill: this});
-      if (combo_point_value > 0) {
-        target_unit.applyComboPointTo(target_unit, combo_point_value, false, source);
+      if (applied_value > 0) {
+        this.unit.applyComboPointTo(this.unit, {applied_value, retained: true, periodic: false}, this.source);
       }
     }
   };
-  
-  private onUnitKilled = () => {
-    this.unit.off(UnitEventType.COMBO_POINT_APPLIED, this.onUnitComboPointApplied);
-  };
-  
-  private onUnitRevived = () => {
-    this.unit.on(UnitEventType.COMBO_POINT_APPLIED, this.onUnitComboPointApplied);
-  };
-  
 }
 
 export interface ComboSkillInitializer extends SkillInitializer {

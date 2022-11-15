@@ -12,7 +12,7 @@ export default abstract class LogEntry {
   
   public abstract getUniqueKey(): string;
   
-  public abstract incrementBy(value: typeof this): this
+  public abstract incrementBy(value: LogEntry): this
   
 }
 

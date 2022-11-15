@@ -15,7 +15,7 @@ import Encounter from "../Encounter/Encounter";
 import DamageLogEntry from "../Log/LogEntry/DamageLogEntry";
 import EffectLogEntry from "../Log/LogEntry/EffectLogEntry";
 import HealLogEntry from "../Log/LogEntry/HealLogEntry";
-import {Skill} from "../Skill";
+import {ComboSkill, Skill} from "../Skill";
 import {SkillInitializer} from "../Skill/Skill";
 import Source from "../Source/Source";
 
@@ -39,9 +39,9 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     
     this.health = initializer.health ?? this.getAttributeValue(UnitAttributeType.HEALTH);
     this.alignment = initializer.alignment;
-    
+  
     this.attachEvents();
-    this.on(UnitEventType.KILLED, this.onUnitKilled);
+    this.on(UnitEventType.DIED, this.onUnitKilled);
     this.on(UnitEventType.REVIVE_RECEIVED, this.onUnitRevived);
   }
   
@@ -81,7 +81,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   
   public die(source: Source) {
     this.health = 0;
-    this.trigger(UnitEventType.KILLED, {target_unit: this, source});
+    this.trigger(UnitEventType.DIED, {target_unit: this, source});
   }
   
   public applyDamageTo(target_unit: Unit, action: UnitDamageAction, source: Source = this.reference): void {
@@ -130,9 +130,9 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     const modifier_list = this.modifier_list;
     const max_heath = Modifier.getCategoryValue(ModifierCategoryType.UNIT_ATTRIBUTE_HEALTH, modifier_list, this);
     const heal_modifier = Modifier.getCategoryValue(ModifierCategoryType.HEAL, modifier_list, this);
-    
+  
     const received_value = Math.min(action.applied_value + heal_modifier, max_heath - this.health);
-    const revived = !this.alive && action.reviving && received_value > 0;
+    const revived = !this.alive && received_value > 0;
     this.health += received_value;
     
     if (revived) {
@@ -145,22 +145,27 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     return received_value;
   }
   
-  public applyComboPointTo(target_unit: Unit, received_value: number, chainable: boolean, source: Source = this.reference) {
+  public applyComboPointTo(target_unit: Unit, action: UnitComboPointAction, source: Source = this.reference) {
     if (!target_unit.alive) return;
     
-    target_unit.receiveComboPointFrom(source, received_value, chainable);
+    target_unit.receiveComboPointFrom(source, action);
     
-    if (received_value > 0) {
-      this.trigger(UnitEventType.COMBO_POINT_APPLIED, {source, target_unit, received_value, chainable});
-    }
+    // if (received_value > 0) {
+    //   this.trigger(UnitEventType.COMBO_POINT_APPLIED, {source, target_unit, received_value, chainable});
+    // }
   }
   
-  public receiveComboPointFrom(source: Source, received_value: number, chainable: boolean) {
+  public receiveComboPointFrom(source: Source, action: UnitComboPointAction) {
     if (!this.alive) return;
     
-    if (received_value > 0) {
-      this.trigger(UnitEventType.COMBO_POINT_RECEIVED, {source, target_unit: this, received_value, chainable});
+    for (let skill of this.skill_list) {
+      if (!(skill instanceof ComboSkill)) continue;
+      skill.receiveComboPointFrom(source, action);
     }
+    
+    // if (received_value > 0) {
+    //   this.trigger(UnitEventType.COMBO_POINT_RECEIVED, {source, target_unit: this, received_value, chainable});
+    // }
   }
   
   public applyEffectTo(target_unit: Unit, entity: EffectEntity, duration: number, source: Source = this.reference) {
@@ -233,6 +238,12 @@ export interface UnitHealAction {
   reviving: boolean;
 }
 
+export interface UnitComboPointAction {
+  applied_value: number;
+  retained: boolean;
+  periodic: boolean;
+}
+
 export interface UnitEvent {
   source: Source;
   target_unit: Unit;
@@ -258,7 +269,7 @@ export interface UnitEffectEvent extends UnitEvent {
 
 type UnitEventHandler = {
   [UnitEventType.KILL]: (event: UnitKillEvent) => void
-  [UnitEventType.KILLED]: (event: UnitKillEvent) => void
+  [UnitEventType.DIED]: (event: UnitKillEvent) => void
   [UnitEventType.REVIVE_RECEIVED]: (event: UnitKillEvent) => void
   [UnitEventType.REVIVE_APPLIED]: (event: UnitKillEvent) => void
   [UnitEventType.DAMAGE_RECEIVED]: (event: UnitDamageEvent) => void

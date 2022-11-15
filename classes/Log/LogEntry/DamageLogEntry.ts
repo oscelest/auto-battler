@@ -23,11 +23,11 @@ export default class DamageLogEntry extends LogEntry {
   }
   
   public getUniqueKey(): string {
-    const periodic = this.periodic ? "periodic" : "static";
+    const periodic = this.periodic ? "periodic" : "non-periodic";
     return `damage://${this.target_unit.id}/${this.source_type}/${this.element_type}:${periodic}`;
   }
   
-  public incrementBy(entry: typeof this): this {
+  public incrementBy(entry: DamageLogEntry): this {
     this.value += entry.value;
     return this;
   }

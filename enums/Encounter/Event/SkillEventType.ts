@@ -1,5 +1,6 @@
 enum SkillEventType {
-  USE = "use",
+  USE                  = "use",
+  COMBO_POINT_RECEIVED = "combo_point_received",
 }
 
 export default SkillEventType;

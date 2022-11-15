@@ -2,19 +2,22 @@ import ActionType from "../../enums/Encounter/ActionType";
 import {ActionEntity, ActionEntityInitializer} from "./index";
 
 export default class ComboPointActionEntity extends ActionEntity {
-
+  
   public base_value: number;
-  public chainable: boolean;
-
+  public retained: boolean;
+  public periodic: boolean;
+  
   constructor(initializer: ComboPointActionEntityInitializer) {
     super(ActionType.COMBO_POINT, initializer);
-
+    
     this.base_value = initializer.base_value;
-    this.chainable = initializer.chainable ?? false;
+    this.retained = initializer.retained ?? false;
+    this.periodic = initializer.periodic ?? false;
   }
 }
 
 export interface ComboPointActionEntityInitializer extends ActionEntityInitializer {
   base_value: number;
-  chainable?: boolean;
+  retained?: boolean;
+  periodic?: boolean;
 }

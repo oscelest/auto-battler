@@ -38,7 +38,7 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
     this.unit.encounter.log.writeBegin(this.reference, `${this.source} applied ${this} to ${this.unit} for ${HumanizeDuration(this.duration)}`);
     
     this.on(EffectEventType.EXPIRE, this.onExpire);
-    this.unit.on(UnitEventType.KILLED, this.onUnitDeath);
+    this.unit.on(UnitEventType.DIED, this.onUnitDeath);
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
   }
   
@@ -88,7 +88,7 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
   };
   
   private onUnitDeath = (event: UnitKillEvent) => {
-    this.unit.off(UnitEventType.KILLED, this.onUnitDeath);
+    this.unit.off(UnitEventType.DIED, this.onUnitDeath);
     
     this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DEATH});
   };

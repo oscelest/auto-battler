@@ -2,38 +2,38 @@ import LogEntryType from "../../../enums/Encounter/LogEntryType";
 import {Unit} from "../../Unit";
 import LogEntry, {LogEntryInitializer} from "./LogEntry";
 
-export default class HealLogEntry extends LogEntry {
+export default class ComboPointLogEntry extends LogEntry {
   
   public value: number;
+  public retained: boolean;
   public periodic: boolean;
-  public reviving: boolean;
   public target_unit: Unit;
   
-  public constructor(initializer: HealLogEntryInitializer) {
-    super(LogEntryType.HEAL, initializer);
+  public constructor(initializer: ComboPointLogEntryInitializer) {
+    super(LogEntryType.DAMAGE, initializer);
     
     this.value = initializer.value;
     this.periodic = initializer.periodic ?? false;
-    this.reviving = initializer.reviving ?? false;
+    this.retained = initializer.retained ?? false;
     this.target_unit = initializer.target_unit;
   }
   
   public getUniqueKey(): string {
     const periodic = this.periodic ? "periodic" : "non-periodic";
-    const reviving = this.reviving ? "reviving" : "non-reviving";
-    return `heal://${this.target_unit.id}:${periodic}:${reviving}`;
+    const retained = this.retained ? "retained" : "non-retained";
+    return `combo-point://${this.target_unit.id}:${periodic}:${retained}`;
   }
   
-  public incrementBy(entry: HealLogEntry): this {
+  public incrementBy(entry: ComboPointLogEntry): this {
     this.value += entry.value;
     return this;
   }
   
 }
 
-export interface HealLogEntryInitializer extends LogEntryInitializer {
+export interface ComboPointLogEntryInitializer extends LogEntryInitializer {
   value: number;
   periodic?: boolean;
-  reviving?: boolean;
+  retained?: boolean;
   target_unit: Unit;
 }

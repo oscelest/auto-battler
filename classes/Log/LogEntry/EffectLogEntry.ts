@@ -22,7 +22,7 @@ export default class EffectLogEntry extends LogEntry {
     return `effect://${this.target_unit.id}/${this.effect.id}/${this.effect.duration}:${periodic}`;
   }
   
-  public incrementBy(entry: typeof this): this {
+  public incrementBy(entry: EffectLogEntry): this {
     this.count += entry.count;
     return this;
   }

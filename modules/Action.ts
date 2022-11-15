@@ -1,6 +1,6 @@
 import {Unit} from "../classes";
 import Source from "../classes/Source/Source";
-import {UnitDamageAction, UnitHealAction} from "../classes/Unit/Unit";
+import {UnitComboPointAction, UnitDamageAction, UnitHealAction} from "../classes/Unit/Unit";
 import {ActionEntity, ComboPointActionEntity, DamageActionEntity, EffectEntity, HealActionEntity} from "../entities";
 import EffectActionEntity from "../entities/Action/EffectActionEntity";
 import ActionType from "../enums/Encounter/ActionType";
@@ -76,35 +76,34 @@ module Action {
       case SourceType.ENCOUNTER:
         if (!source.encounter) throw new Error();
         return source.encounter.applyHealingTo(target_unit, action, original_source);
-    
     }
     throw new Error(`Source with type '${source.type}' doesn't exist.`);
   }
   
-  function executeComboPoint({base_value, chainable, modifier_list}: ComboPointActionEntity, target_unit: Unit, source: Source): void {
+  function executeComboPoint({modifier_list, base_value, ...action}: ComboPointActionEntity, target_unit: Unit, source: Source): void {
     modifier_list = Modifier.populateModifierList(source, modifier_list);
     
-    const value = Modifier.getCategoryValue(ModifierCategoryType.COMBO_POINT_CHANGE, modifier_list, source.unit) + base_value;
-    applyComboPoint(source, target_unit, value, chainable);
+    const applied_value = Modifier.getCategoryValue(ModifierCategoryType.COMBO_POINT_CHANGE, modifier_list, source.unit) + base_value;
+    applyComboPoint(source, target_unit, {...action, applied_value}, source);
   }
   
-  function applyComboPoint(source: Source, target_unit: Unit, value: number, chainable: boolean, original_source: Source = source): void {
+  function applyComboPoint(source: Source, target_unit: Unit, action: UnitComboPointAction, original_source: Source = source): void {
     switch (source.type) {
       case SourceType.UNIT:
         if (!source.unit) throw new Error();
-        return source.unit?.applyComboPointTo(target_unit, value, chainable, original_source);
-    
+        return source.unit?.applyComboPointTo(target_unit, action, original_source);
+      
       case SourceType.SKILL:
         if (!source.skill) throw new Error();
-        return source.skill.unit.applyComboPointTo(target_unit, value, chainable, original_source);
-    
+        return source.skill.unit.applyComboPointTo(target_unit, action, original_source);
+      
       case SourceType.EFFECT:
         if (!source.effect) throw new Error();
-        return applyComboPoint(source.effect.source, target_unit, value, chainable, original_source);
+        return applyComboPoint(source.effect.source, target_unit, action, original_source);
     
       case SourceType.ENCOUNTER:
         if (!source.encounter) throw new Error();
-        return source.encounter.applyComboPointTo(target_unit, value, chainable, original_source);
+        return source.encounter.applyComboPointTo(target_unit, action, original_source);
     
     }
     throw new Error(`Source with type '${source.type}' doesn't exist.`);

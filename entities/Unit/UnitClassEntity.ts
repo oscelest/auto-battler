@@ -2,11 +2,11 @@ import {v4} from "uuid";
 import {ModifierEntity} from "../Modifier";
 
 export default class UnitClassEntity {
-
+  
   public id: string;
   public name: string;
   public modifier_list: ModifierEntity[];
-
+  
   constructor(initializer: UnitClassEntityInitializer) {
     this.id = initializer.id ?? v4();
     this.name = initializer.name;

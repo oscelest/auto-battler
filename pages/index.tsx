@@ -175,6 +175,7 @@ function generatePlayerUnit() {
                           action_list: [
                             new DamageActionEntity({
                               direct: false,
+                              periodic: true,
                               damage_source: DamageSourceType.ATTACK,
                               damage_element: DamageElementType.PHYSICAL,
                               modifier_list: [

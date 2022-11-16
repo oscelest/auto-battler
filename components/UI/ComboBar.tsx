@@ -4,10 +4,10 @@ import Style from "./ComboBar.module.scss";
 
 function ProgressBar(props: ProgressBarProps) {
   const {column_left, column_right, current, max, background, className, children, ...component_props} = props;
-
+  
   const classes = [Style.Component];
   if (className) classes.push(className);
-
+  
   return (
     <div {...component_props} className={classes.join(" ")}>
       <div className={Style.Background}>
@@ -18,7 +18,7 @@ function ProgressBar(props: ProgressBarProps) {
       </ColumnSection>
     </div>
   );
-
+  
   function renderBackground() {
     const element_list = [] as React.ReactNode[];
     for (let i = 0; i < max; i++) {
@@ -29,7 +29,7 @@ function ProgressBar(props: ProgressBarProps) {
     }
     return element_list;
   }
-
+  
 }
 
 export interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {

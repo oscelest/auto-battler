@@ -3,10 +3,10 @@ import Style from "./ColumnSection.module.scss";
 
 function ColumnSection(props: ColumnSectionProps) {
   const {children_left, children_right, className, children, ...component_props} = props;
-
+  
   const classes = [Style.Component];
   if (className) classes.push(className);
-
+  
   return (
     <div {...component_props} className={classes.join(" ")}>
       <div className={Style.Left}>
@@ -18,10 +18,10 @@ function ColumnSection(props: ColumnSectionProps) {
       </div>
     </div>
   );
-
+  
   function renderCenter() {
     if (!children) return null;
-
+    
     return (
       <div className={Style.Center}>
         {children}%

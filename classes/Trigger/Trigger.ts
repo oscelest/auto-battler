@@ -11,12 +11,12 @@ import {PeriodicStatusEffectTriggerInitializer} from "./PeriodicTrigger";
 export default abstract class Trigger<Entity extends TriggerEntity = TriggerEntity, Event extends TriggerEvent = TriggerEvent> extends EntityEventElement<Entity, Event> {
   
   public effect: Effect;
-
+  
   protected constructor(initializer: TriggerInitializer<Entity>) {
     super(initializer);
     this.effect = initializer.effect;
   }
-
+  
   public static instantiate(initializer: TriggerInitializer) {
     switch (initializer.entity.type) {
       case TriggerType.PERIODIC:

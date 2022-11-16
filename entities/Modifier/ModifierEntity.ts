@@ -11,7 +11,7 @@ export default abstract class ModifierEntity {
   
   protected constructor(type: ModifierType, initializer: ModifierEntityInitializer) {
     this.type = type;
-
+  
     this.value = initializer.value;
     this.value_per_level = initializer.value_per_level ?? 0;
     this.category = initializer.category;

@@ -6,7 +6,6 @@ import LogEntry, {LogEntryInitializer} from "./LogEntry";
 
 export default class DamageLogEntry extends LogEntry {
   
-  public periodic: boolean;
   public target_unit: Unit;
   public damage_source: DamageSourceType;
   public damage_element: DamageElementType;
@@ -15,7 +14,6 @@ export default class DamageLogEntry extends LogEntry {
   public constructor(initializer: DamageLogEntryInitializer) {
     super(LogEntryType.DAMAGE, initializer);
     
-    this.periodic = initializer.periodic ?? false;
     this.target_unit = initializer.target_unit;
     this.damage_source = initializer.damage_source;
     this.damage_element = initializer.damage_element;
@@ -49,7 +47,6 @@ export default class DamageLogEntry extends LogEntry {
 }
 
 export interface DamageLogEntryInitializer extends LogEntryInitializer {
-  periodic?: boolean;
   target_unit: Unit;
   damage_source: DamageSourceType;
   damage_element: DamageElementType;

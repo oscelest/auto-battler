@@ -5,17 +5,15 @@ import LogEntry, {LogEntryInitializer} from "./LogEntry";
 export default class ComboPointLogEntry extends LogEntry {
   
   public retained: boolean;
-  public periodic: boolean;
   public target_skill: Skill;
   public received_value: number;
   
   public constructor(initializer: ComboPointLogEntryInitializer) {
-    super(LogEntryType.DAMAGE, initializer);
+    super(LogEntryType.COMBO_POINT, initializer);
     
-    this.periodic = initializer.periodic ?? false;
     this.retained = initializer.retained ?? false;
     this.target_skill = initializer.target_skill;
-    this.received_value = initializer.received_value;
+    this.received_value = initializer.received_value ?? 0;
   }
   
   public toString() {
@@ -47,13 +45,12 @@ export default class ComboPointLogEntry extends LogEntry {
     this.received_value += entry.received_value;
     return this;
   }
-
+  
   
 }
 
 export interface ComboPointLogEntryInitializer extends LogEntryInitializer {
-  periodic?: boolean;
   retained?: boolean;
   target_skill: Skill;
-  received_value: number;
+  received_value?: number;
 }

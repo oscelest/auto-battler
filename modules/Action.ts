@@ -44,7 +44,7 @@ module Action {
       case SourceType.EFFECT:
         if (!source.effect) throw new Error();
         return applyDamage(source.effect.source, target_unit, action, original_source);
-    
+  
       case SourceType.ENCOUNTER:
         if (!source.encounter) throw new Error();
         return source.encounter.applyDamageTo(target_unit, action, original_source);
@@ -72,7 +72,7 @@ module Action {
       case SourceType.EFFECT:
         if (!source.effect) throw new Error();
         return applyHealing(source.effect.source, target_unit, action, original_source);
-    
+  
       case SourceType.ENCOUNTER:
         if (!source.encounter) throw new Error();
         return source.encounter.applyHealingTo(target_unit, action, original_source);
@@ -100,11 +100,11 @@ module Action {
       case SourceType.EFFECT:
         if (!source.effect) throw new Error();
         return applyComboPoint(source.effect.source, target_unit, action, original_source);
-    
+  
       case SourceType.ENCOUNTER:
         if (!source.encounter) throw new Error();
         return source.encounter.applyComboPointTo(target_unit, action, original_source);
-    
+  
     }
     throw new Error(`Source with type '${source.type}' doesn't exist.`);
   }

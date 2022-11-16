@@ -68,10 +68,10 @@ module Modifier {
         }
       }
     }
-
+  
     return Math.max(0, flat * additive * multiplicative);
   }
-
+  
 }
 
 export default Modifier;

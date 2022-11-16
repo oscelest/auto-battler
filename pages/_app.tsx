@@ -8,7 +8,7 @@ import "../public/style/globals.scss";
 
 function Application({Component, pageProps}: AppProps) {
   const value = {};
-
+  
   return (
     <GameContext.Provider value={value}>
       <Header>

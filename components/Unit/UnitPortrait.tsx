@@ -12,16 +12,16 @@ function UnitPortrait(props: UnitPortraitProps) {
   const {unit, className, ...component_props} = props;
   const {entity: {name}, health, effect_list} = unit;
   const max_health = unit.getAttributeValue(UnitAttributeType.HEALTH);
-
+  
   const name_percent = 100;
   const name_background = "linear-gradient(to bottom, #673ab7, #512da8)";
-
+  
   const health_percent = Math.min(Math.max(health / max_health * 100, 0), 100);
   const health_background = "linear-gradient(to bottom, #ed213a, #93291e)";
-
+  
   const classes = [Style.Component];
   if (className) classes.push(className);
-
+  
   return (
     <div {...component_props} className={classes.join(" ")}>
       <StatusEffectBar>{effect_list}</StatusEffectBar>
@@ -30,7 +30,7 @@ function UnitPortrait(props: UnitPortraitProps) {
       <div className={Style.SkillList}>{unit.skill_list.map(renderSkill)}</div>
     </div>
   );
-
+  
   function renderSkill(skill: Skill, index: number = 0) {
     switch (skill.entity.type) {
       case SkillType.CHARGE:
@@ -48,12 +48,12 @@ function UnitPortrait(props: UnitPortraitProps) {
                          background={combo_background} column_left={skill.entity.name} column_right={`${combo_point_current} / ${combo_point_max}`}/>;
     }
   }
-
+  
   function getChargePercentage(skill: ChargeSkill) {
     const charge_max = skill.getCategoryValue(ModifierCategoryType.CHARGE_SKILL_MAX);
     return Math.min(Math.max(skill.charge_current / charge_max * 100, 0), 100);
   }
-
+  
 }
 
 export interface UnitPortraitProps extends HTMLAttributes<HTMLDivElement> {

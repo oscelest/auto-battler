@@ -7,14 +7,12 @@ import LogEntry, {LogEntryInitializer} from "./LogEntry";
 export default class EffectLogEntry extends LogEntry {
   
   public effect: Effect;
-  public periodic: boolean;
   public target_unit: Unit;
   
-  public constructor(initializer: EffectHealLogEntryInitializer) {
+  public constructor(initializer: EffectLogEntryInitializer) {
     super(LogEntryType.EFFECT, initializer);
-    
+  
     this.effect = initializer.effect;
-    this.periodic = initializer.periodic ?? false;
     this.target_unit = initializer.target_unit;
   }
   
@@ -45,8 +43,7 @@ export default class EffectLogEntry extends LogEntry {
   
 }
 
-export interface EffectHealLogEntryInitializer extends LogEntryInitializer {
+export interface EffectLogEntryInitializer extends LogEntryInitializer {
   effect: Effect;
-  periodic?: boolean;
   target_unit: Unit;
 }

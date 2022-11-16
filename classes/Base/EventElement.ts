@@ -1,7 +1,7 @@
 import Element, {ElementInitializer} from "./Element";
 
 export default abstract class EventElement<Collection extends EventElementCollection> extends Element {
-
+  
   private readonly callback_collection: { [K in keyof Collection]?: Function[] };
   
   protected constructor(initializer: EventElementInitializer) {

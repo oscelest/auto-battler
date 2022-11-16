@@ -4,14 +4,14 @@ import {SkillEntity} from "../Skill";
 import {UnitClassEntity} from "./index";
 
 export default class UnitEntity {
-
+  
   public id: string;
   public name: string;
   public class: UnitClassEntity;
   public experience: number;
   public skill_list: SkillEntity[];
   public modifier_list: ModifierEntity[];
-
+  
   constructor(initializer: UnitEntityInitializer) {
     this.id = initializer.id ?? v4();
     this.name = initializer.name;

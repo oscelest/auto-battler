@@ -6,16 +6,16 @@ import Style from "./StatusEffectBar.module.scss";
 
 function StatusEffectBar(props: StatusEffectBarProps) {
   const {className, children, ...component_props} = props;
-
+  
   const collection = Effect.getStatusEffectAlignmentCollection(children);
-
+  
   const classes = [Style.Component];
   if (className) classes.push(className);
   
   if (!collection[EffectAlignmentType.NEUTRAL].length && !collection[EffectAlignmentType.NEGATIVE].length && !collection[EffectAlignmentType.POSITIVE].length) {
     return null;
   }
-
+  
   return (
     <div {...component_props} className={classes.join(" ")}>
       {renderList(collection[EffectAlignmentType.NEUTRAL])}
@@ -23,10 +23,10 @@ function StatusEffectBar(props: StatusEffectBarProps) {
       {renderList(collection[EffectAlignmentType.POSITIVE])}
     </div>
   );
-
+  
   function renderList(list: Effect[]) {
     if (!list.length) return null;
-
+    
     const collection = Object.values(Effect.getStatusEffectStackCollection(list));
     return (
       <div className={Style.List}>
@@ -34,7 +34,7 @@ function StatusEffectBar(props: StatusEffectBarProps) {
       </div>
     );
   }
-
+  
   function renderStatusEffectIcon(list: Effect[], index: number = 0) {
     if (list.length === 1) {
       const effect = list[0];
@@ -49,7 +49,7 @@ function StatusEffectBar(props: StatusEffectBarProps) {
         </div>
       );
     }
-
+    
     return (
       <div key={index} className={Style.StatusEffect}>
         <div className={Style.Icon}>
@@ -59,8 +59,8 @@ function StatusEffectBar(props: StatusEffectBarProps) {
       </div>
     );
   }
-
-
+  
+  
 }
 
 export interface StatusEffectBarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {

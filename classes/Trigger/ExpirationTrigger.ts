@@ -3,16 +3,16 @@ import {EffectEventType} from "../../enums";
 import Trigger, {TriggerInitializer} from "./Trigger";
 
 export default class ExpirationTrigger extends Trigger<ExpirationTriggerEntity> {
-
+  
   constructor(initializer: ExpirationTriggerInitializer) {
     super(initializer);
-
+    
     this.effect.on(EffectEventType.EXPIRE, this.onEffectExpire);
   }
-
+  
   private onEffectExpire = () => {
     this.effect.off(EffectEventType.EXPIRE, this.onEffectExpire);
-
+    
     //   const log_group = new LogGroup();
     //   if (this.entity.expiration_type !== expiration_type) return log_group;
     //

@@ -4,12 +4,12 @@ import Style from "./ProgressBar.module.scss";
 
 function ProgressBar(props: ProgressBarProps) {
   const {column_left, column_right, percent, background, className, children, ...component_props} = props;
-
+  
   const classes = [Style.Component];
   if (className) classes.push(className);
-
+  
   const background_style = {right: `${100 - percent}%`, background};
-
+  
   return (
     <div {...component_props} className={classes.join(" ")}>
       <div className={Style.Background} style={background_style}/>
@@ -18,7 +18,7 @@ function ProgressBar(props: ProgressBarProps) {
       </ColumnSection>
     </div>
   );
-
+  
 }
 
 export interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {

@@ -6,7 +6,7 @@ import Style from "./EffectIcon.module.scss";
 function EffectIcon(props: EffectIconProps) {
   const {status_effect} = props;
   const {duration} = status_effect;
-
+  
   return (
     <div className={Style.Component}>
       <Countdown className={Style.Countdown} duration={duration ?? 0}>
@@ -16,7 +16,7 @@ function EffectIcon(props: EffectIconProps) {
       </Countdown>
     </div>
   );
-
+  
 }
 
 export interface EffectIconProps {

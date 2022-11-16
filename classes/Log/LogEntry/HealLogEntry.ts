@@ -4,7 +4,6 @@ import LogEntry, {LogEntryInitializer} from "./LogEntry";
 
 export default class HealLogEntry extends LogEntry {
   
-  public periodic: boolean;
   public reviving: boolean;
   public target_unit: Unit;
   public received_value: number;
@@ -12,7 +11,6 @@ export default class HealLogEntry extends LogEntry {
   public constructor(initializer: HealLogEntryInitializer) {
     super(LogEntryType.HEAL, initializer);
     
-    this.periodic = initializer.periodic ?? false;
     this.reviving = initializer.reviving ?? false;
     this.target_unit = initializer.target_unit;
     this.received_value = initializer.received_value;
@@ -52,7 +50,6 @@ export default class HealLogEntry extends LogEntry {
 }
 
 export interface HealLogEntryInitializer extends LogEntryInitializer {
-  periodic?: boolean;
   reviving?: boolean;
   target_unit: Unit;
   received_value: number;

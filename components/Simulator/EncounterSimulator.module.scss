@@ -1,0 +1,22 @@
+.Component {
+  display:         flex;
+  flex:            1 1 auto;
+  flex-flow:       column;
+  justify-content: space-between;
+
+  .Controls {
+    display:         flex;
+    flex:            0 0 auto;
+    grid-column-gap: 5px;
+    justify-content: space-between;
+
+    .Encounter {
+      display:         flex;
+      grid-column-gap: 5px;
+
+      .Generate, .Play, .Pause, .Stop {
+        font-family: IcoFont, sans-serif;
+      }
+    }
+  }
+}

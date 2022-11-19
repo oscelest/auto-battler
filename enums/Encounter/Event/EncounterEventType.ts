@@ -1,5 +1,6 @@
 enum EncounterEventType {
-  PROGRESS = "progress",
+  PROGRESS     = "progress",
+  STATE_CHANGE = "state_change",
 }
 
 export default EncounterEventType;

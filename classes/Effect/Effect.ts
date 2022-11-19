@@ -35,7 +35,7 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
     this.unit = initializer.unit;
     this.trigger_list = (initializer.trigger_list ?? initializer.entity.trigger_list)?.map(entity => Trigger.instantiate(entity instanceof TriggerEntity ? {entity, effect: this} : entity)) ?? [];
     
-    this.unit.encounter.log.writeBegin(this.reference, `${this.source} applied ${this} to ${this.unit} for ${HumanizeDuration(this.duration)}`);
+    this.unit.encounter.log.writeBegin(this.reference);
     
     this.on(EffectEventType.EXPIRE, this.onExpire);
     this.unit.on(UnitEventType.DIED, this.onUnitDeath);
@@ -77,14 +77,15 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
   
   private onExpire = (event: EffectExpireEvent) => {
     this.off(EffectEventType.EXPIRE, this.onExpire);
-    
+  
     for (let i = this.unit.effect_list.length - 1; i >= 0; i--) {
       if (this.id === this.unit.effect_list[i].id) {
         this.unit.effect_list.splice(i, 1);
       }
     }
-    
-    this.unit.encounter.log.writeFinish(this.reference);
+  
+  
+    this.unit.encounter.log.writeEnd(this.reference, `${this} ${this.getExpireString(event.expiration_type)} ${this.unit} after ${HumanizeDuration(this.duration)}.`);
   };
   
   private onUnitDeath = (event: UnitKillEvent) => {
@@ -101,6 +102,19 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
       this.trigger(EffectEventType.EXPIRE, {effect: this, expiration_type: EffectExpirationType.DURATION});
     }
   };
+  
+  private getExpireString(type: EffectExpirationType) {
+    switch (type) {
+      case EffectExpirationType.CLEANSE:
+        return "was cleansed from";
+      case EffectExpirationType.DEATH:
+        return "was removed on death from";
+      case EffectExpirationType.DISPEL:
+        return "was dispelled from";
+      case EffectExpirationType.DURATION:
+        return "expired from";
+    }
+  }
 }
 
 export interface EffectInitializer<Entity extends EffectEntity = EffectEntity> extends EntityEventElementInitializer<Entity> {

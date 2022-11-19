@@ -8,11 +8,11 @@ export default class PeriodicTrigger extends Trigger<PeriodicTriggerEntity> {
   
   public current_interval: number;
   
-  constructor(initializer: PeriodicStatusEffectTriggerInitializer) {
+  constructor(initializer: PeriodicEffectTriggerInitializer) {
     super(initializer);
   
     this.current_interval = initializer.current_interval ?? 0;
-    
+  
     this.effect.on(EffectEventType.EXPIRE, this.onEffectExpire);
     this.effect.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
   }
@@ -35,6 +35,6 @@ export default class PeriodicTrigger extends Trigger<PeriodicTriggerEntity> {
   };
 }
 
-export interface PeriodicStatusEffectTriggerInitializer extends TriggerInitializer<PeriodicTriggerEntity> {
+export interface PeriodicEffectTriggerInitializer extends TriggerInitializer<PeriodicTriggerEntity> {
   current_interval?: number;
 }

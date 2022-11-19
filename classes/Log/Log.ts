@@ -5,8 +5,8 @@ import LogSection from "./LogSection";
 
 export default class Log {
   
-  private readonly log_section_list: LogSection[];
-  private readonly log_instance_collection: {[source_id: string]: LogInstance};
+  public readonly log_section_list: LogSection[];
+  public readonly log_instance_collection: {[source_id: string]: LogInstance};
   
   constructor(initializer: LogInitializer = {}) {
     this.log_section_list = initializer.log_section_list ?? [];
@@ -14,8 +14,6 @@ export default class Log {
   }
   
   public toString() {
-    console.log(this.log_section_list);
-    console.log(this.log_instance_collection);
     return this.log_section_list.join("\n");
   }
   
@@ -23,21 +21,20 @@ export default class Log {
     this.log_section_list.push(new LogSection({title}));
   }
   
-  public writeBegin(source: Source, title: string) {
+  public writeBegin(source: Source) {
     if (this.log_instance_collection[source.id]) {
       console.warn(`Attempting to start writing to log from source with ID "${source.id}", but it already exists.`);
     }
     
-    this.log_instance_collection[source.id] = new LogInstance({title});
+    this.log_instance_collection[source.id] = new LogInstance();
   }
   
-  public writeFinish(source: Source) {
+  public writeEnd(source: Source, title: string) {
     if (!this.log_instance_collection[source.id]) {
       throw new Error(`Attempting to finish writing to log from source with ID "${source.id}", but it doesn't exist.`);
     }
-  
-    console.log(this.log_instance_collection[source.id]);
-    this.log_section_list.push(this.log_instance_collection[source.id].toLogSection());
+    
+    this.log_section_list.push(this.log_instance_collection[source.id].toLogSection(title));
     delete this.log_instance_collection[source.id];
   }
   

@@ -26,7 +26,7 @@ function UnitPortrait(props: UnitPortraitProps) {
     <div {...component_props} className={classes.join(" ")}>
       <StatusEffectBar>{effect_list}</StatusEffectBar>
       <ProgressBar className={Style.NameBar} percent={name_percent} background={name_background} column_left={name}/>
-      <ProgressBar className={Style.HealthBar} percent={health_percent} background={health_background} column_left={`HP: ${health}`} column_right={`${health_percent.toFixed(1)}%`}/>
+      <ProgressBar className={Style.HealthBar} percent={health_percent} background={health_background} column_left={`HP: ${Math.ceil(health)}`} column_right={`${health_percent.toFixed(1)}%`}/>
       <div className={Style.SkillList}>{unit.skill_list.map(renderSkill)}</div>
     </div>
   );

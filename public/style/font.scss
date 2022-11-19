@@ -3,9 +3,11 @@
     font-family: $name;
     font-weight: $weight;
     font-style:  $style;
-    src:         url("/font/" + $name +"-" + $type + ".ttf");
+    src:         url("/font/" + $name + "-" + $type + ".ttf");
   }
 }
+
+@include Font("IcoFont", "Regular", 400, normal);
 
 @include Font("Kanit", "Thin", 100, normal);
 @include Font("Kanit", "ThinItalic", 100, italic);

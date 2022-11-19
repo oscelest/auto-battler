@@ -4,9 +4,11 @@ import TriggerType from "../../enums/Encounter/TriggerType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import {Effect} from "../Effect";
+import {DamageTakenTriggerInitializer} from "./DamageTakenTrigger";
 import {ExpirationTriggerInitializer} from "./ExpirationTrigger";
-import {ExpirationStatusEffectTrigger, PeriodicStatusEffectTrigger} from "./index";
-import {PeriodicStatusEffectTriggerInitializer} from "./PeriodicTrigger";
+import {HealingReceivedTriggerInitializer} from "./HealingReceivedTrigger";
+import {DamageTakenTrigger, ExpirationTrigger, HealingReceivedTrigger, PeriodicTrigger} from "./index";
+import {PeriodicEffectTriggerInitializer} from "./PeriodicTrigger";
 
 export default abstract class Trigger<Entity extends TriggerEntity = TriggerEntity, Event extends TriggerEvent = TriggerEvent> extends EntityEventElement<Entity, Event> {
   
@@ -20,13 +22,13 @@ export default abstract class Trigger<Entity extends TriggerEntity = TriggerEnti
   public static instantiate(initializer: TriggerInitializer) {
     switch (initializer.entity.type) {
       case TriggerType.PERIODIC:
-        return new PeriodicStatusEffectTrigger(initializer as PeriodicStatusEffectTriggerInitializer);
+        return new PeriodicTrigger(initializer as PeriodicEffectTriggerInitializer);
       case TriggerType.EXPIRATION:
-        return new ExpirationStatusEffectTrigger(initializer as ExpirationTriggerInitializer);
-      case TriggerType.DAMAGE_TAKEN:
-        return new ExpirationStatusEffectTrigger(initializer as ExpirationTriggerInitializer);
+        return new ExpirationTrigger(initializer as ExpirationTriggerInitializer);
+      case TriggerType.DAMAGE_RECEIVED:
+        return new DamageTakenTrigger(initializer as DamageTakenTriggerInitializer);
       case TriggerType.HEALING_RECEIVED:
-        return new ExpirationStatusEffectTrigger(initializer as ExpirationTriggerInitializer);
+        return new HealingReceivedTrigger(initializer as HealingReceivedTriggerInitializer);
     }
   }
 }

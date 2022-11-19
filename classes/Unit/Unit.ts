@@ -55,7 +55,6 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   
   public get modifier_list(): ModifierEntity[] {
     return [
-      ...this.entity.modifier_list,
       ...this.entity.class.modifier_list,
       ...this.effect_list.reduce(
         (result, status_effect) => [...result, ...status_effect.entity.modifier_list],

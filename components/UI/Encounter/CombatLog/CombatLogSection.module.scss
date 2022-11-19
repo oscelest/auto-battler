@@ -1,0 +1,43 @@
+.Component {
+  display:   flex;
+  flex:      0 0 auto;
+  flex-flow: column;
+
+  .Collapsible:global(.collapsible) {
+    border: 0 solid transparent;
+
+    :global(.collapsible-label) {
+      user-select:   text;
+      border-bottom: 1px solid transparent;
+    }
+
+    :global(.collapsible-content) {
+      margin-left: 15px;
+    }
+
+    &[data-collapsed="true"] :global(.collapsible-label) .Icon {
+      transform: rotate(-90deg);
+    }
+
+    .Title {
+
+    }
+  }
+
+  .Text {
+    display:     flex;
+    align-items: center;
+  }
+
+  .Icon {
+    display:         flex;
+    justify-content: center;
+    align-items:     center;
+    width:           20px;
+    height:          20px;
+    font-size:       18px;
+    font-family:     IcoFont, sans-serif;
+    user-select:     none;
+    transition:      transform .2s ease-in-out;
+  }
+}

@@ -7,7 +7,7 @@ export default class DamageTakenTriggerEntity extends TriggerEntity {
   public modifier_list: ModifierEntity[];
   
   constructor(initializer: DamageTakenStatusEffectTriggerEntityInitializer) {
-    super(TriggerType.DAMAGE_TAKEN, initializer);
+    super(TriggerType.DAMAGE_RECEIVED, initializer);
     this.modifier_list = initializer.modifier_list;
   }
 }

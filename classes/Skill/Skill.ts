@@ -31,11 +31,11 @@ export default abstract class Skill extends EntityEventElement<SkillEntity, Skil
   }
   
   private static onSkillUse = ({skill}: SkillUseEvent) => {
-    skill.unit.encounter.log.writeBegin(skill.source, `${skill.unit} used ${skill}`);
+    skill.unit.encounter.log.writeBegin(skill.source);
     for (let operation of skill.entity.operation_list) {
       Operation.execute(operation, skill.unit, skill.source);
     }
-    skill.unit.encounter.log.writeFinish(skill.source);
+    skill.unit.encounter.log.writeEnd(skill.source, `${skill.unit} used ${skill}`);
   };
   
   public static instantiate<T extends SkillEntity | SkillInitializer>(initializer: SkillInitializer) {

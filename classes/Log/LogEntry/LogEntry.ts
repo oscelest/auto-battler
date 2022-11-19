@@ -1,5 +1,6 @@
 import LogEntryType from "../../../enums/Encounter/LogEntryType";
 import {Source} from "../../Source";
+import {LogSection} from "../index";
 import {ComboPointLogEntryInitializer} from "./ComboPointLogEntry";
 import {DamageLogEntryInitializer} from "./DamageLogEntry";
 import {EffectLogEntryInitializer} from "./EffectLogEntry";
@@ -19,6 +20,12 @@ export default abstract class LogEntry {
     this.source = initializer.source;
     this.periodic = initializer.periodic ?? false;
   }
+  
+  public abstract toString(): string;
+  
+  public abstract getUniqueKey(): string;
+  
+  public abstract incrementBy(value: LogEntry): this
   
   public static instantiate(type: LogEntryType, initializer: LogEntryInitializer) {
     switch (type) {
@@ -48,9 +55,9 @@ export default abstract class LogEntry {
     throw new Error(`Could not initialize LogEntry with type ${type}.`);
   }
   
-  public abstract getUniqueKey(): string;
-  
-  public abstract incrementBy(value: LogEntry): this
+  public toLogSection() {
+    return new LogSection({title: this.toString()});
+  }
   
 }
 

@@ -46,43 +46,39 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
   public start() {
     if (this.state !== EncounterStateType.READY) return;
     
-    this.state = EncounterStateType.IN_PROGRESS;
     this.time_started = new Date();
-    this.log.writeLine("Encounter started!");
+    this.setState(EncounterStateType.IN_PROGRESS);
     
     this.loop();
   }
   
   public pause() {
     if (this.state !== EncounterStateType.IN_PROGRESS) return;
-    this.state = EncounterStateType.PAUSED;
-    this.log.writeLine("Encounter paused!");
+    this.setState(EncounterStateType.PAUSED);
   }
   
   public unpause() {
     if (this.state !== EncounterStateType.PAUSED) return;
-    this.state = EncounterStateType.IN_PROGRESS;
-    this.log.writeLine("Encounter unpaused!");
+    this.setState(EncounterStateType.IN_PROGRESS);
     this.loop();
   }
   
   public cancel() {
     if (this.state !== EncounterStateType.IN_PROGRESS) return;
-    this.state = EncounterStateType.CANCELLED;
-    this.log.writeLine("Encounter cancelled!");
+    this.setState(EncounterStateType.CANCELLED);
   }
   
   public end(won: boolean) {
     if (this.state !== EncounterStateType.IN_PROGRESS) return;
-    
+  
     const started = this.time_started?.getTime() ?? Date.now();
     const current = Date.now() - started;
     const total = (current / 1000).toFixed(1);
   
-    this.state = EncounterStateType.COMPLETED;
+    this.setState(EncounterStateType.COMPLETED);
     this.log.writeLine(`Battle ${won ? "won" : "lost"} after ${total} seconds!`);
   
-    console.log(this.log.toString());
+    console.log(this.log.log_section_list);
   
     this.trigger(EncounterEventType.PROGRESS, {encounter: this});
   }
@@ -161,10 +157,15 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     if (!this.unit_list.filter(unit => unit.alignment === UnitAlignmentType.PLAYER && unit.health > 0).length) {
       return this.end(false);
     }
-    
+  
     this.trigger(EncounterEventType.PROGRESS, {encounter: this});
-    
+  
     setTimeout(() => this.loop(), Encounter.tick_interval);
+  }
+  
+  private setState(state: EncounterStateType) {
+    this.state = state;
+    this.trigger(EncounterEventType.STATE_CHANGE, {encounter: this, state});
   }
   
   private getUnitInitializer(entity: UnitEntity, alignment: UnitAlignmentType) {
@@ -185,8 +186,14 @@ export interface EncounterInitializer extends EventElementInitializer {
 
 type EncounterEventHandler = {
   [EncounterEventType.PROGRESS]: (event: EncounterProgressEvent) => void
+  [EncounterEventType.STATE_CHANGE]: (event: EncounterStateChangeEvent) => void
 }
 
 export interface EncounterProgressEvent {
   encounter: Encounter;
+}
+
+export interface EncounterStateChangeEvent {
+  encounter: Encounter;
+  state: EncounterStateType;
 }

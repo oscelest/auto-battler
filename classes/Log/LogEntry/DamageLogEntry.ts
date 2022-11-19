@@ -22,9 +22,10 @@ export default class DamageLogEntry extends LogEntry {
   
   public toString() {
     const {source, damage_source, damage_element, received_value, target_unit} = this;
+    const value = Math.round(received_value);
     const periodic = this.getPeriodicString();
-    
-    return `${source} dealt ${received_value} ${damage_element} ${damage_source} damage to ${target_unit} ${periodic}.`.replace(/\s{2,}/g, "");
+  
+    return `${source} dealt ${value} ${damage_element} ${damage_source} damage to ${target_unit} ${periodic}.`.replace(/\s{2,}/g, "");
   }
   
   private getPeriodicString() {

@@ -1,5 +1,4 @@
 import {v4} from "uuid";
-import {ModifierEntity} from "../Modifier";
 import {SkillEntity} from "../Skill";
 import {UnitClassEntity} from "./index";
 
@@ -10,7 +9,6 @@ export default class UnitEntity {
   public class: UnitClassEntity;
   public experience: number;
   public skill_list: SkillEntity[];
-  public modifier_list: ModifierEntity[];
   
   constructor(initializer: UnitEntityInitializer) {
     this.id = initializer.id ?? v4();
@@ -18,7 +16,6 @@ export default class UnitEntity {
     this.class = initializer.class;
     this.experience = initializer.experience ?? 0;
     this.skill_list = initializer.skill_list ?? [];
-    this.modifier_list = initializer.modifier_list ?? [];
   }
 }
 
@@ -28,5 +25,4 @@ export interface UnitEntityInitializer {
   class: UnitClassEntity;
   experience?: number;
   skill_list?: SkillEntity[];
-  modifier_list?: ModifierEntity[];
 }

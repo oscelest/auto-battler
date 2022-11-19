@@ -1,7 +1,7 @@
 enum TriggerType {
   PERIODIC         = "periodic",
   EXPIRATION       = "expiration",
-  DAMAGE_TAKEN     = "damage_taken",
+  DAMAGE_RECEIVED  = "damage_received",
   HEALING_RECEIVED = "healing_received",
 }
 

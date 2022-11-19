@@ -1,6 +1,7 @@
 import ModifierNumericalType from "../../enums/Encounter/Modifier/ModifierNumericalType";
 import ModifierType from "../../enums/Encounter/Modifier/ModifierType";
-import {ModifierEntity, ModifierEntityInitializer} from "./index";
+import {ModifierEntity} from "./index";
+import {ModifierEntityInitializer} from "./ModifierEntity";
 
 export default class NumericalModifierEntity extends ModifierEntity {
   

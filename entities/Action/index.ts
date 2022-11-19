@@ -1,5 +1,5 @@
-export {default as ActionEntity, type ActionEntityInitializer} from "./ActionEntity";
-export {default as DamageActionEntity, type DamageActionEntityInitializer} from "./DamageActionEntity";
-export {default as HealActionEntity, type HealActionEntityInitializer} from "./HealActionEntity";
-export {default as ComboPointActionEntity, type ComboPointActionEntityInitializer} from "./ComboPointActionEntity";
+export {default as ActionEntity} from "./ActionEntity";
+export {default as DamageActionEntity} from "./DamageActionEntity";
+export {default as HealActionEntity} from "./HealActionEntity";
+export {default as ComboPointActionEntity} from "./ComboPointActionEntity";
 

@@ -1,5 +1,6 @@
 import ActionType from "../../enums/Encounter/ActionType";
-import {ActionEntity, ActionEntityInitializer} from "./index";
+import {ActionEntityInitializer} from "./ActionEntity";
+import {ActionEntity} from "./index";
 
 export default class ComboPointActionEntity extends ActionEntity {
   

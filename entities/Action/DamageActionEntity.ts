@@ -1,7 +1,8 @@
 import ActionType from "../../enums/Encounter/ActionType";
 import DamageElementType from "../../enums/Encounter/Damage/DamageElementType";
 import DamageSourceType from "../../enums/Encounter/Damage/DamageSourceType";
-import {ActionEntity, ActionEntityInitializer} from "./index";
+import {ActionEntityInitializer} from "./ActionEntity";
+import {ActionEntity} from "./index";
 
 export default class DamageActionEntity extends ActionEntity {
   

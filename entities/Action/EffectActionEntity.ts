@@ -1,6 +1,7 @@
 import ActionType from "../../enums/Encounter/ActionType";
 import {EffectEntity} from "../Effect";
-import {ActionEntity, ActionEntityInitializer} from "./index";
+import {ActionEntityInitializer} from "./ActionEntity";
+import {ActionEntity} from "./index";
 
 export default class EffectActionEntity extends ActionEntity {
   

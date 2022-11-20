@@ -1,5 +1,5 @@
-import HealingReceivedTriggerEntity from "../../entities/Trigger/HealingReceivedTriggerEntity";
 import {EffectEventType, UnitEventType} from "../../enums";
+import {HealingReceivedTriggerEntity} from "../../generated/contract/entities/Trigger/HealingReceivedTrigger.entity";
 import {UnitHealEvent} from "../Unit/Unit";
 import Trigger, {TriggerInitializer} from "./Trigger";
 

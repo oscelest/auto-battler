@@ -1,6 +1,6 @@
 import React, {HTMLAttributes} from "react";
 import {Encounter, Unit} from "../../classes";
-import UnitAlignmentType from "../../enums/Unit/UnitAlignmentType";
+import {UnitAlignmentType} from "../../enums";
 import CombatLog from "../UI/Encounter/CombatLog/CombatLog";
 import UnitPortrait from "../Unit/UnitPortrait";
 import Style from "./EncounterScene.module.scss";

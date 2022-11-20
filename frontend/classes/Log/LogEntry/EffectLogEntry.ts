@@ -1,5 +1,5 @@
 import HumanizeDuration from "humanize-duration";
-import LogEntryType from "../../../enums/Discriminator/LogEntryType";
+import {LogEntryType} from "../../../enums";
 import {Effect} from "../../Effect";
 import {Unit} from "../../Unit";
 import LogEntry, {LogEntryInitializer} from "./LogEntry";

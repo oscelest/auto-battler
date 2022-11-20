@@ -1,10 +1,10 @@
 import HumanizeDuration from "humanize-duration";
-import {EffectEntity, ModifierEntity} from "../../entities";
-import {TriggerEntity} from "../../entities/Trigger";
-import {EffectEventType, EncounterEventType, UnitEventType} from "../../enums";
-import SourceType from "../../enums/Discriminator/SourceType";
-import EffectAlignmentType from "../../enums/Effect/EffectAlignmentType";
-import EffectExpirationType from "../../enums/Effect/EffectExpirationType";
+import {EffectEventType, EncounterEventType, SourceType, UnitEventType} from "../../enums";
+import {EffectEntity} from "../../generated/contract/entities/Effect/Effect.entity";
+import {ModifierEntity} from "../../generated/contract/entities/Modifier/Modifier.entity";
+import {isTriggerEntity, TriggerEntity} from "../../generated/contract/entities/Trigger/Trigger.entity";
+import {EffectAlignmentType} from "../../generated/contract/enums/Effect/EffectAlignmentType";
+import {EffectExpirationType} from "../../generated/contract/enums/Effect/EffectExpirationType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import {Encounter} from "../Encounter";
@@ -26,17 +26,18 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
   
   constructor(initializer: EffectInitializer<Entity>) {
     super(initializer);
-    
+  
     this.duration = initializer.duration ?? 0;
     this.duration_elapsed = initializer.duration_elapsed ?? 0;
-    
+  
     this.reference = new Source({type: SourceType.EFFECT, value: this});
     this.source = initializer.source;
     this.unit = initializer.unit;
-    this.trigger_list = (initializer.trigger_list ?? initializer.entity.trigger_list)?.map(entity => Trigger.instantiate(entity instanceof TriggerEntity ? {entity, effect: this} : entity)) ?? [];
-    
+    this.trigger_list = initializer.trigger_list?.map(entity => Trigger.instantiate(isTriggerEntity(entity) ? {effect: this, entity} : entity))
+      ?? initializer.entity.trigger_list.map(entity => Trigger.instantiate({effect: this, entity}));
+  
     this.unit.encounter.log.writeBegin(this.reference);
-    
+  
     this.on(EffectEventType.EXPIRE, this.onExpire);
     this.unit.on(UnitEventType.DIED, this.onUnitDeath);
     this.unit.encounter.on(EncounterEventType.PROGRESS, this.onEncounterProgress);
@@ -71,7 +72,7 @@ export default class Effect<Entity extends EffectEntity = EffectEntity> extends 
     );
   }
   
-  public toString() {
+  public override toString() {
     return this.entity.name;
   }
   

@@ -1,5 +1,5 @@
-import PeriodicTriggerEntity from "../../entities/Trigger/PeriodicTriggerEntity";
 import {EffectEventType, EncounterEventType} from "../../enums";
+import {PeriodicTriggerEntity} from "../../generated/contract/entities/Trigger/PeriodicTrigger.entity";
 import Operation from "../../modules/Operation";
 import {Encounter} from "../Encounter";
 import Trigger, {TriggerInitializer} from "./Trigger";

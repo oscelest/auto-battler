@@ -1,5 +1,5 @@
-import ExpirationTriggerEntity from "../../entities/Trigger/ExpirationTriggerEntity";
 import {EffectEventType} from "../../enums";
+import {ExpirationTriggerEntity} from "../../generated/contract/entities/Trigger/ExpirationTrigger.entity";
 import Trigger, {TriggerInitializer} from "./Trigger";
 
 export default class ExpirationTrigger extends Trigger<ExpirationTriggerEntity> {

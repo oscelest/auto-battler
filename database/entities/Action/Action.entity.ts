@@ -1,8 +1,8 @@
 import {Collection, Entity, Enum, ManyToMany, Property} from "@mikro-orm/core";
 import {ActionType} from "../../enums";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
-import ModifierEntity from "../Modifier/Modifier.entity";
-import OperationEntity from "../Operation/Operation.entity";
+import {ModifierEntity} from "../Modifier";
+import {OperationEntity} from "../Operation";
 
 @Entity({
   abstract: true,

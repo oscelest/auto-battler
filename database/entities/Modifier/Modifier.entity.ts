@@ -3,9 +3,9 @@ import {ModifierCategoryType, ModifierType} from "../../enums";
 import {ActionEntity} from "../Action";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
 import {EffectEntity} from "../Effect";
-import OperationEntity from "../Operation/Operation.entity";
-import SkillEntity from "../Skill/Skill.entity";
-import UnitClassEntity from "../Unit/UnitClass.entity";
+import {OperationEntity} from "../Operation";
+import {SkillEntity} from "../Skill";
+import {UnitClassEntity} from "../Unit";
 
 @Entity({
   abstract: true,

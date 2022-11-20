@@ -1,6 +1,6 @@
-import DamageElementType from "../../../enums/Damage/DamageElementType";
-import DamageSourceType from "../../../enums/Damage/DamageSourceType";
-import LogEntryType from "../../../enums/Discriminator/LogEntryType";
+import {LogEntryType} from "../../../enums";
+import {DamageElementType} from "../../../generated/contract/enums/Damage/DamageElementType";
+import {DamageSourceType} from "../../../generated/contract/enums/Damage/DamageSourceType";
 import {Unit} from "../../Unit";
 import LogEntry, {LogEntryInitializer} from "./LogEntry";
 

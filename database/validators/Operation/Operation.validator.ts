@@ -1,6 +1,6 @@
 import {IsEnum, IsOptional, IsString} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {TargetType} from "../../enums/Encounter/TargetType";
+import {TargetType} from "../../enums";
 
 @InputType()
 export default class OperationValidator {

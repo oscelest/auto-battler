@@ -1,10 +1,15 @@
 import {Unit} from "../classes";
 import Source from "../classes/Source/Source";
 import {UnitComboPointAction, UnitDamageAction, UnitHealAction} from "../classes/Unit/Unit";
-import {ActionEntity, ComboPointActionEntity, DamageActionEntity, EffectActionEntity, EffectEntity, HealActionEntity} from "../entities";
-import ActionType from "../enums/Discriminator/ActionType";
-import SourceType from "../enums/Discriminator/SourceType";
-import ModifierCategoryType from "../enums/Modifier/ModifierCategoryType";
+import {SourceType} from "../enums";
+import {ActionEntity} from "../generated/contract/entities/Action/Action.entity";
+import {ComboPointActionEntity} from "../generated/contract/entities/Action/ComboPointAction.entity";
+import {DamageActionEntity} from "../generated/contract/entities/Action/DamageAction.entity";
+import {EffectActionEntity} from "../generated/contract/entities/Action/EffectAction.entity";
+import {HealActionEntity} from "../generated/contract/entities/Action/HealAction.entity";
+import {EffectEntity} from "../generated/contract/entities/Effect/Effect.entity";
+import {ActionType} from "../generated/contract/enums/Discriminator/ActionType";
+import {ModifierCategoryType} from "../generated/contract/enums/Modifier/ModifierCategoryType";
 import Modifier from "./Modifier";
 
 module Action {

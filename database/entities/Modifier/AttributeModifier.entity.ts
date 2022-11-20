@@ -1,5 +1,5 @@
 import {Entity, Enum} from "@mikro-orm/core";
-import {ModifierType, UnitAttributeType} from "../../../enums";
+import {ModifierType, UnitAttributeType} from "../../enums";
 import {ModifierEntity, ModifierEntityInitializer} from "./Modifier.entity";
 
 @Entity({

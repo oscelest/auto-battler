@@ -1,4 +1,4 @@
-import {Collection, Entity, Enum, ManyToMany, Property} from "@mikro-orm/core";
+import {Collection, Entity, Enum, ManyToMany} from "@mikro-orm/core";
 import {TargetType} from "../../enums";
 import {ActionEntity} from "../Action";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
@@ -8,9 +8,6 @@ import {TriggerEntity} from "../Trigger";
 
 @Entity()
 export class OperationEntity extends CoreEntity<OperationEntity> {
-  
-  @Property()
-  public description?: string;
   
   @Enum(() => TargetType)
   public target: TargetType;
@@ -32,7 +29,6 @@ export class OperationEntity extends CoreEntity<OperationEntity> {
   constructor(initializer: OperationEntityInitializer) {
     super(initializer);
     
-    this.description = initializer.description ?? "";
     this.target = initializer.target;
     this.modifier_list = initializer.modifier_list ?? new Collection<ModifierEntity>(this);
     this.action_list = initializer.action_list ?? new Collection<ActionEntity>(this);
@@ -43,7 +39,6 @@ export class OperationEntity extends CoreEntity<OperationEntity> {
 }
 
 export interface OperationEntityInitializer extends CoreEntityInitializer {
-  description?: string;
   target: TargetType;
   modifier_list?: Collection<ModifierEntity>;
   action_list?: Collection<ActionEntity>;

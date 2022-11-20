@@ -1,4 +1,4 @@
-import LogEntryType from "../../../enums/Discriminator/LogEntryType";
+import {LogEntryType} from "../../../enums";
 import {Source} from "../../Source";
 import {LogSection} from "../index";
 import {ComboPointLogEntryInitializer} from "./ComboPointLogEntry";

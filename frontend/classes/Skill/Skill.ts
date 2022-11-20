@@ -1,8 +1,8 @@
-import {ModifierEntity, SkillEntity} from "../../entities";
-import {SkillEventType} from "../../enums";
-import SkillType from "../../enums/Discriminator/SkillType";
-import SourceType from "../../enums/Discriminator/SourceType";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
+import {SkillEventType, SourceType} from "../../enums";
+import {ModifierEntity} from "../../generated/contract/entities/Modifier/Modifier.entity";
+import {SkillEntity} from "../../generated/contract/entities/Skill/Skill.entity";
+import {SkillType} from "../../generated/contract/enums/Discriminator/SkillType";
+import {ModifierCategoryType} from "../../generated/contract/enums/Modifier/ModifierCategoryType";
 import Modifier from "../../modules/Modifier";
 import Operation from "../../modules/Operation";
 import {EntityEventElement} from "../Base";
@@ -45,9 +45,10 @@ export default abstract class Skill extends EntityEventElement<SkillEntity, Skil
       case SkillType.CHARGE:
         return new ChargeSkill(initializer as ChargeSkillInitializer);
     }
+    throw new Error();
   }
   
-  public toString(): string {
+  public override toString(): string {
     return this.entity.name;
   }
   

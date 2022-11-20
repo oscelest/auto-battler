@@ -1,8 +1,8 @@
 import React, {HTMLAttributes} from "react";
 import {ChargeSkill, ComboSkill, Skill, Unit} from "../../classes";
-import SkillType from "../../enums/Discriminator/SkillType";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
-import UnitAttributeType from "../../enums/Unit/UnitAttributeType";
+import {SkillType} from "../../generated/contract/enums/Discriminator/SkillType";
+import {ModifierCategoryType} from "../../generated/contract/enums/Modifier/ModifierCategoryType";
+import {UnitAttributeType} from "../../generated/contract/enums/Unit/UnitAttributeType";
 import ComboBar from "../UI/ComboBar";
 import ProgressBar from "../UI/ProgressBar";
 import StatusEffectBar from "../UI/StatusEffectBar";
@@ -38,7 +38,7 @@ function UnitPortrait(props: UnitPortraitProps) {
         const charge_background = "linear-gradient(to bottom, #00b4db, #0083b0)";
         return <ProgressBar key={index} className={Style.ChargeBar} percent={percentage}
                             background={charge_background} column_left={skill.entity.name} column_right={`${percentage.toFixed(0)}%`}/>;
-      
+  
       case SkillType.COMBO:
         // TODO: This is not the real min and max combo
         const {combo_point_current} = skill as ComboSkill;
@@ -46,6 +46,8 @@ function UnitPortrait(props: UnitPortraitProps) {
         const combo_background = "linear-gradient(to top, #f12711, #f5af19)";
         return <ComboBar key={index} className={Style.ComboBar} current={combo_point_current} max={combo_point_max}
                          background={combo_background} column_left={skill.entity.name} column_right={`${combo_point_current} / ${combo_point_max}`}/>;
+      default:
+        return null;
     }
   }
   

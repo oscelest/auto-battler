@@ -1,5 +1,9 @@
-/node_modules
+/.vs
 /.next
+
+/node_modules
+package-lock.json
+
 /out
 /build
 /dist
@@ -8,5 +12,4 @@
 .idea
 
 npm-debug.log*
-/.vs
 /database/migrations

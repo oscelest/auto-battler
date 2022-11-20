@@ -1,11 +1,8 @@
 import {MikroORM} from "@mikro-orm/core";
-import * as dotenv from "dotenv";
-dotenv.config();
+import {DatabaseConfig} from "./mikro-orm.config";
 
-import MikroOrmConfig from "../mikro-orm.config";
-
-export default (async () => {
-  const orm = await MikroORM.init(MikroOrmConfig);
+(async () => {
+  const orm = await MikroORM.init(DatabaseConfig);
   
   if (!(await orm.isConnected()) || !(await orm.migrator.getStorage().executed())) {
     await orm.getMigrator().createInitialMigration();

@@ -1,6 +1,6 @@
 import React, {HTMLAttributes} from "react";
 import {Effect} from "../../classes";
-import EffectAlignmentType from "../../enums/Effect/EffectAlignmentType";
+import {EffectAlignmentType} from "../../generated/contract/enums/Effect/EffectAlignmentType";
 import Countdown from "./Countdown";
 import Style from "./StatusEffectBar.module.scss";
 

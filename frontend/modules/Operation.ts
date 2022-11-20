@@ -1,8 +1,9 @@
 import {Unit} from "../classes";
 import Source from "../classes/Source/Source";
-import {ModifierEntity, OperationEntity} from "../entities";
-import SourceType from "../enums/Discriminator/SourceType";
-import TargetType from "../enums/Encounter/TargetType";
+import {SourceType} from "../enums";
+import {ModifierEntity} from "../generated/contract/entities/Modifier/Modifier.entity";
+import {OperationEntity} from "../generated/contract/entities/Operation/Operation.entity";
+import {TargetType} from "../generated/contract/enums/TargetType";
 import Action from "./Action";
 import Modifier from "./Modifier";
 

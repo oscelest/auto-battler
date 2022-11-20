@@ -1,9 +1,8 @@
 import {EntityManager} from "@mikro-orm/core";
 import GraphQL from "graphql";
-import fieldsToRelations from "graphql-fields-to-relations";
+// import fieldsToRelations from "graphql-fields-to-relations";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
-import UnitEntity from "../../entities/Unit/Unit.entity";
-import UnitClassEntity from "../../entities/Unit/UnitClass.entity";
+import {UnitClassEntity, UnitEntity} from "../../entities";
 import UnitValidator from "../../validators/Unit/Unit.validator";
 
 @Resolver(() => UnitEntity)
@@ -21,8 +20,8 @@ export class UnitResolver {
   public async getUnitList(@Ctx() ctx: MyContext, @Info() info: GraphQL.GraphQLResolveInfo): Promise<UnitEntity[]> {
     console.log(ctx, info);
   
-    const relationPaths = fieldsToRelations(info);
-    console.log(relationPaths);
+    // const relationPaths = fieldsToRelations(info);
+    // console.log(relationPaths);
     // return ctx.em.getRepository(UnitEntity).findAll();
     return null as any;
   }
@@ -38,10 +37,10 @@ export class UnitResolver {
   
   @Mutation(() => UnitEntity)
   public async updateAuthor(@Arg("input") input: UnitValidator, @Arg("id") id: string, @Ctx() ctx: MyContext, @Info() info: GraphQL.GraphQLResolveInfo): Promise<UnitEntity> {
-    const relationPaths = fieldsToRelations(info);
-    console.log(relationPaths);
+    // const relationPaths = fieldsToRelations(info);
+    // console.log(relationPaths);
     const entity = await ctx.em.getRepository(UnitEntity).findOneOrFail({id});
-    
+  
     entity.assign(input);
     await ctx.em.persist(entity).flush();
     return entity;

@@ -1,4 +1,4 @@
-import LogEntryType from "../../../enums/Discriminator/LogEntryType";
+import {LogEntryType} from "../../../enums";
 import {Skill} from "../../Skill";
 import LogEntry, {LogEntryInitializer} from "./LogEntry";
 

@@ -1,7 +1,7 @@
 import {Entity, ManyToOne} from "@mikro-orm/core";
 import {ActionType} from "../../enums";
-import EffectEntity from "../Effect/Effect.entity";
-import  {ActionEntity, ActionEntityInitializer} from "./Action.entity";
+import {EffectEntity} from "../Effect";
+import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
 @Entity({
   discriminatorValue: ActionType.EFFECT

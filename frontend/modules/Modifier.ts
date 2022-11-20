@@ -1,12 +1,13 @@
 import {Unit} from "../classes";
 import Source from "../classes/Source/Source";
-import {ModifierEntity, NumericalModifierEntity} from "../entities";
-import AttributeModifierEntity from "../entities/Modifier/AttributeModifierEntity";
-import SourceType from "../enums/Discriminator/SourceType";
-import ModifierCategoryType from "../enums/Modifier/ModifierCategoryType";
-import ModifierNumericalType from "../enums/Modifier/ModifierNumericalType";
-import ModifierType from "../enums/Modifier/ModifierType";
-import UnitAttributeType from "../enums/Unit/UnitAttributeType";
+import {SourceType} from "../enums";
+import {AttributeModifierEntity} from "../generated/contract/entities/Modifier/AttributeModifier.entity";
+import {ModifierEntity} from "../generated/contract/entities/Modifier/Modifier.entity";
+import {NumericalModifierEntity} from "../generated/contract/entities/Modifier/NumericalModifier.entity";
+import {ModifierType} from "../generated/contract/enums/Discriminator/ModifierType";
+import {ModifierCategoryType} from "../generated/contract/enums/Modifier/ModifierCategoryType";
+import {ModifierNumericalType} from "../generated/contract/enums/Modifier/ModifierNumericalType";
+import {UnitAttributeType} from "../generated/contract/enums/Unit/UnitAttributeType";
 
 module Modifier {
   

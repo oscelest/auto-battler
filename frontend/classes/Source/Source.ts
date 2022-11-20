@@ -1,5 +1,5 @@
 import {v4} from "uuid";
-import SourceType from "../../enums/Discriminator/SourceType";
+import {SourceType} from "../../enums";
 import {Effect} from "../Effect";
 import {Encounter} from "../Encounter";
 import {Skill} from "../Skill";
@@ -45,13 +45,6 @@ export default class Source<Type extends keyof SourceMap = SourceType> {
   public toString() {
     return this.value.toString();
   }
-}
-
-export enum SourceType {
-  UNIT      = "unit",
-  SKILL     = "skill",
-  EFFECT    = "effect",
-  ENCOUNTER = "encounter"
 }
 
 export interface SourceInitializer<Type extends keyof SourceMap> {

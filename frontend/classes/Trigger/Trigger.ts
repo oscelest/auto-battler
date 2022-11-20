@@ -1,10 +1,10 @@
-import TriggerEntity from "../../entities/Trigger/TriggerEntity";
-import TriggerType from "../../enums/Discriminator/TriggerType";
-import TriggerEventType from "../../enums/Event/TriggerEventType";
+import {TriggerEventType} from "../../enums";
+import {TriggerEntity} from "../../generated/contract/entities/Trigger/Trigger.entity";
+import {TriggerType} from "../../generated/contract/enums/Discriminator/TriggerType";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
 import {Effect} from "../Effect";
-import {DamageTakenTriggerInitializer} from "./DamageTakenTrigger";
+import {DamageTakenTriggerInitializer} from "./DamageReceivedTrigger";
 import {ExpirationTriggerInitializer} from "./ExpirationTrigger";
 import {HealingReceivedTriggerInitializer} from "./HealingReceivedTrigger";
 import {DamageTakenTrigger, ExpirationTrigger, HealingReceivedTrigger, PeriodicTrigger} from "./index";

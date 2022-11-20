@@ -1,5 +1,5 @@
 import {SkillEventType} from "../../enums";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
+import {ModifierCategoryType} from "../../generated/contract/enums/Modifier/ModifierCategoryType";
 import {ComboPointLogEntry} from "../Log";
 import {Source} from "../Source";
 import {UnitComboPointAction} from "../Unit/Unit";

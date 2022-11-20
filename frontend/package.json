@@ -20,10 +20,8 @@
     "access": "public"
   },
   "scripts":         {
-    "update":     "npx npm-check-updates -u && npm i",
     "start":      "next dev",
-    "db-start":   "ts-node database/app.ts",
-    "db-migrate": "ts-node database/migrate.ts"
+    "update": "npx npm-check-updates -u && npm i"
   },
   "dependencies":    {
     "@noxy/geometry":          "^0.2.1",

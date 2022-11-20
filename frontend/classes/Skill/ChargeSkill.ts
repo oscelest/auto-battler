@@ -1,5 +1,5 @@
 import {EncounterEventType, SkillEventType, UnitEventType} from "../../enums";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
+import {ModifierCategoryType} from "../../generated/contract/enums/Modifier/ModifierCategoryType";
 import {Encounter} from "../Encounter";
 import Skill, {SkillInitializer} from "./Skill";
 

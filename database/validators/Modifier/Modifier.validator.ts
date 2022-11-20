@@ -1,7 +1,7 @@
 import {IsEnum, IsNumber, IsOptional} from "class-validator";
 import {Field, InputType} from "type-graphql";
+import {ModifierType} from "../../enums/Discriminator/ModifierType";
 import {ModifierCategoryType} from "../../enums/Modifier/ModifierCategoryType";
-import {ModifierType} from "../../enums/Modifier/ModifierType";
 
 @InputType({isAbstract: true})
 export default abstract class ModifierValidator {

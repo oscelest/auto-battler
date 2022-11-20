@@ -1,11 +1,12 @@
-import {EffectEntity, ModifierEntity, SkillEntity, UnitEntity} from "../../entities";
-import {SkillEventType, UnitEventType} from "../../enums";
-import DamageElementType from "../../enums/Damage/DamageElementType";
-import DamageSourceType from "../../enums/Damage/DamageSourceType";
-import SourceType from "../../enums/Discriminator/SourceType";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
-import UnitAlignmentType from "../../enums/Unit/UnitAlignmentType";
-import UnitAttributeType from "../../enums/Unit/UnitAttributeType";
+import {SkillEventType, SourceType, UnitAlignmentType, UnitEventType} from "../../enums";
+import {EffectEntity} from "../../generated/contract/entities/Effect/Effect.entity";
+import {ModifierEntity} from "../../generated/contract/entities/Modifier/Modifier.entity";
+import {isSkillEntity, SkillEntity} from "../../generated/contract/entities/Skill/Skill.entity";
+import {UnitEntity} from "../../generated/contract/entities/Unit/Unit.entity";
+import {DamageElementType} from "../../generated/contract/enums/Damage/DamageElementType";
+import {DamageSourceType} from "../../generated/contract/enums/Damage/DamageSourceType";
+import {ModifierCategoryType} from "../../generated/contract/enums/Modifier/ModifierCategoryType";
+import {UnitAttributeType} from "../../generated/contract/enums/Unit/UnitAttributeType";
 import Modifier from "../../modules/Modifier";
 import {EntityEventElement} from "../Base";
 import {EntityEventElementInitializer} from "../Base/EntityEventElement";
@@ -31,15 +32,16 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
   
   constructor(initializer: UnitInitializer) {
     super(initializer);
-    
+  
     this.reference = new Source({type: SourceType.UNIT, value: this});
     this.encounter = initializer.encounter;
-    this.skill_list = (initializer.skill_list ?? initializer.entity.skill_list)?.map(entity => Skill.instantiate(entity instanceof SkillEntity ? {unit: this, entity} : entity)) ?? [];
+    this.skill_list = initializer.skill_list?.map(entity => Skill.instantiate(isSkillEntity(entity) ? {unit: this, entity} : entity))
+      ?? initializer.entity.skill_list.map(entity => Skill.instantiate({unit: this, entity}));
     this.effect_list = initializer.effect_list?.map(initializer => new Effect(initializer)) ?? [];
-    
+  
     this.health = initializer.health ?? this.getAttributeValue(UnitAttributeType.HEALTH);
     this.alignment = initializer.alignment;
-    
+  
     this.attachEvents();
     this.on(UnitEventType.DIED, this.onUnitKilled);
     this.on(UnitEventType.REVIVE_RECEIVED, this.onUnitRevived);
@@ -63,7 +65,7 @@ export default class Unit extends EntityEventElement<UnitEntity, UnitEventHandle
     ];
   }
   
-  public toString(): string {
+  public override toString(): string {
     return this.entity.name;
   }
   
@@ -225,7 +227,7 @@ export interface UnitInitializer extends EntityEventElementInitializer<UnitEntit
   alignment: UnitAlignmentType;
   
   encounter: Encounter;
-  skill_list?: SkillInitializer[];
+  skill_list?: (SkillEntity | SkillInitializer)[];
   effect_list?: EffectInitializer[];
 }
 

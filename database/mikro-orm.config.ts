@@ -1,7 +1,10 @@
 import {Options} from "@mikro-orm/core";
 import {TsMorphMetadataProvider} from "@mikro-orm/reflection";
+import * as dotenv from "dotenv";
 
-const DatabaseConfig: Options = {
+dotenv.config();
+
+export const DatabaseConfig: Options = {
   type: "mysql",
   host: process.env["DB_HOST"],
   port: Number(process.env["DB_PORT"]),
@@ -17,5 +20,3 @@ const DatabaseConfig: Options = {
   //   "query", "query-params"
   // ],
 };
-
-export default DatabaseConfig;

@@ -2,8 +2,8 @@ import {Collection, Entity, Enum, ManyToMany, OneToMany, Property} from "@mikro-
 import {EffectAlignmentType} from "../../enums";
 import {EffectActionEntity} from "../Action";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
-import ModifierEntity from "../Modifier/Modifier.entity";
-import TriggerEntity from "../Trigger/Trigger.entity";
+import {ModifierEntity} from "../Modifier";
+import {TriggerEntity} from "../Trigger";
 
 @Entity()
 export class EffectEntity extends CoreEntity<EffectEntity> {

@@ -1,9 +1,9 @@
-import {EffectEntity, ModifierEntity, UnitEntity} from "../../entities";
-import SourceType from "../../enums/Discriminator/SourceType";
-import TargetType from "../../enums/Encounter/TargetType";
-import {EncounterEventType} from "../../enums/Event";
-import ModifierCategoryType from "../../enums/Modifier/ModifierCategoryType";
-import UnitAlignmentType from "../../enums/Unit/UnitAlignmentType";
+import {EncounterEventType, EncounterStateType, SourceType, UnitAlignmentType} from "../../enums";
+import {EffectEntity} from "../../generated/contract/entities/Effect/Effect.entity";
+import {ModifierEntity} from "../../generated/contract/entities/Modifier/Modifier.entity";
+import {isUnitEntity, UnitEntity} from "../../generated/contract/entities/Unit/Unit.entity";
+import {ModifierCategoryType} from "../../generated/contract/enums/Modifier/ModifierCategoryType";
+import {TargetType} from "../../generated/contract/enums/TargetType";
 import Modifier from "../../modules/Modifier";
 import EventElement, {EventElementInitializer} from "../Base/EventElement";
 import {Effect} from "../Effect";
@@ -15,7 +15,7 @@ import {UnitComboPointAction, UnitDamageAction, UnitHealAction, UnitInitializer}
 
 export default class Encounter extends EventElement<EncounterEventHandler> {
   
-  public static tick_rate: number = 60;                         // 64 updates per second
+  public static tick_rate: number = 60;                        // 64 updates per second
   public static tick_interval: number = 1000 / this.tick_rate; // Time between ticks in ms
   
   public state: EncounterStateType;
@@ -37,8 +37,8 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     this.log = initializer.log instanceof Log ? initializer.log : new Log(initializer.log);
     this.reference = new Source({type: SourceType.ENCOUNTER, value: this});
     this.unit_list = [
-      ...initializer.player_unit_list?.map(unit => new Unit(unit instanceof UnitEntity ? this.getUnitInitializer(unit, UnitAlignmentType.PLAYER) : unit)) ?? [],
-      ...initializer.enemy_unit_list?.map(unit => new Unit(unit instanceof UnitEntity ? this.getUnitInitializer(unit, UnitAlignmentType.ENEMY) : unit)) ?? []
+      ...initializer.player_unit_list?.map(entity => new Unit(isUnitEntity(entity) ? {entity, encounter: this, alignment: UnitAlignmentType.PLAYER} : entity)) ?? [],
+      ...initializer.enemy_unit_list?.map(entity => new Unit(isUnitEntity(entity) ? {entity, encounter: this, alignment: UnitAlignmentType.ENEMY} : entity)) ?? []
     ];
   }
   
@@ -166,19 +166,6 @@ export default class Encounter extends EventElement<EncounterEventHandler> {
     this.state = state;
     this.trigger(EncounterEventType.STATE_CHANGE, {encounter: this, state});
   }
-  
-  private getUnitInitializer(entity: UnitEntity, alignment: UnitAlignmentType) {
-    return {entity, alignment, encounter: this};
-  }
-}
-
-export enum EncounterStateType {
-  READY       = 0,
-  IN_PROGRESS = 1,
-  COMPLETED   = 2,
-  PAUSED      = 3,
-  CANCELLED   = 4,
-  ERROR       = 5,
 }
 
 export interface EncounterInitializer extends EventElementInitializer {

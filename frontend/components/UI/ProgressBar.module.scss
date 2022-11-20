@@ -1,0 +1,25 @@
+.Component {
+  display:         flex;
+  flex:            0 0 auto;
+  flex-flow:       column;
+  justify-content: center;
+  position:        relative;
+  padding:         2px 5px;
+  background:      linear-gradient(to bottom, #485563, #29323c);
+  border:          1px solid black;
+
+  .Background {
+    display:    flex;
+    flex:       1 1 auto;
+    position:   absolute;
+    inset:      0;
+    background: linear-gradient(to bottom, #00b4db, #0083b0);
+  }
+
+  .Text {
+    z-index:     0;
+    color:       white;
+    font-weight: 300;
+    font-size:   14px;
+  }
+}

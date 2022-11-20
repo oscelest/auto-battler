@@ -1,0 +1,42 @@
+{
+  "name":            "@noxy/auto-battler-database",
+  "author":          "oscelest",
+  "version":         "0.0.1",
+  "description":     "A random project that might become something. Mostly just a playground though.",
+  "license":         "MIT",
+  "private":         true,
+  "repository":      {
+    "type": "git",
+    "url":  "git@github.com:oscelest/crafting.git"
+  },
+  "bugs":            {
+    "url": "https://github.com/oscelest/crafting/issues"
+  },
+  "publishConfig":   {
+    "access": "public"
+  },
+  "scripts":         {
+    "update":  "npx npm-check-updates -u && npm i",
+    "start":   "ts-node app.ts",
+    "migrate": "ts-node migrate.ts"
+  },
+  "dependencies":    {
+    "@mikro-orm/cli":              "^5.5.3",
+    "@mikro-orm/core":             "^5.5.3",
+    "@mikro-orm/migrations":       "^5.5.3",
+    "@mikro-orm/mysql":            "^5.5.3",
+    "@mikro-orm/reflection":       "^5.5.3",
+    "class-validator":             "^0.13.2",
+    "dotenv":                      "^16.0.3",
+    "graphql":                     "^15.3.0",
+    "graphql-fields-to-relations": "^1.0.4",
+    "ts-node":                     "^10.9.1",
+    "type-graphql":                "^1.1.1",
+    "uuid":                        "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.4",
+    "ts-morph":    "^17.0.0",
+    "typescript":  "^4.9.3"
+  }
+}

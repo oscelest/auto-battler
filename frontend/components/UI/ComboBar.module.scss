@@ -1,0 +1,35 @@
+.Component {
+  display:         flex;
+  flex:            0 0 auto;
+  flex-flow:       column;
+  justify-content: center;
+  position:        relative;
+  padding:         2px 5px;
+  background:      linear-gradient(to bottom, #485563, #29323c);
+  border:          1px solid black;
+
+  .Background {
+    display:  flex;
+    flex:     1 1 auto;
+    position: absolute;
+    inset:    0;
+
+    .BackgroundSegment {
+      display:    flex;
+      flex:       1 1 auto;
+      box-shadow: 0 0 5px 2px rgb(0 0 0 / 10%) inset;
+
+
+      &:not(:last-of-type) {
+        border-right: 1px solid rgb(0 0 0 / 30%);
+      }
+    }
+  }
+
+  .Text {
+    z-index:     0;
+    color:       white;
+    font-weight: 300;
+    font-size:   14px;
+  }
+}

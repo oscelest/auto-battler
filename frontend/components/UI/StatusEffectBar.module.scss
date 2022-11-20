@@ -1,0 +1,50 @@
+.Component {
+  display:   flex;
+  flex-flow: column;
+
+  .List {
+    display:   flex;
+    flex:      1 1 auto;
+    flex-flow: row;
+
+    .StatusEffect {
+      display:          flex;
+      flex:             0 0 auto;
+      width:            30px;
+      height:           30px;
+      position:         relative;
+      background-color: #1e3799;
+      border:           3px solid #4b7bec;
+      border-radius:    2px;
+
+      .Icon {
+        display:         flex;
+        flex:            1 1 auto;
+        align-items:     center;
+        justify-content: center;
+        color:           #ec7b02;
+        font-size:       24px;
+
+      }
+
+      .Stack {
+        display:     flex;
+        position:    absolute;
+        right:       1px;
+        bottom:      -1px;
+        color:       white;
+        text-shadow: -1px -1px 0 #000,
+                     1px -1px 0 #000,
+                     -1px 1px 0 #000,
+                     1px 1px 0 #000;
+        font-size:   14px;
+        line-height: 14px;
+      }
+
+      .Countdown {
+        display: flex;
+        flex:    1 1 auto;
+      }
+    }
+  }
+}

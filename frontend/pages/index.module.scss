@@ -1,0 +1,14 @@
+.Component {
+  display:      flex;
+  flex:         1 1 auto;
+  flex-flow:    column;
+  grid-row-gap: 20px;
+  padding:      10px;
+  overflow:     auto;
+
+
+  .Controls {
+    display:         flex;
+    grid-column-gap: 20px;
+  }
+}

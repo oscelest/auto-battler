@@ -12,9 +12,11 @@ export const DatabaseConfig: Options = {
   password: process.env["DB_PASSWORD"],
   dbName: process.env["DB_DATABASE"],
   metadataProvider: TsMorphMetadataProvider,
-  entities: [],
+  entities: [
+    "./entities/**"
+  ],
   migrations: {
-    path: "./api/migrations"
+    path: "./migrations"
   }
   // debug: [
   //   "query", "query-params"

@@ -1,6 +1,8 @@
 import {MikroORM} from "@mikro-orm/core";
 import {DatabaseConfig} from "./mikro-orm.config";
 
+export * from "./entities";
+
 export default (async () => {
   const orm = await MikroORM.init(DatabaseConfig);
   

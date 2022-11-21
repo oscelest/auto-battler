@@ -1,11 +1,11 @@
 import {Collection, Entity, Enum, ManyToMany, Property} from "@mikro-orm/core";
-import {Field} from "type-graphql";
+import {Field, ObjectType} from "type-graphql";
 import {SkillType} from "../../enums";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
 import {ModifierEntity} from "../Modifier";
 import {OperationEntity} from "../Operation";
-import {UnitEntity} from "../Unit";
 
+@ObjectType()
 @Entity()
 export class SkillEntity extends CoreEntity<SkillEntity> {
   
@@ -21,16 +21,18 @@ export class SkillEntity extends CoreEntity<SkillEntity> {
   @Enum(() => SkillType)
   public type: SkillType;
   
+  @Field(() => [OperationEntity])
   @ManyToMany(() => OperationEntity)
   public operation_list: Collection<OperationEntity>;
   
+  @Field(() => [ModifierEntity])
   @ManyToMany(() => ModifierEntity)
   public modifier_list: Collection<ModifierEntity>;
   
   /* ----- Relations ----- */
   
-  @ManyToMany(() => UnitEntity, relation => relation.skill_list)
-  public unit_list?: Collection<UnitEntity>;
+  // @ManyToMany(() => UnitEntity, relation => relation.skill_list)
+  // public unit_list?: Collection<UnitEntity>;
   
   constructor(initializer: SkillEntityInitializer) {
     super(initializer);
@@ -40,7 +42,7 @@ export class SkillEntity extends CoreEntity<SkillEntity> {
     this.operation_list = initializer.operation_list ?? new Collection<OperationEntity>(this);
     this.modifier_list = initializer.modifier_list ?? new Collection<ModifierEntity>(this);
     
-    this.unit_list = initializer.unit_list ?? new Collection<UnitEntity>(this);
+    // this.unit_list = initializer.unit_list ?? new Collection<UnitEntity>(this);
   }
 }
 
@@ -51,5 +53,5 @@ export interface SkillEntityInitializer extends CoreEntityInitializer {
   operation_list?: Collection<OperationEntity>;
   modifier_list?: Collection<ModifierEntity>;
   
-  unit_list: Collection<UnitEntity>;
+  // unit_list: Collection<UnitEntity>;
 }

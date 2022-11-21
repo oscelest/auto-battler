@@ -12,6 +12,7 @@ export  class UnitEntity extends CoreEntity<UnitEntity> {
   @Property()
   public name: string;
   
+  @Field(() => UnitClassEntity)
   @ManyToOne(() => UnitClassEntity)
   public class: UnitClassEntity;
   
@@ -19,6 +20,7 @@ export  class UnitEntity extends CoreEntity<UnitEntity> {
   @Property()
   public experience: number;
   
+  @Field(() => [SkillEntity])
   @ManyToMany(() => SkillEntity)
   public skill_list: Collection<SkillEntity>;
   

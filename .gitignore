@@ -1,15 +1,15 @@
 /.vs
-/.next
+/.idea
+/.run
 
-/node_modules
-package-lock.json
+/**/.next
+/**/out
+/**/build
+/**/dist
 
-/out
-/build
-/dist
+/**/.env
 
-.env
-.idea
-
-npm-debug.log*
-/database/migrations
+/**/package-lock.json
+/**/node_modules
+/**/migrations
+/**/temp

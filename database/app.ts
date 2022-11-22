@@ -10,20 +10,20 @@ export * from "./entities";
 
 (async () => {
   await MikroORM.init(DatabaseConfig);
-  // const orm = await MikroORM.init(DatabaseConfig);
+  const orm = await MikroORM.init(DatabaseConfig);
   
-  // if (!(await orm.isConnected()) || !(await orm.migrator.getStorage().executed())) {
-  //   await orm.getMigrator().createInitialMigration();
-  // }
-  // else {
-  //   await orm.getMigrator().createMigration();
-  // }
-  //
-  // const migrator = orm.getMigrator();
-  // const migrations = await migrator.getPendingMigrations();
-  // if (migrations && migrations.length > 0) {
-  //   await migrator.up();
-  // }
+  if (!(await orm.isConnected()) || !(await orm.migrator.getStorage().executed())) {
+    await orm.getMigrator().createInitialMigration();
+  }
+  else {
+    await orm.getMigrator().createMigration();
+  }
+  
+  const migrator = orm.getMigrator();
+  const migrations = await migrator.getPendingMigrations();
+  if (migrations && migrations.length > 0) {
+    await migrator.up();
+  }
   
   const schema: GraphQLSchema = await buildSchema({
     resolvers: resolver_list,

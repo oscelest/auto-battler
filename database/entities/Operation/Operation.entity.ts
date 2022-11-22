@@ -5,7 +5,7 @@ import {ActionEntity} from "../Action";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
 import {ModifierEntity} from "../Modifier";
 
-@ObjectType()
+@ObjectType({implements: CoreEntity})
 @Entity()
 export class OperationEntity extends CoreEntity<OperationEntity> {
   
@@ -21,23 +21,12 @@ export class OperationEntity extends CoreEntity<OperationEntity> {
   @ManyToMany(() => ActionEntity)
   public action_list: Collection<ActionEntity>;
   
-  /* ----- Relations ----- */
-  
-  // @ManyToMany(() => SkillEntity, relation => relation.operation_list)
-  // public skill_list?: Collection<SkillEntity>;
-  //
-  // @ManyToMany(() => TriggerEntity, relation => relation.operation_list)
-  // public trigger_list?: Collection<TriggerEntity>;
-  
   constructor(initializer: OperationEntityInitializer) {
     super(initializer);
     
     this.target = initializer.target;
     this.modifier_list = initializer.modifier_list ?? new Collection<ModifierEntity>(this);
     this.action_list = initializer.action_list ?? new Collection<ActionEntity>(this);
-    
-    // this.skill_list = initializer.skill_list ?? new Collection<SkillEntity>(this);
-    // this.trigger_list = initializer.trigger_list ?? new Collection<TriggerEntity>(this);
   }
 }
 

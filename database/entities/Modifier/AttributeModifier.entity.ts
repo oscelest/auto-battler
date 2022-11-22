@@ -1,12 +1,11 @@
 import {Entity, Enum} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {ModifierType, UnitAttributeType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {ModifierEntity, ModifierEntityInitializer} from "./Modifier.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: ModifierType.ATTRIBUTE
-})
+@ObjectType({implements: [CoreEntity, ModifierEntity]})
+@Entity({discriminatorValue: ModifierType.ATTRIBUTE})
 export class AttributeModifierEntity extends ModifierEntity {
   
   @Field(() => UnitAttributeType)

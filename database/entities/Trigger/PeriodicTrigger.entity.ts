@@ -1,12 +1,11 @@
 import {Entity, Property} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {TriggerType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {TriggerEntity, TriggerEntityInitializer} from "./Trigger.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: TriggerType.PERIODIC
-})
+@ObjectType({implements: [CoreEntity, TriggerEntity]})
+@Entity({discriminatorValue: TriggerType.PERIODIC})
 export class PeriodicTriggerEntity extends TriggerEntity {
   
   @Field()

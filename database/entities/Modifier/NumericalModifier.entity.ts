@@ -1,12 +1,11 @@
 import {Entity, Enum} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {ModifierNumericalType, ModifierType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {ModifierEntity, ModifierEntityInitializer} from "./Modifier.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: ModifierType.NUMERICAL
-})
+@ObjectType({implements: [CoreEntity, ModifierEntity]})
+@Entity({discriminatorValue: ModifierType.NUMERICAL})
 export class NumericalModifierEntity extends ModifierEntity {
   
   @Field(() => ModifierNumericalType)

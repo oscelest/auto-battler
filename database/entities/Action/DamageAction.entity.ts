@@ -1,12 +1,11 @@
 import {Entity, Enum, Property} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {ActionType, DamageElementType, DamageSourceType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: ActionType.DAMAGE
-})
+@ObjectType({implements: [CoreEntity, ActionEntity]})
+@Entity({discriminatorValue: ActionType.DAMAGE})
 export class DamageActionEntity extends ActionEntity {
   
   @Field()

@@ -1,3 +1,5 @@
+import {registerEnumType} from "type-graphql";
+
 export enum TriggerType {
   PERIODIC         = "periodic",
   EXPIRATION       = "expiration",
@@ -5,4 +7,4 @@ export enum TriggerType {
   HEALING_RECEIVED = "healing_received",
 }
 
-
+registerEnumType(TriggerType, {name: "TriggerType"});

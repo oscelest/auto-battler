@@ -15,12 +15,12 @@
   "publishConfig":   {
     "access": "public"
   },
-  "scripts":      {
+  "scripts":         {
     "start":   "ts-node app.ts",
     "migrate": "ts-node migrate.ts",
     "update":  "npx npm-check-updates -u && npm i"
   },
-  "dependencies": {
+  "dependencies":    {
     "@mikro-orm/cli":              "^5.5.3",
     "@mikro-orm/core":             "^5.5.3",
     "@mikro-orm/migrations":       "^5.5.3",
@@ -30,13 +30,16 @@
     "dotenv":                      "^16.0.3",
     "graphql":                     "^16.6.0",
     "graphql-fields-to-relations": "^1.0.5",
+    "graphql-yoga":                "^3.0.1",
+    "koa":                         "^2.13.4",
     "ts-node":                     "^10.9.1",
     "type-graphql":                "^2.0.0-beta.1",
     "uuid":                        "^9.0.0"
   },
   "devDependencies": {
+    "@types/koa":  "^2.13.5",
     "@types/uuid": "^8.3.4",
-    "ts-morph":    "^17.0.0",
+    "ts-morph":    "^17.0.1",
     "typescript":  "^4.9.3"
   }
 }

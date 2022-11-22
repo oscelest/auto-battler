@@ -1,13 +1,12 @@
 import {Entity, ManyToOne} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {ActionType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {EffectEntity} from "../Effect";
 import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: ActionType.EFFECT
-})
+@ObjectType({implements: [CoreEntity, ActionEntity]})
+@Entity({discriminatorValue: ActionType.EFFECT})
 export class EffectActionEntity extends ActionEntity {
   
   @Field(() => EffectEntity)

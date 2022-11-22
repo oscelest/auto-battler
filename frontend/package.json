@@ -19,8 +19,8 @@
   "publishConfig":   {
     "access": "public"
   },
-  "scripts":         {
-    "start":      "next dev",
+  "scripts": {
+    "start":  "next dev",
     "update": "npx npm-check-updates -u && npm i"
   },
   "dependencies":    {

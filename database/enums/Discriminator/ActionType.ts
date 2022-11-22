@@ -1,3 +1,5 @@
+import {registerEnumType} from "type-graphql";
+
 export enum ActionType {
   DAMAGE      = "damage",
   HEAL        = "heal",
@@ -5,4 +7,4 @@ export enum ActionType {
   EFFECT      = "effect"
 }
 
-
+registerEnumType(ActionType, {name: "ActionType"});

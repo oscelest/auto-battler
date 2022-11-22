@@ -35,25 +35,25 @@ export class UnitResolver {
     return entity;
   }
   
-  @Mutation(() => UnitEntity)
-  public async updateAuthor(@Arg("input") input: UnitValidator, @Arg("id") id: string, @Ctx() ctx: MyContext, @Info() info: GraphQL.GraphQLResolveInfo): Promise<UnitEntity> {
-    // const relationPaths = fieldsToRelations(info);
-    // console.log(relationPaths);
-    const entity = await ctx.em.getRepository(UnitEntity).findOneOrFail({id});
-  
-    entity.assign(input);
-    await ctx.em.persist(entity).flush();
-    return entity;
-  }
-  
-  @Mutation(() => Boolean)
-  public async deleteAuthor(@Arg("id") id: string, @Ctx() ctx: MyContext): Promise<boolean> {
-    
-    const entity = await ctx.em.getRepository(UnitEntity).findOneOrFail({id});
-    await ctx.em.getRepository(UnitEntity).remove(entity).flush();
-    
-    return true;
-  }
+  // @Mutation(() => UnitEntity)
+  // public async updateAuthor(@Arg("input") input: UnitValidator, @Arg("id") id: string, @Ctx() ctx: MyContext, @Info() info: GraphQL.GraphQLResolveInfo): Promise<UnitEntity> {
+  //   // const relationPaths = fieldsToRelations(info);
+  //   // console.log(relationPaths);
+  //   const entity = await ctx.em.getRepository(UnitEntity).findOneOrFail({id});
+  //
+  //   entity.assign(input);
+  //   await ctx.em.persist(entity).flush();
+  //   return entity;
+  // }
+  //
+  // @Mutation(() => Boolean)
+  // public async deleteAuthor(@Arg("id") id: string, @Ctx() ctx: MyContext): Promise<boolean> {
+  //
+  //   const entity = await ctx.em.getRepository(UnitEntity).findOneOrFail({id});
+  //   await ctx.em.getRepository(UnitEntity).remove(entity).flush();
+  //
+  //   return true;
+  // }
 }
 
 interface MyContext {

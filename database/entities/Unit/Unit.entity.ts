@@ -4,9 +4,9 @@ import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
 import {SkillEntity} from "../Skill";
 import {UnitClassEntity} from "./UnitClass.entity";
 
+@ObjectType({implements: CoreEntity})
 @Entity()
-@ObjectType()
-export  class UnitEntity extends CoreEntity<UnitEntity> {
+export class UnitEntity extends CoreEntity<UnitEntity> {
   
   @Field()
   @Property()
@@ -23,8 +23,6 @@ export  class UnitEntity extends CoreEntity<UnitEntity> {
   @Field(() => [SkillEntity])
   @ManyToMany(() => SkillEntity)
   public skill_list: Collection<SkillEntity>;
-  
-  /* ----- Relations ----- */
   
   constructor(initializer: UnitEntityInitializer) {
     super(initializer);

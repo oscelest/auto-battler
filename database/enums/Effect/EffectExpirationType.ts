@@ -1,3 +1,5 @@
+import {registerEnumType} from "type-graphql";
+
 export enum EffectExpirationType {
   DURATION = "duration",
   CLEANSE  = "cleanse",
@@ -5,4 +7,4 @@ export enum EffectExpirationType {
   DEATH    = "death",
 }
 
-
+registerEnumType(EffectExpirationType, {name: "EffectExpirationType"});

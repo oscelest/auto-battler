@@ -1,7 +1,6 @@
 import {IsBoolean, IsEnum, IsOptional} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {DamageElementType} from "../../enums/Damage/DamageElementType";
-import {DamageSourceType} from "../../enums/Damage/DamageSourceType";
+import {DamageElementType, DamageSourceType} from "../../enums";
 import ActionValidator from "./Action.validator";
 
 @InputType()

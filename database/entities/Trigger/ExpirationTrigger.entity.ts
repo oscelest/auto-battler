@@ -1,12 +1,11 @@
 import {Entity, Enum} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {EffectExpirationType, TriggerType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {TriggerEntity, TriggerEntityInitializer} from "./Trigger.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: TriggerType.EXPIRATION
-})
+@ObjectType({implements: [CoreEntity, TriggerEntity]})
+@Entity({discriminatorValue: TriggerType.EXPIRATION})
 export class ExpirationTriggerEntity extends TriggerEntity {
   
   @Field(() => EffectExpirationType)

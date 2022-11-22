@@ -1,13 +1,12 @@
 import {Entity, ManyToMany} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {TriggerType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {ModifierEntity} from "../Modifier";
 import {TriggerEntity, TriggerEntityInitializer} from "./Trigger.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: TriggerType.DAMAGE_RECEIVED
-})
+@ObjectType({implements: [CoreEntity, TriggerEntity]})
+@Entity({discriminatorValue: TriggerType.DAMAGE_RECEIVED})
 export class DamageReceivedTriggerEntity extends TriggerEntity {
   
   @Field(() => [ModifierEntity])

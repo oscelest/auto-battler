@@ -1,3 +1,5 @@
+import {registerEnumType} from "type-graphql";
+
 export enum TargetType {
   ANY_SINGLE    = 0,
   ANY_CHAIN     = 1,
@@ -12,4 +14,4 @@ export enum TargetType {
   SOURCE        = 10,
 }
 
-
+registerEnumType(TargetType, {name: "TargetType"});

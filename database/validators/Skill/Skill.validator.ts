@@ -1,6 +1,6 @@
 import {IsEnum, IsString} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {SkillType} from "../../enums/Discriminator/SkillType";
+import {SkillType} from "../../enums";
 
 @InputType()
 export default class SkillValidator {

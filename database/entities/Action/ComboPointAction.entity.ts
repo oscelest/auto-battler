@@ -1,13 +1,11 @@
 import {Entity, Property} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {ActionType} from "../../enums";
-
+import {CoreEntity} from "../Core.entity";
 import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: ActionType.COMBO_POINT
-})
+@ObjectType({implements: [CoreEntity, ActionEntity]})
+@Entity({discriminatorValue: ActionType.COMBO_POINT})
 export class ComboPointActionEntity extends ActionEntity {
   
   @Field()

@@ -1,6 +1,6 @@
 import {IsBoolean, IsEnum, IsOptional} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {ActionType} from "../../enums/Discriminator/ActionType";
+import {ActionType} from "../../enums";
 
 @InputType({isAbstract: true})
 export default abstract class ActionValidator {
@@ -12,6 +12,6 @@ export default abstract class ActionValidator {
   @Field({nullable: true})
   @IsBoolean()
   @IsOptional()
-  public periodic!: boolean;
+  public periodic?: boolean;
   
 }

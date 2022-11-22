@@ -1,3 +1,5 @@
+import {registerEnumType} from "type-graphql";
+
 export enum ModifierCategoryType {
   CHARGE_SKILL_MAX            = "charge_skill_max",
   
@@ -18,4 +20,5 @@ export enum ModifierCategoryType {
   UNIT_ATTRIBUTE_WARD         = "unit_attribute_ward",
 }
 
+registerEnumType(ModifierCategoryType, {name: "ModifierCategoryType"});
 

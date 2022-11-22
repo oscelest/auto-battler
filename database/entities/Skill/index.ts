@@ -1,2 +1,2 @@
-export {SkillEntity, type SkillEntityInitializer} from "./Skill.entity";
+export {SkillEntity} from "./Skill.entity";
 

@@ -1,12 +1,11 @@
 import {Entity, Property} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
 import {ActionType} from "../../enums";
+import {CoreEntity} from "../Core.entity";
 import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
-@ObjectType()
-@Entity({
-  discriminatorValue: ActionType.HEAL
-})
+@ObjectType({implements: [CoreEntity, ActionEntity]})
+@Entity({discriminatorValue: ActionType.HEAL})
 export class HealActionEntity extends ActionEntity {
   
   @Field()

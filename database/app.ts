@@ -1,8 +1,8 @@
 import {MikroORM} from "@mikro-orm/core";
 import {createYoga} from "graphql-yoga";
-import {GraphQLSchema} from "graphql/type";
 import Koa from "koa";
 import {buildSchema} from "type-graphql";
+import {GraphQLContext} from "./Globals";
 import {DatabaseConfig} from "./mikro-orm.config";
 import {resolver_list} from "./resolvers";
 
@@ -25,12 +25,13 @@ export * from "./entities";
     await migrator.up();
   }
   
-  const schema: GraphQLSchema = await buildSchema({
-    resolvers: resolver_list,
-    dateScalarMode: "isoDate"
+  const yoga = createYoga<Koa.ParameterizedContext>({
+    schema: await buildSchema({
+      resolvers: resolver_list,
+      dateScalarMode: "isoDate"
+    }),
+    context: ctx => ({...ctx, entity_manager: orm.em.fork()}) as GraphQLContext
   });
-  
-  const yoga = createYoga<Koa.ParameterizedContext>({schema});
   
   const app = new Koa();
   app.use(async (ctx) => {

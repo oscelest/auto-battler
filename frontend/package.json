@@ -23,13 +23,13 @@
     "start":  "next dev",
     "update": "npx npm-check-updates -u && npm i"
   },
-  "dependencies":    {
+  "dependencies": {
     "@noxy/geometry":          "^0.2.1",
     "@noxy/react-button":      "^0.3.1",
     "@noxy/react-collapsible": "^0.6.2",
     "@noxy/react-input-field": "^0.5.2",
     "humanize-duration":       "^3.27.3",
-    "next":                    "^13.0.4",
+    "next":                    "^13.0.5",
     "next-i18next":            "^13.0.0",
     "react":                   "^18.2.0",
     "react-dom":               "^18.2.0",

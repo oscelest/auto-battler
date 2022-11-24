@@ -1,6 +1,6 @@
 import {IsBoolean, IsEnum, IsOptional, IsString} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {EffectAlignmentType} from "../../enums/Effect/EffectAlignmentType";
+import {EffectAlignmentType} from "../../enums";
 
 @InputType()
 export default class EffectValidator {

@@ -5,3 +5,4 @@ export * from "./Modifier";
 export * from "./Unit";
 
 export {TargetType} from "./TargetType";
+export {QueryOrder} from "./QueryOrder";

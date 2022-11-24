@@ -1,19 +1,18 @@
 import {EntityManager} from "@mikro-orm/core";
-import GraphQL from "graphql";
-// import fieldsToRelations from "graphql-fields-to-relations";
+import GraphQL, {GraphQLResolveInfo} from "graphql";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
 import {UnitClassEntity, UnitEntity} from "../../entities";
+import {GraphQLContext} from "../../Globals";
 import UnitValidator from "../../validators/Unit/Unit.validator";
 
 @Resolver(() => UnitEntity)
 export class UnitResolver {
   
   @Query(() => UnitEntity, {nullable: true})
-  public async getUnit(@Arg("id") id: string, @Ctx() ctx: MyContext, @Info() info: GraphQL.GraphQLResolveInfo): Promise<UnitEntity | null> {
-    // const relationPaths = fieldsToRelations(info);
-    console.log(id, ctx, info);
-    // return ctx.em.getRepository(UnitEntity).findOne({id});
-    return null as any;
+  public async getUnit(@Arg("id") id: string, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<UnitEntity | null> {
+    // console.log(id, ctx, info);
+    return ctx.entity_manager.getRepository(UnitEntity).findOne({id});
+    // return null as any;
   }
   
   @Query(() => [UnitEntity])
@@ -27,8 +26,8 @@ export class UnitResolver {
   }
   
   @Mutation(() => UnitEntity)
-  public async createUnitEntity(@Arg("input") input: UnitValidator, @Ctx() ctx: MyContext): Promise<UnitEntity> {
-    const unit_class = await ctx.em.getRepository(UnitClassEntity).findOneOrFail({id: input.unit_class});
+  public async createUnitEntity(@Arg("input") input: UnitValidator, @Ctx() ctx: GraphQLContext): Promise<UnitEntity> {
+    const unit_class = await ctx.entity_manager.getRepository(UnitClassEntity).findOneOrFail({id: input.unit_class});
     const entity = new UnitEntity({...input, class: unit_class.toReference().getEntity()});
     
     await ctx.em.persist(entity).flush();

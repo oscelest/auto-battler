@@ -1,9 +1,11 @@
-import {IsEnum, IsNumber, IsOptional} from "class-validator";
+import {IsEnum, IsNumber} from "class-validator";
 import {Field, InputType} from "type-graphql";
+import {ModifierEntity} from "../../entities";
 import {ModifierCategoryType} from "../../enums";
+import {EntityProps} from "../../Globals";
 
 @InputType({isAbstract: true})
-export default abstract class ModifierValidator {
+export abstract class ModifierCreateValidator implements EntityProps<ModifierEntity> {
   
   @Field()
   @IsNumber()
@@ -11,11 +13,27 @@ export default abstract class ModifierValidator {
   
   @Field({nullable: true})
   @IsNumber()
-  @IsOptional()
   public value_per_level?: number;
   
   @Field(() => ModifierCategoryType)
   @IsEnum(ModifierCategoryType)
   public category!: ModifierCategoryType;
+  
+}
+
+@InputType({isAbstract: true})
+export abstract class ModifierUpdateValidator implements EntityProps<ModifierEntity> {
+  
+  @Field({nullable: true})
+  @IsNumber()
+  public value?: number;
+  
+  @Field({nullable: true})
+  @IsNumber()
+  public value_per_level?: number;
+  
+  @Field(() => ModifierCategoryType, {nullable: true})
+  @IsEnum(ModifierCategoryType)
+  public category?: ModifierCategoryType;
   
 }

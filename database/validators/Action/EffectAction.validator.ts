@@ -1,7 +1,21 @@
-import {InputType} from "type-graphql";
-import ActionValidator from "./Action.validator";
+import {IsUUID} from "class-validator";
+import {Field, InputType} from "type-graphql";
+import {ActionCreateValidator, ActionUpdateValidator} from "./Action.validator";
 
 @InputType()
-export default class EffectActionValidator extends ActionValidator {
+export class EffectActionCreateValidator extends ActionCreateValidator {
+  
+  @Field()
+  @IsUUID()
+  public effect!: string;
+  
+}
 
+@InputType()
+export class EffectActionUpdateValidator extends ActionUpdateValidator {
+  
+  @Field({nullable: true})
+  @IsUUID()
+  public effect?: string;
+  
 }

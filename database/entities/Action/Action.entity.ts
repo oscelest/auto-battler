@@ -24,12 +24,12 @@ export abstract class ActionEntity extends CoreEntity<ActionEntity> {
     super(initializer);
     this.type = type;
     this.periodic = initializer.periodic ?? false;
-    this.modifier_list = initializer.modifier_list ?? new Collection<ModifierEntity>(this);
+    this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
   }
 }
 
 export interface ActionEntityInitializer extends CoreEntityInitializer {
   periodic?: boolean;
-  modifier_list?: Collection<ModifierEntity>;
+  modifier_list?: ModifierEntity[] | Collection<ModifierEntity>;
 }
 

@@ -1,4 +1,4 @@
-import {BaseEntity, Entity, PrimaryKey, Property} from "@mikro-orm/core";
+import {BaseEntity, Collection, Entity, PrimaryKey, Property} from "@mikro-orm/core";
 import {Field, InterfaceType} from "type-graphql";
 import {v4} from "uuid";
 
@@ -23,6 +23,10 @@ export abstract class CoreEntity<T extends {id: string}> extends BaseEntity<T, "
     this.id = initializer.id ?? v4();
     this.created_at = initializer.created_at ?? new Date();
     this.updated_at = initializer.updated_at ?? new Date();
+  }
+  
+  protected toCollectionFromList<M extends object>(list: M[] | Collection<M> = []) {
+    return list instanceof Collection ? list : new Collection<M>(this, list);
   }
 }
 

@@ -3,13 +3,24 @@ import {GraphQLResolveInfo, Kind, SelectionSetNode} from "graphql/index";
 export module ASTWalker {
   
   export function getRelationList(info: GraphQLResolveInfo) {
-    return info.fieldNodes.reduce((result, node) => [...result, getSelection(node.selectionSet).join(".")], [] as string[]);
+    return info.fieldNodes.reduce(
+      (result, node) => {
+        const field = getSelection(node.selectionSet);
+        if (field.length) {
+          result.push(field.join("."));
+        }
+        return result;
+      },
+      [] as string[]
+    );
   }
   
   function getSelection(set?: SelectionSetNode, path: string[] = []): string[][] {
     const result = [] as string[][];
-    if (!set) return result;
-    
+    if (!set) {
+      return result;
+    }
+  
     for (let selection of set.selections) {
       switch (selection.kind) {
         case Kind.FIELD:

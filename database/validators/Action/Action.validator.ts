@@ -1,9 +1,8 @@
 import {IsBoolean, IsEnum, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
 import {ActionEntity} from "../../entities";
-import {ActionType, QueryOrder} from "../../enums";
+import {ActionType} from "../../enums";
 import {EntityProps} from "../../Globals";
-import {CoreOrderByValidator} from "../Core.validator";
 
 
 @InputType({isAbstract: true})
@@ -39,17 +38,3 @@ export abstract class ActionUpdateValidator implements EntityProps<ActionEntity>
   public modifier_list?: string[];
   
 }
-
-@InputType({isAbstract: true})
-export abstract class ActionOrderByValidator extends CoreOrderByValidator {
-  
-  @Field(() => QueryOrder, {nullable: true})
-  @IsEnum(QueryOrder)
-  public periodic?: QueryOrder;
-  
-  @Field(() => QueryOrder, {nullable: true})
-  @IsEnum(QueryOrder)
-  public type?: QueryOrder;
-  
-}
-

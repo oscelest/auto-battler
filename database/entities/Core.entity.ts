@@ -4,7 +4,7 @@ import {v4} from "uuid";
 
 @InterfaceType({isAbstract: true})
 @Entity({abstract: true})
-export abstract class CoreEntity<T extends {id: string}> extends BaseEntity<T, "id"> {
+export abstract class CoreEntity<T extends {id: string} = any> extends BaseEntity<T, "id"> {
   
   @Field()
   @PrimaryKey({type: "uuid"})

@@ -31,7 +31,7 @@
     "graphql":                     "^16.6.0",
     "graphql-fields":              "^2.0.3",
     "graphql-fields-to-relations": "^1.0.5",
-    "graphql-yoga":                "^3.0.2",
+    "graphql-yoga":                "^3.1.0",
     "koa":                         "^2.13.4",
     "ts-node":                     "^10.9.1",
     "type-graphql":                "^2.0.0-beta.1",

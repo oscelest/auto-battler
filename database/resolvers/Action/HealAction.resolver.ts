@@ -1,4 +1,3 @@
-import {QueryOrderMap} from "@mikro-orm/core";
 import {AutoPath} from "@mikro-orm/core/typings";
 import {GraphQLResolveInfo} from "graphql/type";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
@@ -19,13 +18,9 @@ export class HealActionResolver {
   @Query(() => [HealActionEntity])
   public async getHealActionList(@Arg("pagination") pagination: HealActionPaginationValidator, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<HealActionEntity[]> {
     const populate = ASTWalker.getRelationList(info) as AutoPath<HealActionEntity, string>;
-    const {offset, limit, order_by = {}} = pagination;
-    for (let key of Object.keys(order_by)) {
-      let k = key as keyof typeof order_by;
-      if (order_by[k] === undefined) delete order_by[k];
-    }
-    
-    return await ctx.entity_manager.getRepository(HealActionEntity).find({}, {populate, offset, limit, orderBy: {...order_by} as QueryOrderMap<HealActionEntity>});
+    const {offset, limit} = pagination;
+  
+    return await ctx.entity_manager.getRepository(HealActionEntity).find({}, {populate, offset, limit, orderBy: pagination.getOrderBy()});
   }
   
   @Mutation(() => HealActionEntity)

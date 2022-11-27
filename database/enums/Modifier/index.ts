@@ -1,2 +1,2 @@
 export {ModifierCategoryType} from "./ModifierCategoryType";
-export {ModifierNumericalType} from "./ModifierNumericalType";
+export {ArithmeticalType} from "./ArithmeticalType";

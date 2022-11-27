@@ -1,6 +1,6 @@
 import {Entity, Enum} from "@mikro-orm/core";
 import {Field, ObjectType} from "type-graphql";
-import {ModifierType, UnitAttributeType} from "../../enums";
+import {AttributeType, ModifierType} from "../../enums";
 import {CoreEntity} from "../Core.entity";
 import {ModifierEntity, ModifierEntityInitializer} from "./Modifier.entity";
 
@@ -8,9 +8,9 @@ import {ModifierEntity, ModifierEntityInitializer} from "./Modifier.entity";
 @Entity({discriminatorValue: ModifierType.ATTRIBUTE})
 export class AttributeModifierEntity extends ModifierEntity {
   
-  @Field(() => UnitAttributeType)
-  @Enum(() => UnitAttributeType)
-  public attribute: UnitAttributeType;
+  @Field(() => AttributeType)
+  @Enum(() => AttributeType)
+  public attribute: AttributeType;
   
   constructor(initializer: AttributeModifierEntityInitializer) {
     super(ModifierType.ATTRIBUTE, initializer);
@@ -20,5 +20,5 @@ export class AttributeModifierEntity extends ModifierEntity {
 }
 
 export interface AttributeModifierEntityInitializer extends ModifierEntityInitializer {
-  attribute: UnitAttributeType;
+  attribute: AttributeType;
 }

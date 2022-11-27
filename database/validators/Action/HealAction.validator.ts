@@ -40,7 +40,5 @@ export class HealActionPaginationValidator extends CorePaginationValidator<HealA
   
 }
 
-const HealActionSortOrder = CorePaginationValidator.toEnumFromFieldList(["id", "created_at", "updated_at"]);
+const HealActionSortOrder = HealActionPaginationValidator.toEnumFromFieldList<HealActionEntity>(["id", "created_at", "updated_at"]);
 registerEnumType(HealActionSortOrder, {name: "HealActionSortOrder"});
-
-

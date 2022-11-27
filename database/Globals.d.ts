@@ -2,7 +2,6 @@ import {Collection, EntityManager} from "@mikro-orm/core";
 import {YogaInitialContext} from "graphql-yoga/typings/types";
 import Koa from "koa";
 import {CoreEntity} from "./entities";
-import {QueryOrder} from "./enums";
 
 interface GraphQLContext extends Koa.ParameterizedContext, YogaInitialContext {
   entity_manager: EntityManager;
@@ -17,10 +16,6 @@ type ValidatorEntityValue<V> = V extends Collection<infer R> ? R extends CoreEnt
 type ValidatorEntityProps<V> = { [K in keyof V]: ValidatorEntityValue<V[K]> };
 
 type EntityProps<V extends {id: string}, E = CoreEntity<V>> = Partial<ValidatorEntityProps<Properties<NonCoreEntityProps<V>>>>
-
-type SearchProps<V extends object> = keyof V | `-${keyof V}`
-
-type OrderByProps<O extends CoreEntity> = { [K in keyof Properties<O>]?: QueryOrder }
 
 type Unwrap<A> = A extends Array<infer R> | Collection<infer R> ? R : A;
 

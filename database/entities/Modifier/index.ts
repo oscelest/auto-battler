@@ -1,4 +1,4 @@
 export {ModifierEntity} from "./Modifier.entity";
-export {NumericalModifierEntity} from "./NumericalModifier.entity";
+export {ArithmeticalModifierEntity} from "./ArithmeticalModifierEntity";
 export {AttributeModifierEntity} from "./AttributeModifier.entity";
 

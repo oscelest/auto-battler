@@ -34,7 +34,4 @@ export interface OperationEntityInitializer extends CoreEntityInitializer {
   target: TargetType;
   modifier_list?: Collection<ModifierEntity>;
   action_list?: Collection<ActionEntity>;
-  
-  // skill_list?: Collection<SkillEntity>;
-  // trigger_list?: Collection<TriggerEntity>;
 }

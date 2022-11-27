@@ -3,7 +3,7 @@ import {Field, InputType} from "type-graphql";
 import {SkillType} from "../../enums";
 
 @InputType()
-export default class SkillValidator {
+export class SkillCreateValidator {
   
   @Field()
   @IsString()
@@ -14,3 +14,17 @@ export default class SkillValidator {
   public type!: SkillType;
   
 }
+
+@InputType()
+export class SkillUpdateValidator {
+  
+  @Field({nullable: true})
+  @IsString()
+  public name?: string;
+  
+  @Field(() => SkillType, {nullable: true})
+  @IsEnum(SkillType)
+  public type?: SkillType;
+  
+}
+

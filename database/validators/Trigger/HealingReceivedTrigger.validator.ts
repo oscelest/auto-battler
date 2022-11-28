@@ -1,7 +1,13 @@
 import {InputType} from "type-graphql";
-import TriggerValidator from "./Trigger.validator";
+import {TriggerCreateValidator, TriggerUpdateValidator} from "./Trigger.validator";
+
 
 @InputType()
-export default class DamageReceivedTriggerValidator extends TriggerValidator {
+export class HealingReceivedTriggerCreateValidator extends TriggerCreateValidator {
   
+}
+
+@InputType()
+export class HealingReceivedTriggerUpdateValidator extends TriggerUpdateValidator {
+
 }

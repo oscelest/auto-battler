@@ -1,8 +1,5 @@
-import {IsBoolean, IsEnum} from "class-validator";
-import {Field, InputType, registerEnumType} from "type-graphql";
-import {HealActionEntity} from "../../entities";
-import {EntityOrderKey} from "../../Globals";
-import {CorePaginationValidator} from "../Core.validator";
+import {IsBoolean} from "class-validator";
+import {Field, InputType} from "type-graphql";
 import {ActionCreateValidator, ActionUpdateValidator} from "./Action.validator";
 
 @InputType()
@@ -30,15 +27,3 @@ export class HealActionUpdateValidator extends ActionUpdateValidator {
   public reviving?: boolean;
   
 }
-
-@InputType()
-export class HealActionPaginationValidator extends CorePaginationValidator<HealActionEntity> {
-  
-  @Field(() => [HealActionSortOrder], {nullable: true})
-  @IsEnum(() => HealActionSortOrder, {each: true})
-  public order_by?: EntityOrderKey<HealActionEntity>[];
-  
-}
-
-const HealActionSortOrder = HealActionPaginationValidator.toEnumFromFieldList<HealActionEntity>(["id", "created_at", "updated_at"]);
-registerEnumType(HealActionSortOrder, {name: "HealActionSortOrder"});

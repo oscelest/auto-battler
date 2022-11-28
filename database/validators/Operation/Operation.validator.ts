@@ -14,7 +14,6 @@ export class OperationCreateValidator {
   
 }
 
-
 @InputType()
 export class OperationUpdateValidator {
   

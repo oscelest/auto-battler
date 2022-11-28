@@ -24,7 +24,7 @@ export class EffectActionUpdateValidator extends ActionUpdateValidator {
 }
 
 @InputType()
-export class HealActionPaginationValidator extends CorePaginationValidator<EffectActionEntity> {
+export class EffectActionPaginationValidator extends CorePaginationValidator<EffectActionEntity> {
   
   @Field(() => [EffectActionSortOrder], {nullable: true})
   @IsEnum(() => EffectActionSortOrder, {each: true})
@@ -32,5 +32,5 @@ export class HealActionPaginationValidator extends CorePaginationValidator<Effec
   
 }
 
-const EffectActionSortOrder = HealActionPaginationValidator.toEnumFromFieldList<EffectActionEntity>(["id", "created_at", "updated_at", "effect.id"]);
+const EffectActionSortOrder = EffectActionPaginationValidator.toEnumFromFieldList<EffectActionEntity>(["id", "created_at", "updated_at", "effect.id"]);
 registerEnumType(EffectActionSortOrder, {name: "EffectActionSortOrder"});

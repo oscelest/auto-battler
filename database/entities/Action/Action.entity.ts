@@ -6,7 +6,7 @@ import {ModifierEntity} from "../Modifier";
 
 @InterfaceType({implements: CoreEntity})
 @Entity({abstract: true, discriminatorColumn: "type" as keyof ActionEntity})
-export abstract class ActionEntity extends CoreEntity<ActionEntity> {
+export abstract class ActionEntity<E extends ActionEntity = any> extends CoreEntity<E> {
   
   @Field(() => ActionType)
   @Enum(() => ActionType)

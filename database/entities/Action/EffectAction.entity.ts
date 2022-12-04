@@ -7,7 +7,7 @@ import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
 @ObjectType({implements: [CoreEntity, ActionEntity]})
 @Entity({discriminatorValue: ActionType.EFFECT})
-export class EffectActionEntity extends ActionEntity {
+export class EffectActionEntity extends ActionEntity<EffectActionEntity> {
   
   @Field(() => EffectEntity)
   @ManyToOne(() => EffectEntity)

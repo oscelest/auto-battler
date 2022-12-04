@@ -6,7 +6,7 @@ import {ModifierEntity, ModifierEntityInitializer} from "./Modifier.entity";
 
 @ObjectType({implements: [CoreEntity, ModifierEntity]})
 @Entity({discriminatorValue: ModifierType.ARITHMETICAL})
-export class ArithmeticalModifierEntity extends ModifierEntity {
+export class ArithmeticalModifierEntity extends ModifierEntity<ArithmeticalModifierEntity> {
   
   @Field(() => ArithmeticalType)
   @Enum(() => ArithmeticalType)

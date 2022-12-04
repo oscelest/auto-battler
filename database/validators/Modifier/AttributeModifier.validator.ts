@@ -1,5 +1,5 @@
 import {IsEnum} from "class-validator";
-import {Field, InputType, registerEnumType} from "type-graphql";
+import {Field, InputType} from "type-graphql";
 import {AttributeModifierEntity} from "../../entities";
 import {AttributeType} from "../../enums";
 import {EntityOrderKey} from "../../Globals";
@@ -27,11 +27,10 @@ export class AttributeModifierUpdateValidator extends ModifierUpdateValidator {
 @InputType()
 export class AttributeModifierPaginationValidator extends CorePaginationValidator<AttributeModifierEntity> {
   
-  @Field(() => [AttributeModifierSortOrder], {nullable: true})
-  @IsEnum(() => AttributeModifierSortOrder, {each: true})
+  @Field(() => [order_by_enum], {nullable: true})
+  @IsEnum(() => order_by_enum, {each: true})
   public order_by?: EntityOrderKey<AttributeModifierEntity>[];
   
 }
 
-const AttributeModifierSortOrder = AttributeModifierPaginationValidator.toEnumFromFieldList<AttributeModifierEntity>(["id", "created_at", "updated_at", "attribute"]);
-registerEnumType(AttributeModifierSortOrder, {name: "AttributeModifierSortOrder"});
+const order_by_enum = AttributeModifierEntity.registerAsEnum("AttributeModifierSortOrder", ["id", "created_at", "updated_at", "attribute"]);

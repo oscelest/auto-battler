@@ -6,7 +6,7 @@ import {TriggerEntity, TriggerEntityInitializer} from "./Trigger.entity";
 
 @ObjectType({implements: [CoreEntity, TriggerEntity]})
 @Entity({discriminatorValue: TriggerType.EXPIRATION})
-export class ExpirationTriggerEntity extends TriggerEntity {
+export class ExpirationTriggerEntity extends TriggerEntity<ExpirationTriggerEntity> {
   
   @Field(() => EffectExpirationType)
   @Enum(() => EffectExpirationType)
@@ -14,6 +14,7 @@ export class ExpirationTriggerEntity extends TriggerEntity {
   
   constructor(initializer: ExpirationTriggerEntityInitializer) {
     super(TriggerType.PERIODIC, initializer);
+    
     this.expiration_type = initializer.expiration_type;
   }
 }

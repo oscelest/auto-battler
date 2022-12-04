@@ -6,7 +6,7 @@ import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
 @ObjectType({implements: [CoreEntity, ActionEntity]})
 @Entity({discriminatorValue: ActionType.DAMAGE})
-export class DamageActionEntity extends ActionEntity {
+export class DamageActionEntity extends ActionEntity<DamageActionEntity> {
   
   @Field()
   @Property()

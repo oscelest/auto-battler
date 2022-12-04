@@ -6,7 +6,7 @@ import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
 @ObjectType({implements: [CoreEntity, ActionEntity]})
 @Entity({discriminatorValue: ActionType.HEAL})
-export class HealActionEntity extends ActionEntity {
+export class HealActionEntity extends ActionEntity<HealActionEntity> {
   
   @Field()
   @Property()
@@ -18,6 +18,7 @@ export class HealActionEntity extends ActionEntity {
   
   constructor(initializer: HealActionEntityInitializer) {
     super(ActionType.HEAL, initializer);
+    
     this.direct = initializer.direct ?? true;
     this.reviving = initializer.reviving ?? false;
   }

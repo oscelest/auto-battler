@@ -39,8 +39,8 @@ export class EffectEntity extends CoreEntity<EffectEntity> {
     this.expires = initializer.expires ?? false;
     this.removable = initializer.removable ?? false;
     this.alignment = initializer.alignment;
-    this.modifier_list = initializer.modifier_list ?? new Collection<ModifierEntity>(this);
-    this.trigger_list = initializer.trigger_list ?? new Collection<TriggerEntity>(this);
+    this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
+    this.trigger_list = this.toCollectionFromList(initializer.trigger_list);
   }
 }
 

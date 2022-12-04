@@ -2,7 +2,7 @@ import {Collection, Entity, ManyToMany, ManyToOne, Property} from "@mikro-orm/co
 import {Field, ObjectType} from "type-graphql";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
 import {SkillEntity} from "../Skill";
-import {UnitClassEntity} from "./UnitClass.entity";
+import {UnitTypeEntity} from "./UnitTypeEntity";
 
 @ObjectType({implements: CoreEntity})
 @Entity()
@@ -12,13 +12,13 @@ export class UnitEntity extends CoreEntity<UnitEntity> {
   @Property()
   public name: string;
   
-  @Field(() => UnitClassEntity)
-  @ManyToOne(() => UnitClassEntity)
-  public class: UnitClassEntity;
-  
   @Field()
   @Property()
   public experience: number;
+  
+  @Field(() => UnitTypeEntity)
+  @ManyToOne(() => UnitTypeEntity)
+  public type: UnitTypeEntity;
   
   @Field(() => [SkillEntity])
   @ManyToMany(() => SkillEntity)
@@ -27,15 +27,15 @@ export class UnitEntity extends CoreEntity<UnitEntity> {
   constructor(initializer: UnitEntityInitializer) {
     super(initializer);
     this.name = initializer.name;
-    this.class = initializer.class;
+    this.type = initializer.type;
     this.experience = initializer.experience ?? 0;
-    this.skill_list = initializer.skill_list ?? new Collection<SkillEntity>(this);
+    this.skill_list = this.toCollectionFromList(initializer.skill_list);
   }
 }
 
 export interface UnitEntityInitializer extends CoreEntityInitializer {
   name: string;
-  class: UnitClassEntity;
   experience?: number;
-  skill_list?: Collection<SkillEntity>;
+  type: UnitTypeEntity;
+  skill_list?: SkillEntity[] | Collection<SkillEntity>;
 }

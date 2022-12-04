@@ -5,7 +5,7 @@ import {ModifierEntity} from "../Modifier";
 
 @ObjectType({implements: CoreEntity})
 @Entity()
-export class UnitClassEntity extends CoreEntity<UnitClassEntity> {
+export class UnitTypeEntity extends CoreEntity<UnitTypeEntity> {
   
   @Field()
   @Property()
@@ -19,11 +19,11 @@ export class UnitClassEntity extends CoreEntity<UnitClassEntity> {
     super(initializer);
     
     this.name = initializer.name;
-    this.modifier_list = initializer.modifier_list ?? new Collection<ModifierEntity>(this);
+    this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
   }
 }
 
 export interface UnitClassEntityInitializer extends CoreEntityInitializer {
   name: string;
-  modifier_list?: Collection<ModifierEntity>;
+  modifier_list?: ModifierEntity[] | Collection<ModifierEntity>;
 }

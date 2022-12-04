@@ -6,7 +6,7 @@ import {ModifierEntity, ModifierEntityInitializer} from "./Modifier.entity";
 
 @ObjectType({implements: [CoreEntity, ModifierEntity]})
 @Entity({discriminatorValue: ModifierType.ATTRIBUTE})
-export class AttributeModifierEntity extends ModifierEntity {
+export class AttributeModifierEntity extends ModifierEntity<AttributeModifierEntity> {
   
   @Field(() => AttributeType)
   @Enum(() => AttributeType)

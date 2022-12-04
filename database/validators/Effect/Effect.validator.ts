@@ -1,5 +1,5 @@
 import {IsBoolean, IsEnum, IsOptional, IsString} from "class-validator";
-import {Field, InputType, registerEnumType} from "type-graphql";
+import {Field, InputType} from "type-graphql";
 import {EffectEntity} from "../../entities";
 import {EffectAlignmentType} from "../../enums";
 import {EntityOrderKey} from "../../Globals";
@@ -55,11 +55,10 @@ export class EffectUpdateValidator {
 @InputType()
 export class EffectPaginationValidator extends CorePaginationValidator<EffectEntity> {
   
-  @Field(() => [EffectSortOrder], {nullable: true})
-  @IsEnum(() => EffectSortOrder, {each: true})
+  @Field(() => [order_by_enum], {nullable: true})
+  @IsEnum(() => order_by_enum, {each: true})
   public order_by?: EntityOrderKey<EffectEntity>[];
   
 }
 
-const EffectSortOrder = EffectPaginationValidator.toEnumFromFieldList<EffectEntity>(["id", "created_at", "updated_at", "name", "alignment"]);
-registerEnumType(EffectSortOrder, {name: "EffectSortOrder"});
+const order_by_enum = EffectEntity.registerAsEnum("EffectSortOrder", ["id", "created_at", "updated_at", "name", "alignment"]);

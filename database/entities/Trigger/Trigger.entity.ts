@@ -6,7 +6,7 @@ import {OperationEntity} from "../Operation";
 
 @InterfaceType({implements: CoreEntity})
 @Entity({abstract: true, discriminatorColumn: "type" as keyof TriggerEntity})
-export abstract class TriggerEntity extends CoreEntity<TriggerEntity> {
+export abstract class TriggerEntity<E extends TriggerEntity = any> extends CoreEntity<E> {
   
   @Field(() => TriggerType)
   @Enum(() => TriggerType)
@@ -16,14 +16,15 @@ export abstract class TriggerEntity extends CoreEntity<TriggerEntity> {
   @ManyToMany(() => OperationEntity)
   public operation_list: Collection<OperationEntity>;
   
+  
   protected constructor(type: TriggerType, initializer: TriggerEntityInitializer) {
     super(initializer);
     
     this.type = type;
-    this.operation_list = initializer.operation_list ?? new Collection<OperationEntity>(this);
+    this.operation_list = this.toCollectionFromList(initializer.operation_list);
   }
 }
 
 export interface TriggerEntityInitializer extends CoreEntityInitializer {
-  operation_list?: Collection<OperationEntity>;
+  operation_list?: OperationEntity[] | Collection<OperationEntity>;
 }

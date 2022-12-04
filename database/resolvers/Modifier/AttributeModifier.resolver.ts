@@ -1,4 +1,4 @@
-import {GraphQLResolveInfo} from "graphql/index";
+import {GraphQLResolveInfo} from "graphql/type";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
 import {AttributeModifierEntity} from "../../entities";
 import {GraphQLContext} from "../../Globals";
@@ -18,9 +18,8 @@ export class AttributeModifierResolver {
   }
   
   @Mutation(() => AttributeModifierEntity)
-  public async createAttributeModifier(@Arg("data") input: AttributeModifierCreateValidator, @Ctx() ctx: GraphQLContext): Promise<AttributeModifierEntity> {
-    const {attribute, value, value_per_level, category} = input;
-    const entity = new AttributeModifierEntity({attribute, value, value_per_level, category});
+  public async createAttributeModifier(@Arg("data") data: AttributeModifierCreateValidator, @Ctx() ctx: GraphQLContext): Promise<AttributeModifierEntity> {
+    const entity = new AttributeModifierEntity(data);
     await ctx.entity_manager.persist(entity).flush();
     return entity;
   }

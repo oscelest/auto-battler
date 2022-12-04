@@ -6,7 +6,7 @@ import {TriggerEntity, TriggerEntityInitializer} from "./Trigger.entity";
 
 @ObjectType({implements: [CoreEntity, TriggerEntity]})
 @Entity({discriminatorValue: TriggerType.PERIODIC})
-export class PeriodicTriggerEntity extends TriggerEntity {
+export class PeriodicTriggerEntity extends TriggerEntity<PeriodicTriggerEntity> {
   
   @Field()
   @Property()
@@ -14,6 +14,7 @@ export class PeriodicTriggerEntity extends TriggerEntity {
   
   constructor(initializer: PeriodicTriggerEntityInitializer) {
     super(TriggerType.PERIODIC, initializer);
+    
     this.interval = initializer.interval;
   }
 }

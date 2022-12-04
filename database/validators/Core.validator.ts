@@ -1,12 +1,14 @@
 import {QueryOrderMap} from "@mikro-orm/core/enums";
 import {IsEnum, IsInt, Max, Min, ValidateIf} from "class-validator";
-import {Field, InputType, registerEnumType} from "type-graphql";
+import {Field, InputType} from "type-graphql";
 import {CoreEntity} from "../entities";
 import {QueryOrder} from "../enums";
 import {EntityOrderKey} from "../Globals";
 
 @InputType({isAbstract: true})
-export abstract class CorePaginationValidator<E extends CoreEntity = CoreEntity> {
+export abstract class CorePaginationValidator<E extends CoreEntity> {
+  
+  protected entity!: E;
   
   @Field({nullable: true, defaultValue: 0})
   @IsInt()
@@ -18,8 +20,8 @@ export abstract class CorePaginationValidator<E extends CoreEntity = CoreEntity>
   @Max(100)
   public limit!: number;
   
-  @Field(() => [CoreSortOrder], {nullable: true})
-  @IsEnum(() => CoreSortOrder, {each: true})
+  @Field(() => [order_by_enum], {nullable: true})
+  @IsEnum(() => order_by_enum, {each: true})
   @ValidateIf(object => object.constructor === CorePaginationValidator)
   public abstract order_by?: EntityOrderKey<E>[];
   
@@ -51,24 +53,6 @@ export abstract class CorePaginationValidator<E extends CoreEntity = CoreEntity>
     
     return result as QueryOrderMap<E>;
   }
-  
-  public static toEnumFromFieldList<T extends CoreEntity, K extends EntityOrderKey<T> = EntityOrderKey<T>>(list: K[]) {
-    const result = {} as Record<string, `${K}|${QueryOrder.ASC}` | `${K}|${QueryOrder.DESC}`>;
-    for (let value of list) {
-      const base_key = value.replace(/\./g, "_");
-      const ascending_key = `${base_key}_${QueryOrder.ASC}`;
-      const descending_key = `${base_key}_${QueryOrder.DESC}`;
-      
-      const ascending_value = `${value}|${QueryOrder.ASC}` as `${K}|${QueryOrder.ASC}`;
-      const descending_value = `${value}|${QueryOrder.DESC}` as `${K}|${QueryOrder.DESC}`;
-      
-      result[ascending_key] = ascending_value;
-      result[descending_key] = descending_value;
-    }
-    
-    return result;
-  }
 }
 
-const CoreSortOrder = CorePaginationValidator.toEnumFromFieldList(["id", "created_at", "updated_at"]);
-registerEnumType(CoreSortOrder, {name: "CoreSortOrder"});
+const order_by_enum = CoreEntity.registerAsEnum("id", ["created_at", "updated_at"]);

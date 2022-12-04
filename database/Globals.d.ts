@@ -7,6 +7,8 @@ interface GraphQLContext extends Koa.ParameterizedContext, YogaInitialContext {
   entity_manager: EntityManager;
 }
 
+type Constructor<T> = (abstract new (...args: any[]) => T);
+
 type Properties<E extends {id: string}> = { [K in keyof Pick<E, { [K in keyof E]: E[K] extends Function ? never : K }[keyof E]>]: E[K] };
 
 type NonCoreEntityProps<V extends {id: string}, E = CoreEntity<V>> = Omit<V, "id" | "created_at" | "updated_at">

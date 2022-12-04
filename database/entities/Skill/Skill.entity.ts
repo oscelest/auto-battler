@@ -31,11 +31,12 @@ export class SkillEntity extends CoreEntity<SkillEntity> {
   
   constructor(initializer: SkillEntityInitializer) {
     super(initializer);
+  
     this.name = initializer.name;
     this.description = initializer.description ?? "";
     this.type = initializer.type;
-    this.operation_list = initializer.operation_list ?? new Collection<OperationEntity>(this);
-    this.modifier_list = initializer.modifier_list ?? new Collection<ModifierEntity>(this);
+    this.operation_list = this.toCollectionFromList(initializer.operation_list);
+    this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
   }
 }
 
@@ -43,6 +44,6 @@ export interface SkillEntityInitializer extends CoreEntityInitializer {
   name: string;
   description?: string;
   type: SkillType;
-  operation_list?: Collection<OperationEntity>;
-  modifier_list?: Collection<ModifierEntity>;
+  operation_list?: OperationEntity[] | Collection<OperationEntity>;
+  modifier_list?: ModifierEntity[] | Collection<ModifierEntity>;
 }

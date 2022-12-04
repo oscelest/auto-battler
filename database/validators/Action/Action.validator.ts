@@ -1,12 +1,10 @@
 import {IsBoolean, IsEnum, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {ActionEntity} from "../../entities";
 import {ActionType} from "../../enums";
-import {EntityProps} from "../../Globals";
 
 
 @InputType({isAbstract: true})
-export abstract class ActionCreateValidator implements EntityProps<ActionEntity> {
+export abstract class ActionCreateValidator {
   
   @Field({nullable: true})
   @IsBoolean()
@@ -23,7 +21,7 @@ export abstract class ActionCreateValidator implements EntityProps<ActionEntity>
 }
 
 @InputType({isAbstract: true})
-export abstract class ActionUpdateValidator implements EntityProps<ActionEntity> {
+export abstract class ActionUpdateValidator {
   
   @Field({nullable: true})
   @IsBoolean()

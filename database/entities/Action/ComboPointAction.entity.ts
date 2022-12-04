@@ -6,7 +6,7 @@ import {ActionEntity, ActionEntityInitializer} from "./Action.entity";
 
 @ObjectType({implements: [CoreEntity, ActionEntity]})
 @Entity({discriminatorValue: ActionType.COMBO_POINT})
-export class ComboPointActionEntity extends ActionEntity {
+export class ComboPointActionEntity extends ActionEntity<ComboPointActionEntity> {
   
   @Field()
   @Property()
@@ -21,7 +21,6 @@ export class ComboPointActionEntity extends ActionEntity {
     
     this.base_value = initializer.base_value;
     this.retained = initializer.retained ?? false;
-    this.periodic = initializer.periodic ?? false;
   }
 }
 

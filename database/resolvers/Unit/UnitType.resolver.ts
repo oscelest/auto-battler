@@ -1,7 +1,6 @@
-import {AutoPath} from "@mikro-orm/core/typings";
 import {GraphQLResolveInfo} from "graphql";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
-import {ModifierEntity, UnitEntity, UnitTypeEntity} from "../../entities";
+import {ModifierEntity, UnitTypeEntity} from "../../entities";
 import {GraphQLContext} from "../../Globals";
 import {ASTWalker} from "../../modules/ASTWalker";
 import {UnitTypeCreateValidator, UnitTypePaginationValidator, UnitTypeUpdateValidator} from "../../validators/Unit/UnitType.validator";
@@ -11,16 +10,16 @@ export class UnitTypeResolver {
   
   @Query(() => UnitTypeEntity, {nullable: true})
   public async getUnitType(@Arg("id") id: string, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<UnitTypeEntity | null> {
-    const {fields, populate} = ASTWalker.getFieldsAndPopulate(info) as AutoPath<UnitEntity, string>;
+    const {fields, populate} = ASTWalker.getEntityFieldsAndPopulate<UnitTypeEntity>(info);
     return await ctx.entity_manager.getRepository(UnitTypeEntity).findOne({id}, {fields, populate});
   }
   
   @Query(() => [UnitTypeEntity])
   public async getUnitTypeList(@Arg("pagination") pagination: UnitTypePaginationValidator, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<UnitTypeEntity[]> {
-    const {fields, populate} = ASTWalker.getFieldsAndPopulate(info) as AutoPath<UnitEntity, string>;
-    const {offset, limit} = pagination;
+    const {fields, populate} = ASTWalker.getEntityFieldsAndPopulate<UnitTypeEntity>(info);
+    const {offset, limit, orderBy} = pagination;
   
-    return await ctx.entity_manager.getRepository(UnitTypeEntity).find({}, {fields, populate, offset, limit, orderBy: pagination.getOrderBy()});
+    return await ctx.entity_manager.getRepository(UnitTypeEntity).find({}, {fields, populate, offset, limit, orderBy});
   }
   
   @Mutation(() => UnitTypeEntity)

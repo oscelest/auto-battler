@@ -1,4 +1,3 @@
-import {AutoPath} from "@mikro-orm/core/typings";
 import {GraphQLResolveInfo} from "graphql";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
 import {UnitEntity, UnitTypeEntity} from "../../entities";
@@ -11,17 +10,17 @@ export class UnitResolver {
   
   @Query(() => UnitEntity, {nullable: true})
   public async getUnit(@Arg("id") id: string, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<UnitEntity | null> {
-    const {fields, populate} = ASTWalker.getFieldsAndPopulate(info) as AutoPath<UnitEntity, string>;
+    const {fields, populate} = ASTWalker.getEntityFieldsAndPopulate<UnitEntity>(info);
   
     return await ctx.entity_manager.getRepository(UnitEntity).findOne({id}, {fields, populate});
   }
   
   @Query(() => [UnitEntity])
   public async getUnitList(@Arg("pagination") pagination: UnitPaginationValidator, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<UnitEntity[]> {
-    const {fields, populate} = ASTWalker.getFieldsAndPopulate<UnitEntity>(info);
-    const {offset, limit} = pagination;
+    const {fields, populate} = ASTWalker.getEntityFieldsAndPopulate<UnitEntity>(info);
+    const {offset, limit, orderBy} = pagination;
   
-    return await ctx.entity_manager.getRepository(UnitEntity).find({}, {fields, populate, offset, limit, orderBy: pagination.getOrderBy()});
+    return await ctx.entity_manager.getRepository(UnitEntity).find({}, {fields, populate, offset, limit, orderBy});
   }
   
   @Mutation(() => UnitEntity)

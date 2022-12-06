@@ -25,14 +25,14 @@ export abstract class CorePaginationValidator<E extends CoreEntity> {
   @ValidateIf(object => object.constructor === CorePaginationValidator)
   public abstract order_by?: EntityOrderKey<E>[];
   
-  public getOrderBy<K extends EntityOrderKey<E> = EntityOrderKey<E>>() {
+  public get orderBy() {
     const result = {} as any;
-    
+  
     for (let value of this.order_by ?? []) {
-      
+    
       const [column_root, order] = value.split("|") as [EntityOrderKey<E>, QueryOrder];
       const column_list = column_root.split(".");
-      
+    
       let current = result;
       for (let i = 0; i < column_list.length; i++) {
         const column = column_list[i];
@@ -50,7 +50,7 @@ export abstract class CorePaginationValidator<E extends CoreEntity> {
         }
       }
     }
-    
+  
     return result as QueryOrderMap<E>;
   }
 }

@@ -1,6 +1,6 @@
 import {GraphQLResolveInfo} from "graphql/type";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
-import {HealActionEntity, ModifierEntity, UnitEntity} from "../../entities";
+import {HealActionEntity, ModifierEntity} from "../../entities";
 import {GraphQLContext} from "../../Globals";
 import {ASTWalker} from "../../modules/ASTWalker";
 import {HealActionCreateValidator, HealActionPaginationValidator, HealActionUpdateValidator} from "../../validators/Action/HealAction.validator";
@@ -10,17 +10,17 @@ export class HealActionResolver {
   
   @Query(() => HealActionEntity, {nullable: true})
   public async getHealAction(@Arg("id") id: string, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<HealActionEntity | null> {
-    const {fields, populate} = ASTWalker.getFieldsAndPopulate<UnitEntity>(info);
+    const {fields, populate} = ASTWalker.getEntityFieldsAndPopulate<HealActionEntity>(info);
   
     return await ctx.entity_manager.getRepository(HealActionEntity).findOne({id}, {fields, populate});
   }
   
   @Query(() => [HealActionEntity])
   public async getHealActionList(@Arg("pagination") pagination: HealActionPaginationValidator, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo): Promise<HealActionEntity[]> {
-    const {fields, populate} = ASTWalker.getFieldsAndPopulate<UnitEntity>(info);
-    const {offset, limit} = pagination;
+    const {fields, populate} = ASTWalker.getEntityFieldsAndPopulate<HealActionEntity>(info);
+    const {offset, limit, orderBy} = pagination;
   
-    return await ctx.entity_manager.getRepository(HealActionEntity).find({}, {fields, populate, offset, limit, orderBy: pagination.getOrderBy()});
+    return await ctx.entity_manager.getRepository(HealActionEntity).find({}, {fields, populate, offset, limit, orderBy});
   }
   
   @Mutation(() => HealActionEntity)

@@ -32,7 +32,7 @@
     "graphql-fields":              "^2.0.3",
     "graphql-fields-to-relations": "^1.0.5",
     "graphql-yoga":                "^3.1.1",
-    "koa":                         "^2.13.4",
+    "koa":                         "^2.14.0",
     "ts-node":                     "^10.9.1",
     "type-graphql":                "^2.0.0-beta.1",
     "uuid":                        "^9.0.0"

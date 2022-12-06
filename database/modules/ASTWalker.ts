@@ -1,42 +1,53 @@
+import {AutoPath} from "@mikro-orm/core/typings";
 import {GraphQLResolveInfo, Kind, SelectionSetNode} from "graphql/index";
 
 export module ASTWalker {
   
-  export function getRelationList(info: GraphQLResolveInfo) {
-    return info.fieldNodes.reduce(
+  export function getFieldsAndPopulate<E extends object>(info: GraphQLResolveInfo): ASTQuery<AutoPath<E, string>> {
+    const {fields, populate} = info.fieldNodes.reduce(
       (result, node) => {
-        const field = getSelection(node.selectionSet);
-        if (field.length) {
-          result.push(field.join("."));
-        }
+        const {fields, populate} = getNodes(node.selectionSet);
+        result.fields.push(...fields);
+        result.populate.push(...populate);
         return result;
       },
-      [] as string[]
+      {fields: [], populate: []} as ASTQuery<AutoPath<E, string>>
     );
+    
+    return {fields: fields.filter(onlyUnique), populate: populate.filter(onlyUnique)};
   }
   
-  function getSelection(set?: SelectionSetNode, path: string[] = []): string[][] {
-    const result = [] as string[][];
-    if (!set) {
-      return result;
-    }
-  
+  function getNodes(set?: SelectionSetNode, path: string[] = []): ASTQuery {
+    const result = {fields: [], populate: []} as ASTQuery;
+    if (!set) return result;
+    
     for (let selection of set.selections) {
-      switch (selection.kind) {
-        case Kind.FIELD:
-          if (selection.selectionSet) {
-            const name = [...path, selection.name.value];
-            result.push(name);
-            result.push(...getSelection(selection.selectionSet, [...path, selection.name.value]));
-          }
-          break;
-        case Kind.FRAGMENT_SPREAD:
-        case Kind.INLINE_FRAGMENT:
-          break;
+      if (selection.kind === Kind.FRAGMENT_SPREAD || selection.kind === Kind.INLINE_FRAGMENT) continue;
+      
+      const name = selection.name.value;
+      const next_set = selection.selectionSet;
+      if (next_set) {
+        const {fields, populate} = getNodes(next_set, [...path, name]);
+        result.populate.push(...populate.map(relation => `${name}.${relation}`));
+        result.populate.push(name);
+        result.fields.push(...fields);
+      }
+      else {
+        result.fields.push([...path, name].join("."));
       }
     }
     
     return result;
   }
   
+  function onlyUnique(value: string, index: number, self: string[]) {
+    return self.indexOf(value) === index;
+  }
+  
+  
+}
+
+interface ASTQuery<S = any> {
+  fields: S[];
+  populate: S[];
 }

@@ -33,4 +33,4 @@ export class ExpirationTriggerPaginationValidator extends CorePaginationValidato
   
 }
 
-const order_by_enum = ExpirationTriggerEntity.registerAsEnum("ExpirationTriggerSortOrder", ["id", "created_at", "updated_at", "type", "expiration_type", "operation_list.id"]);
+const order_by_enum = ExpirationTriggerEntity.registerAsEnum("ExpirationTriggerSortOrder", ["id", "created_at", "updated_at", "expiration_type"]);

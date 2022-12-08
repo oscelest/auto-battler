@@ -32,7 +32,7 @@
     "graphql-fields":              "^2.0.3",
     "graphql-fields-to-relations": "^1.0.5",
     "graphql-yoga":                "^3.1.1",
-    "koa":                         "^2.14.0",
+    "koa":                         "^2.14.1",
     "ts-node":                     "^10.9.1",
     "type-graphql":                "^2.0.0-beta.1",
     "uuid":                        "^9.0.0"
@@ -41,6 +41,6 @@
     "@types/koa":  "^2.13.5",
     "@types/uuid": "^9.0.0",
     "ts-morph":    "^17.0.1",
-    "typescript":  "^4.9.3"
+    "typescript": "^4.9.4"
   }
 }

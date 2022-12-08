@@ -32,4 +32,4 @@ export class PeriodicTriggerPaginationValidator extends CorePaginationValidator<
   
 }
 
-const order_by_enum = PeriodicTriggerEntity.registerAsEnum("PeriodicTriggerSortOrder", ["id", "created_at", "updated_at", "interval", "operation_list.id"]);
+const order_by_enum = PeriodicTriggerEntity.registerAsEnum("PeriodicTriggerSortOrder", ["id", "created_at", "updated_at", "interval"]);

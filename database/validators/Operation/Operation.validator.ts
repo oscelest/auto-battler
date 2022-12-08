@@ -1,4 +1,4 @@
-import {IsEnum} from "class-validator";
+import {IsEnum, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
 import {OperationEntity} from "../../entities";
 import {TargetType} from "../../enums";
@@ -12,6 +12,14 @@ export class OperationCreateValidator {
   @IsEnum(TargetType)
   public target!: TargetType;
   
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public action_list?: string[];
+  
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public modifier_list?: string[];
+  
 }
 
 @InputType()
@@ -20,6 +28,14 @@ export class OperationUpdateValidator {
   @Field(() => TargetType, {nullable: true})
   @IsEnum(TargetType)
   public target?: TargetType;
+  
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public action_list?: string[];
+  
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public modifier_list?: string[];
   
 }
 

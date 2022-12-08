@@ -32,6 +32,6 @@ export class OperationEntity extends CoreEntity<OperationEntity> {
 
 export interface OperationEntityInitializer extends CoreEntityInitializer {
   target: TargetType;
-  action_list?: Collection<ActionEntity>;
-  modifier_list?: Collection<ModifierEntity>;
+  action_list?: ActionEntity[] | Collection<ActionEntity>;
+  modifier_list?: ModifierEntity[] | Collection<ModifierEntity>;
 }

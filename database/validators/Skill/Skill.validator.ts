@@ -1,4 +1,4 @@
-import {IsEnum, IsString} from "class-validator";
+import {IsEnum, IsString, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
 import {SkillEntity} from "../../entities";
 import {SkillType} from "../../enums";
@@ -16,6 +16,18 @@ export class SkillCreateValidator {
   @IsEnum(SkillType)
   public type!: SkillType;
   
+  @Field({nullable: true})
+  @IsString()
+  public description?: string;
+  
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public operation_list?: string[];
+  
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public modifier_list?: string[];
+  
 }
 
 @InputType()
@@ -29,6 +41,17 @@ export class SkillUpdateValidator {
   @IsEnum(SkillType)
   public type?: SkillType;
   
+  @Field({nullable: true})
+  @IsString()
+  public description?: string;
+  
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public operation_list?: string[];
+  
+  @Field(() => [String], {nullable: true})
+  @IsUUID("4", {each: true})
+  public modifier_list?: string[];
 }
 
 @InputType()

@@ -1,0 +1,41 @@
+query {
+  __type (name: "$name") {
+    name
+    kind
+    fields {
+      name
+      type {
+        name
+        kind
+        ofType {
+          name
+          kind
+                  ofType {
+                    name
+                    kind
+                  }
+                          ofType {
+                            name
+                            kind
+                          }
+                                  ofType {
+                                    name
+                                    kind
+                                  }
+                                          ofType {
+                                            name
+                                            kind
+                                          }
+        }
+      }
+    }
+    interfaces {
+      name
+      kind
+    }
+    ofType {
+      name
+      kind
+    }
+  }
+}

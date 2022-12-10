@@ -2,7 +2,6 @@ import {IsBoolean, IsEnum, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
 import {ActionType} from "../../enums";
 
-
 @InputType({isAbstract: true})
 export abstract class ActionCreateValidator {
   

@@ -21,26 +21,27 @@
     "update":  "npx npm-check-updates -u && npm i"
   },
   "dependencies":    {
-    "@mikro-orm/cli":              "^5.5.3",
-    "@mikro-orm/core":             "^5.5.3",
-    "@mikro-orm/migrations":       "^5.5.3",
-    "@mikro-orm/mysql":            "^5.5.3",
-    "@mikro-orm/reflection":       "^5.5.3",
-    "class-validator":             "^0.13.2",
-    "dotenv":                      "^16.0.3",
-    "graphql":                     "^16.6.0",
-    "graphql-fields":              "^2.0.3",
-    "graphql-fields-to-relations": "^1.0.5",
-    "graphql-yoga":                "^3.1.1",
-    "koa":                         "^2.14.1",
-    "ts-node":                     "^10.9.1",
-    "type-graphql":                "^2.0.0-beta.1",
-    "uuid":                        "^9.0.0"
+    "@mikro-orm/cli":        "^5.6.0",
+    "@mikro-orm/core":       "^5.6.0",
+    "@mikro-orm/migrations": "^5.6.0",
+    "@mikro-orm/mysql":      "^5.6.0",
+    "@mikro-orm/reflection": "^5.6.0",
+    "class-validator":       "^0.14.0",
+    "dotenv":                "^16.0.3",
+    "graphql":               "^16.6.0",
+    "graphql-scalars":       "^1.20.1",
+    "graphql-yoga":          "^3.1.1",
+    "koa":                   "^2.14.1",
+    "koa-router":            "^12.0.0",
+    "ts-node":               "^10.9.1",
+    "type-graphql":          "^2.0.0-beta.1",
+    "uuid":                  "^9.0.0"
   },
   "devDependencies": {
-    "@types/koa":  "^2.13.5",
-    "@types/uuid": "^9.0.0",
-    "ts-morph":    "^17.0.1",
-    "typescript": "^4.9.4"
+    "@types/koa":        "^2.13.5",
+    "@types/koa-router": "^7.4.4",
+    "@types/uuid":       "^9.0.0",
+    "ts-morph":          "^17.0.1",
+    "typescript":        "^4.9.4"
   }
 }

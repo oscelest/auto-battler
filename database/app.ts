@@ -25,15 +25,21 @@ export * from "./entities";
     await migrator.up();
   }
   
+  const schema = await buildSchema({
+    resolvers: [...resolver_list],
+    dateScalarMode: "isoDate"
+    // scalarsMap: [
+    //   {type: () => UUIDResolver, scalar: GraphQLUUID}
+    // ]
+  });
+  
   const yoga = createYoga<Koa.ParameterizedContext>({
-    schema: await buildSchema({
-      resolvers: resolver_list,
-      dateScalarMode: "isoDate"
-    }),
+    schema,
     context: ctx => ({...ctx, entity_manager: orm.em.fork()}) as GraphQLContext
   });
   
   const app = new Koa();
+  
   app.use(async (ctx) => {
     const response = await yoga.handleNodeRequest(ctx.req, ctx);
     
@@ -44,6 +50,7 @@ export * from "./entities";
     
     ctx.body = response.body;
   });
+  
   
   app.listen(4000, () => {
     console.log("Running a GraphQL API server at http://localhost:4000");

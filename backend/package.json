@@ -1,0 +1,35 @@
+{
+  "name":            "@noxy/auto-battler-backend",
+  "author":          "oscelest",
+  "version":         "0.0.1",
+  "description":     "A random project that might become something. Mostly just a playground though.",
+  "license":         "MIT",
+  "private":         true,
+  "repository":      {
+    "type": "git",
+    "url":  "git@github.com:oscelest/auto-battler.git"
+  },
+  "bugs":            {
+    "url": "https://github.com/oscelest/auto-battler/issues"
+  },
+  "publishConfig":   {
+    "access": "public"
+  },
+  "scripts":         {
+    "start": "ts-node app.ts"
+  },
+  "dependencies":    {
+    "dotenv":       "^16.0.3",
+    "graphql-yoga": "^3.1.1",
+    "koa":          "^2.14.1",
+    "superagent":   "^8.0.6",
+    "ts-node":      "^10.9.1",
+    "uuid":         "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/koa":        "^2.13.5",
+    "@types/superagent": "^4.1.16",
+    "@types/uuid":       "^9.0.0",
+    "typescript":        "^4.9.4"
+  }
+}

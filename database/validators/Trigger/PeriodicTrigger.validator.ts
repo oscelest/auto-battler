@@ -1,6 +1,6 @@
 import {IsEnum, IsNumber} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {PeriodicTriggerEntity} from "../../entities/Trigger";
+import {PeriodicTriggerEntity, PeriodicTriggerPaginationOrder} from "../../entities";
 import {EntityOrderKey} from "../../Globals";
 import {CorePaginationValidator} from "../Core.validator";
 import {TriggerCreateValidator, TriggerUpdateValidator} from "./Trigger.validator";
@@ -26,10 +26,8 @@ export class PeriodicTriggerUpdateValidator extends TriggerUpdateValidator {
 @InputType()
 export class PeriodicTriggerPaginationValidator extends CorePaginationValidator<PeriodicTriggerEntity> {
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [PeriodicTriggerPaginationOrder], {nullable: true})
+  @IsEnum(() => PeriodicTriggerPaginationOrder, {each: true})
   public order_by?: EntityOrderKey<PeriodicTriggerEntity>[];
   
 }
-
-const order_by_enum = PeriodicTriggerEntity.registerAsEnum("PeriodicTriggerSortOrder", ["id", "created_at", "updated_at", "interval"]);

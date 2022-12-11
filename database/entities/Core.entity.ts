@@ -86,7 +86,7 @@ export abstract class CoreEntity<E extends CoreEntity = any> extends BaseEntity<
         result.fields.push([...path, name].join(".") as DeepKey<E>);
       }
     }
-    
+  
     return result;
   }
   
@@ -95,6 +95,8 @@ export abstract class CoreEntity<E extends CoreEntity = any> extends BaseEntity<
   }
   
 }
+
+export const CoreEntityPaginationOrder = CoreEntity.registerAsEnum("CoreEntityPaginationOrder", ["id", "created_at", "updated_at"]);
 
 interface ASTQuery<F = any, P = any> {
   fields: F[];

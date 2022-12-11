@@ -1,2 +1,2 @@
-export {OperationEntity} from "./Operation.entity";
+export * from "./Operation.entity";
 

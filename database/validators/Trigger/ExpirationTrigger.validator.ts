@@ -1,6 +1,6 @@
 import {IsEnum} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {ExpirationTriggerEntity} from "../../entities/Trigger";
+import {ExpirationTriggerEntity, ExpirationTriggerPaginationOrder} from "../../entities";
 import {EffectExpirationType} from "../../enums";
 import {EntityOrderKey} from "../../Globals";
 import {CorePaginationValidator} from "../Core.validator";
@@ -27,10 +27,8 @@ export class ExpirationTriggerUpdateValidator extends TriggerUpdateValidator {
 @InputType()
 export class ExpirationTriggerPaginationValidator extends CorePaginationValidator<ExpirationTriggerEntity> {
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [ExpirationTriggerPaginationOrder], {nullable: true})
+  @IsEnum(() => ExpirationTriggerPaginationOrder, {each: true})
   public order_by?: EntityOrderKey<ExpirationTriggerEntity>[];
   
 }
-
-const order_by_enum = ExpirationTriggerEntity.registerAsEnum("ExpirationTriggerSortOrder", ["id", "created_at", "updated_at", "expiration_type"]);

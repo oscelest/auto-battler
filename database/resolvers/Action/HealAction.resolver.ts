@@ -2,7 +2,7 @@ import {GraphQLResolveInfo} from "graphql/type";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
 import {HealActionEntity, ModifierEntity} from "../../entities";
 import {GraphQLContext} from "../../Globals";
-import {HealActionCreateValidator, HealActionPaginationValidator, HealActionUpdateValidator} from "../../validators/Action/HealAction.validator";
+import {HealActionCreateValidator, HealActionPaginationValidator, HealActionUpdateValidator} from "../../validators";
 
 @Resolver(() => HealActionEntity)
 export class HealActionResolver {

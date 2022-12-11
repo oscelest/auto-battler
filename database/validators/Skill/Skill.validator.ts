@@ -1,6 +1,6 @@
 import {IsEnum, IsString, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {SkillEntity} from "../../entities";
+import {SkillEntity, SkillPaginationOrder} from "../../entities";
 import {SkillType} from "../../enums";
 import {EntityOrderKey} from "../../Globals";
 import {CorePaginationValidator} from "../Core.validator";
@@ -57,10 +57,8 @@ export class SkillUpdateValidator {
 @InputType()
 export class SkillPaginationValidator extends CorePaginationValidator<SkillEntity> {
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [SkillPaginationOrder], {nullable: true})
+  @IsEnum(() => SkillPaginationOrder, {each: true})
   public order_by?: EntityOrderKey<SkillEntity>[];
   
 }
-
-const order_by_enum = SkillEntity.registerAsEnum("SkillSortOrder", ["id", "created_at", "updated_at", "name", "type"]);

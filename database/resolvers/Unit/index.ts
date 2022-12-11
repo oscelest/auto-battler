@@ -1,2 +1,2 @@
-export {UnitResolver} from "./Unit.resolver";
-export {UnitTypeResolver} from "./UnitType.resolver";
+export * from "./Unit.resolver";
+export * from "./UnitType.resolver";

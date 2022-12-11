@@ -1,2 +1,2 @@
-export {UnitEntity} from "./Unit.entity";
-export {UnitTypeEntity} from "./UnitTypeEntity";
+export * from "./Unit.entity";
+export * from "./UnitTypeEntity";

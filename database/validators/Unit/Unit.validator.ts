@@ -1,6 +1,6 @@
 import {IsEnum, IsNumber, IsString, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {UnitEntity} from "../../entities";
+import {UnitEntity, UnitPaginationOrder} from "../../entities";
 import {EntityOrderKey} from "../../Globals";
 import {CorePaginationValidator} from "../Core.validator";
 
@@ -41,10 +41,8 @@ export class UnitUpdateValidator {
 @InputType()
 export class UnitPaginationValidator extends CorePaginationValidator<UnitEntity> {
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [UnitPaginationOrder], {nullable: true})
+  @IsEnum(() => UnitPaginationOrder, {each: true})
   public order_by?: EntityOrderKey<UnitEntity>[];
   
 }
-
-const order_by_enum = UnitEntity.registerAsEnum("UnitSortOrder", ["id", "created_at", "updated_at", "name", "experience", "type.id"]);

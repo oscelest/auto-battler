@@ -1,1 +1,1 @@
-export {EffectEntity} from "./Effect.entity";
+export * from "./Effect.entity";

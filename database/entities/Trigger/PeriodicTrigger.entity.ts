@@ -19,6 +19,11 @@ export class PeriodicTriggerEntity extends TriggerEntity<PeriodicTriggerEntity> 
   }
 }
 
+export const PeriodicTriggerPaginationOrder = PeriodicTriggerEntity.registerAsEnum(
+  "PeriodicTriggerPaginationOrder",
+  ["id", "created_at", "updated_at", "interval"]
+);
+
 export interface PeriodicTriggerEntityInitializer extends TriggerEntityInitializer {
   interval: number;
 }

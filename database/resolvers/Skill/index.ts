@@ -1,1 +1,1 @@
-export {SkillResolver} from "./Skill.resolver";
+export * from "./Skill.resolver";

@@ -33,6 +33,11 @@ export class UnitEntity extends CoreEntity<UnitEntity> {
   }
 }
 
+export const UnitPaginationOrder = UnitEntity.registerAsEnum(
+  "UnitPaginationOrder",
+  ["id", "created_at", "updated_at", "name", "experience", "type.id"]
+);
+
 export interface UnitEntityInitializer extends CoreEntityInitializer {
   name: string;
   experience?: number;

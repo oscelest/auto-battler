@@ -1,4 +1,4 @@
-export {ModifierEntity} from "./Modifier.entity";
-export {ArithmeticalModifierEntity} from "./ArithmeticalModifierEntity";
-export {AttributeModifierEntity} from "./AttributeModifier.entity";
+export * from "./Modifier.entity";
+export * from "./ArithmeticalModifierEntity";
+export * from "./AttributeModifier.entity";
 

@@ -19,6 +19,11 @@ export class ExpirationTriggerEntity extends TriggerEntity<ExpirationTriggerEnti
   }
 }
 
+export const ExpirationTriggerPaginationOrder = ExpirationTriggerEntity.registerAsEnum(
+  "ExpirationTriggerPaginationOrder",
+  ["id", "created_at", "updated_at", "expiration_type"]
+);
+
 export interface ExpirationTriggerEntityInitializer extends TriggerEntityInitializer {
   expiration_type: EffectExpirationType;
 }

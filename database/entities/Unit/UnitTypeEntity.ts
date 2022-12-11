@@ -21,9 +21,12 @@ export class UnitTypeEntity extends CoreEntity<UnitTypeEntity> {
     this.name = initializer.name;
     this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
   }
+  
 }
 
 export interface UnitClassEntityInitializer extends CoreEntityInitializer {
   name: string;
   modifier_list?: ModifierEntity[] | Collection<ModifierEntity>;
 }
+
+export const UnitTypePaginationOrder = UnitTypeEntity.registerAsEnum("UnitTypePaginationOrder", ["id", "created_at", "updated_at", "name"]);

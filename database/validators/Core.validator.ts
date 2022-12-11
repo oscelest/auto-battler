@@ -1,7 +1,7 @@
 import {QueryOrderMap} from "@mikro-orm/core/enums";
 import {IsEnum, IsInt, Max, Min, ValidateIf} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {CoreEntity} from "../entities";
+import {CoreEntity, CoreEntityPaginationOrder} from "../entities";
 import {QueryOrder} from "../enums";
 import {EntityOrderKey} from "../Globals";
 
@@ -20,19 +20,19 @@ export abstract class CorePaginationValidator<E extends CoreEntity> {
   @Max(100)
   public limit!: number;
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [CoreEntityPaginationOrder], {nullable: true})
+  @IsEnum(() => CoreEntityPaginationOrder, {each: true})
   @ValidateIf(object => object.constructor === CorePaginationValidator)
   public abstract order_by?: EntityOrderKey<E>[];
   
   public get orderBy() {
     const result = {} as any;
-  
-    for (let value of this.order_by ?? []) {
     
+    for (let value of this.order_by ?? []) {
+      
       const [column_root, order] = value.split("|") as [EntityOrderKey<E>, QueryOrder];
       const column_list = column_root.split(".");
-    
+      
       let current = result;
       for (let i = 0; i < column_list.length; i++) {
         const column = column_list[i];
@@ -50,9 +50,8 @@ export abstract class CorePaginationValidator<E extends CoreEntity> {
         }
       }
     }
-  
+    
     return result as QueryOrderMap<E>;
   }
 }
 
-const order_by_enum = CoreEntity.registerAsEnum("id", ["created_at", "updated_at"]);

@@ -23,12 +23,18 @@ export class OperationEntity extends CoreEntity<OperationEntity> {
   
   constructor(initializer: OperationEntityInitializer) {
     super(initializer);
-  
+    
     this.target = initializer.target;
     this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
     this.action_list = this.toCollectionFromList(initializer.action_list);
   }
+  
 }
+
+export const OperationPaginationOrder = OperationEntity.registerAsEnum(
+  "OperationPaginationOrder",
+  ["id", "created_at", "updated_at", "target"]
+);
 
 export interface OperationEntityInitializer extends CoreEntityInitializer {
   target: TargetType;

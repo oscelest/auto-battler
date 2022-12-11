@@ -1,6 +1,6 @@
 import {IsBoolean, IsEnum} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {DamageActionEntity} from "../../entities";
+import {DamageActionEntity, DamageActionPaginationOrder} from "../../entities";
 import {DamageElementType, DamageSourceType} from "../../enums";
 import {EntityOrderKey} from "../../Globals";
 import {CorePaginationValidator} from "../Core.validator";
@@ -43,10 +43,8 @@ export class DamageActionUpdateValidator extends ActionUpdateValidator {
 @InputType()
 export class DamageActionPaginationValidator extends CorePaginationValidator<DamageActionEntity> {
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [DamageActionPaginationOrder], {nullable: true})
+  @IsEnum(() => DamageActionPaginationOrder, {each: true})
   public order_by?: EntityOrderKey<DamageActionEntity>[];
   
 }
-
-const order_by_enum = DamageActionEntity.registerAsEnum("DamageActionSortOrder", ["id", "created_at", "updated_at", "damage_source", "damage_element"]);

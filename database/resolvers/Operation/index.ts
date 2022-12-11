@@ -1,1 +1,1 @@
-export {OperationResolver} from "./Operation.resolver";
+export * from "./Operation.resolver";

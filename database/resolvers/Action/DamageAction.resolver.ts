@@ -2,7 +2,7 @@ import {GraphQLResolveInfo} from "graphql/type";
 import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
 import {DamageActionEntity, ModifierEntity} from "../../entities";
 import {GraphQLContext} from "../../Globals";
-import {DamageActionCreateValidator, DamageActionPaginationValidator, DamageActionUpdateValidator} from "../../validators/Action/DamageAction.validator";
+import {DamageActionCreateValidator, DamageActionPaginationValidator, DamageActionUpdateValidator} from "../../validators";
 
 @Resolver(() => DamageActionEntity)
 export class DamageActionResolver {

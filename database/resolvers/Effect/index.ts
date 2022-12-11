@@ -1,1 +1,1 @@
-export {EffectResolver} from "./Effect.resolver";
+export * from "./Effect.resolver";

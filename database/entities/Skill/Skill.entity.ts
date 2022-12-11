@@ -40,6 +40,11 @@ export class SkillEntity extends CoreEntity<SkillEntity> {
   }
 }
 
+export const SkillPaginationOrder = SkillEntity.registerAsEnum(
+  "SkillPaginationOrder",
+  ["id", "created_at", "updated_at", "name", "type"]
+);
+
 export interface SkillEntityInitializer extends CoreEntityInitializer {
   name: string;
   description?: string;

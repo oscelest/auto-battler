@@ -21,6 +21,11 @@ export class DamageReceivedTriggerEntity extends TriggerEntity<DamageReceivedTri
   }
 }
 
+export const DamageReceivedTriggerPaginationOrder = DamageReceivedTriggerEntity.registerAsEnum(
+  "DamageReceivedTriggerPaginationOrder",
+  ["id", "created_at", "updated_at"]
+);
+
 export interface DamageTakenTriggerEntityInitializer extends TriggerEntityInitializer {
   modifier_list: ModifierEntity[] | Collection<ModifierEntity>;
 }

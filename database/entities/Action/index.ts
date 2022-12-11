@@ -1,6 +1,6 @@
-export {ActionEntity} from "./Action.entity";
-export {DamageActionEntity} from "./DamageAction.entity";
-export {HealActionEntity} from "./HealAction.entity";
-export {ComboPointActionEntity} from "./ComboPointAction.entity";
-export {EffectActionEntity} from "./EffectAction.entity";
+export * from "./Action.entity";
+export * from "./DamageAction.entity";
+export * from "./HealAction.entity";
+export * from "./ComboPointAction.entity";
+export * from "./EffectAction.entity";
 

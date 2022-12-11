@@ -17,7 +17,13 @@ export class AttributeModifierEntity extends ModifierEntity<AttributeModifierEnt
     
     this.attribute = initializer.attribute;
   }
+  
 }
+
+export const AttributeModifierPaginationOrder = AttributeModifierEntity.registerAsEnum(
+  "AttributeModifierPaginationOrder",
+  ["id", "created_at", "updated_at", "attribute"]
+);
 
 export interface AttributeModifierEntityInitializer extends ModifierEntityInitializer {
   attribute: AttributeType;

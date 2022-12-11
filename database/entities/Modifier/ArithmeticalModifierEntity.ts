@@ -16,7 +16,14 @@ export class ArithmeticalModifierEntity extends ModifierEntity<ArithmeticalModif
     super(ModifierType.ARITHMETICAL, initializer);
     this.arithmetical = initializer.arithmetical;
   }
+  
+  
 }
+
+export const ArithmeticalModifierPaginationOrder = ArithmeticalModifierEntity.registerAsEnum(
+  "ArithmeticalModifierPaginationOrder",
+  ["id", "created_at", "updated_at", "arithmetical"]
+);
 
 export interface ArithmeticalModifierEntityInitializer extends ModifierEntityInitializer {
   arithmetical: ArithmeticalType;

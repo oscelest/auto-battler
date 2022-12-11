@@ -20,6 +20,11 @@ export class HealingReceivedTriggerEntity extends TriggerEntity<HealingReceivedT
   }
 }
 
+export const HealingReceivedTriggerPaginationOrder = HealingReceivedTriggerEntity.registerAsEnum(
+  "HealingReceivedTriggerPaginationOrder",
+  ["id", "created_at", "updated_at"]
+);
+
 export interface HealingReceivedTriggerEntityInitializer extends TriggerEntityInitializer {
   modifier_list?: ModifierEntity[] | Collection<ModifierEntity>;
 }

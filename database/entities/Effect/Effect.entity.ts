@@ -42,7 +42,14 @@ export class EffectEntity extends CoreEntity<EffectEntity> {
     this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
     this.trigger_list = this.toCollectionFromList(initializer.trigger_list);
   }
+  
+  
 }
+
+export const EffectPaginationOrder = EffectEntity.registerAsEnum(
+  "EffectPaginationOrder",
+  ["id", "created_at", "updated_at", "name", "alignment"]
+);
 
 export interface EffectEntityInitializer extends CoreEntityInitializer {
   name: string;

@@ -1,6 +1,6 @@
 import {IsEnum, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {DamageReceivedTriggerEntity} from "../../entities/Trigger";
+import {DamageReceivedTriggerEntity, DamageReceivedTriggerPaginationOrder} from "../../entities";
 import {EntityOrderKey} from "../../Globals";
 import {CorePaginationValidator} from "../Core.validator";
 import {TriggerCreateValidator, TriggerUpdateValidator} from "./Trigger.validator";
@@ -26,10 +26,8 @@ export class DamageReceivedTriggerUpdateValidator extends TriggerUpdateValidator
 @InputType()
 export class DamageReceivedTriggerPaginationValidator extends CorePaginationValidator<DamageReceivedTriggerEntity> {
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [DamageReceivedTriggerPaginationOrder], {nullable: true})
+  @IsEnum(() => DamageReceivedTriggerPaginationOrder, {each: true})
   public order_by?: EntityOrderKey<DamageReceivedTriggerEntity>[];
   
 }
-
-const order_by_enum = DamageReceivedTriggerEntity.registerAsEnum("DamageReceivedTriggerSortOrder", ["id", "created_at", "updated_at"]);

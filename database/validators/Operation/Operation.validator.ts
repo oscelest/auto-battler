@@ -1,6 +1,6 @@
 import {IsEnum, IsUUID} from "class-validator";
 import {Field, InputType} from "type-graphql";
-import {OperationEntity} from "../../entities";
+import {OperationEntity, OperationPaginationOrder} from "../../entities";
 import {TargetType} from "../../enums";
 import {EntityOrderKey} from "../../Globals";
 import {CorePaginationValidator} from "../Core.validator";
@@ -42,10 +42,8 @@ export class OperationUpdateValidator {
 @InputType()
 export class OperationPaginationValidator extends CorePaginationValidator<OperationEntity> {
   
-  @Field(() => [order_by_enum], {nullable: true})
-  @IsEnum(() => order_by_enum, {each: true})
+  @Field(() => [OperationPaginationOrder], {nullable: true})
+  @IsEnum(() => OperationPaginationOrder, {each: true})
   public order_by?: EntityOrderKey<OperationEntity>[];
   
 }
-
-const order_by_enum = OperationEntity.registerAsEnum("OperationSortOrder", ["id", "created_at", "updated_at", "target"]);

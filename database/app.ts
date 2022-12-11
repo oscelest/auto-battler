@@ -4,9 +4,23 @@ import Koa from "koa";
 import {buildSchema} from "type-graphql";
 import {GraphQLContext} from "./Globals";
 import {DatabaseConfig} from "./mikro-orm.config";
-import {resolver_list} from "./resolvers";
-
-export * from "./entities";
+import {
+  ArithmeticalModifierResolver,
+  AttributeModifierResolver,
+  ComboPointActionResolver,
+  DamageActionResolver,
+  DamageReceivedTriggerResolver,
+  EffectActionResolver,
+  EffectResolver,
+  ExpirationTriggerResolver,
+  HealActionResolver,
+  HealingReceivedTriggerResolver,
+  OperationResolver,
+  PeriodicTriggerResolver,
+  SkillResolver,
+  UnitResolver,
+  UnitTypeResolver
+} from "./resolvers";
 
 (async () => {
   await MikroORM.init(DatabaseConfig);
@@ -26,7 +40,15 @@ export * from "./entities";
   }
   
   const schema = await buildSchema({
-    resolvers: [...resolver_list],
+    resolvers: [
+      ComboPointActionResolver, DamageActionResolver, EffectActionResolver, HealActionResolver,
+      EffectResolver,
+      ArithmeticalModifierResolver, AttributeModifierResolver,
+      OperationResolver,
+      SkillResolver,
+      PeriodicTriggerResolver, DamageReceivedTriggerResolver, HealingReceivedTriggerResolver, ExpirationTriggerResolver,
+      UnitResolver, UnitTypeResolver
+    ],
     dateScalarMode: "isoDate"
     // scalarsMap: [
     //   {type: () => UUIDResolver, scalar: GraphQLUUID}

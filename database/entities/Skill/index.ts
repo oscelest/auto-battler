@@ -1,2 +1,2 @@
-export {SkillEntity} from "./Skill.entity";
+export * from "./Skill.entity";
 

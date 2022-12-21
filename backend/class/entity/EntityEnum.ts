@@ -1,23 +1,29 @@
-import {SchemaType, SchemaTypeKind} from "../../interfaces/Globals";
+import {EnumTypeDefinitionNode} from "graphql/language";
 
 export class EntityEnum {
   
   public name: string;
-  public value_list: [string, string?][];
+  public value_list: EntityEnumValue[];
   
   public static collection: {[name: string]: EntityEnum} = {};
   
-  constructor(type: SchemaType) {
-    this.name = type.name;
-    this.value_list = type.enumValues.map(definition => [definition.name, definition.description]);
+  constructor(initializer: EntityEnumInitializer) {
+    this.name = initializer.name;
+    this.value_list = initializer.value_list ?? [];
   }
   
-  public static fromSchemaToInstance(definition: SchemaType) {
-    if (definition.kind !== SchemaTypeKind.ENUM) {
-      throw new Error(`Trying to instantiate an EntityEnum using SchemaType definition with kind ${definition.kind}`);
+  public static instantiate(node: EnumTypeDefinitionNode) {
+    const name = node.name.value;
+    if (this.collection[name]) return this.collection[name];
+    
+    const value_list = [] as EntityEnumValue[];
+    for (let enum_value of node.values ?? []) {
+      value_list.push({name: enum_value.name.value, description: enum_value.description?.value});
     }
     
-    return this.collection[definition.name] ?? (this.collection[definition.name] = new EntityEnum(definition));
+    const entity = new this({name, value_list});
+    this.collection[name] = entity;
+    return entity;
   }
   
   public toString() {
@@ -27,12 +33,22 @@ export class EntityEnum {
     return result;
   }
   
-  public getValueString([name, description]: [string, string?]) {
+  public getValueString({name, description}: EntityEnumValue) {
     if (description) {
       return `  ${name}, //${description}`;
     }
-    return `${name},`;
+    return `  ${name},`;
   }
   
+}
+
+interface EntityEnumValue {
+  name: string;
+  description?: string;
+}
+
+interface EntityEnumInitializer {
+  name: string;
+  value_list?: EntityEnumValue[];
 }
 

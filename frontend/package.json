@@ -29,15 +29,15 @@
     "@noxy/react-collapsible": "^0.6.2",
     "@noxy/react-input-field": "^0.5.2",
     "humanize-duration":       "^3.27.3",
-    "next":                    "^13.0.6",
-    "next-i18next":            "^13.0.0",
+    "next":                    "^13.0.7",
+    "next-i18next":            "^13.0.2",
     "react":                   "^18.2.0",
     "react-dom":               "^18.2.0",
     "uuid":                    "^9.0.0"
   },
   "devDependencies": {
     "@types/humanize-duration": "^3.27.1",
-    "@types/node":              "^18.11.12",
+    "@types/node":              "^18.11.17",
     "@types/react":             "^18.0.26",
     "@types/react-dom":         "^18.0.9",
     "@types/uuid":              "^9.0.0",

@@ -1,37 +1,54 @@
-import {SchemaField} from "../../interfaces/Globals";
-import {EntityType} from "./EntityType";
+import {FieldDefinitionNode, InputValueDefinitionNode, Kind} from "graphql/language";
+import {EntityValue} from "./EntityValue";
 
 export class EntityField {
   
   public name: string;
-  public description?: string;
-  public type: EntityType;
   
-  // public argument_list: EntityInputType[]
+  public value: EntityValue;
   
+  public argument_list: EntityFieldArgument[];
   
   constructor(initializer: EntityFieldInitializer) {
-    this.name = initializer.name;
-    this.description = initializer.description;
-    this.type = initializer.type;
-  }
-  
-  public static async fromSchemaToInstance(definition: SchemaField) {
-    const name = definition.name;
-    console.log("field", name);
-    const type = await EntityType.fromSchemaToInstance(definition.type);
     
-    return new this({name, type});
+    this.name = initializer.name;
+    this.value = initializer.value;
+    this.argument_list = initializer.argument_list ?? [];
   }
   
-  public toString() {
-    // return this.nullable ? `${this.name}?: ${this.type}` : `${this.name}: ${this.type}`;
+  public static instantiate(node: FieldDefinitionNode | InputValueDefinitionNode) {
+    const name = node.name.value;
+    
+    const argument_list = [] as EntityFieldArgument[];
+    if (node.kind === Kind.FIELD_DEFINITION) {
+      for (let argument of node.arguments ?? []) {
+        argument_list.push({name: argument.name.value, value: EntityValue.instantiate(argument.type)});
+      }
+    }
+    
+    return new this({name, value: EntityValue.instantiate(node.type), argument_list});
+  }
+  
+  public toString(): string {
+    if (this.argument_list.length) {
+      const argument_string = this.argument_list.map(argument => `${argument.name}: ${argument.value}`);
+      return `${this.name}(${argument_string.join(", ")}): ${this.value.toString()}`;
+    }
+    else if (this.value.nullable) {
+      return `${this.name}?: ${this.value.toString(true)}`;
+    }
+    return `${this.name}: ${this.value.toString()}`;
   }
   
 }
 
-export interface EntityFieldInitializer {
+interface EntityFieldInitializer {
   name: string;
-  description?: string;
-  type: EntityType;
+  value: EntityValue;
+  argument_list?: EntityFieldArgument[];
+}
+
+interface EntityFieldArgument {
+  name: string;
+  value: EntityValue;
 }

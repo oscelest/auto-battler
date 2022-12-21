@@ -1,60 +1,66 @@
-import {Schema, SchemaType, SchemaTypeKind} from "../../interfaces/Globals";
+import {parse} from "graphql";
+import {DefinitionNode, DocumentNode, Kind} from "graphql/language";
 import {EntityEnum} from "./EntityEnum";
 import {EntityInterface} from "./EntityInterface";
-import {EntityObject} from "./EntityObject";
+import {EntityScalar} from "./EntityScalar";
 
 export class EntitySchema {
   
-  public interface_list: EntityInterface[];
+  public schema: string;
+  public node: DocumentNode;
   public enum_list: EntityEnum[];
-  public object_list: EntityObject[];
+  public scalar_list: EntityScalar[];
+  public interface_list: EntityInterface[];
   
-  private static reserved_object_keyword_list = ["Query", "Mutation", "__Schema", "__Type", "__Field", "__InputValue", "__EnumValue", "__Directive"];
-  private static reserved_enum_keyword_list = ["__TypeKind", "__DirectiveLocation"];
-  
-  constructor() {
-    this.interface_list = [];
+  constructor(initializer: EntitySchemaInitializer) {
+    this.schema = initializer.schema;
+    this.node = parse(this.schema);
+    
     this.enum_list = [];
-    this.object_list = [];
+    this.scalar_list = [];
+    this.interface_list = [];
+    
+    for (let definition of this.node.definitions) {
+      this.addDefinition(definition);
+    }
+    
+    // this.addDefinition(this.node.definitions[0]);
   }
   
-  public async populate(definition: Schema) {
-    for (let type of definition.types) {
-      await this.addType(type);
+  private addDefinition(node: DefinitionNode) {
+    switch (node.kind) {
+      case Kind.INTERFACE_TYPE_DEFINITION:
+      case Kind.OBJECT_TYPE_DEFINITION:
+      case Kind.INPUT_OBJECT_TYPE_DEFINITION:
+        return this.interface_list.push(EntityInterface.instantiate(node));
+      case Kind.ENUM_TYPE_DEFINITION:
+        return this.enum_list.push(EntityEnum.instantiate(node));
+      case Kind.SCALAR_TYPE_DEFINITION:
+        return this.scalar_list.push(EntityScalar.instantiate(node));
     }
-  }
-  
-  private async addType(definition: SchemaType) {
-    switch (definition.kind) {
-      case SchemaTypeKind.INTERFACE:
-        return this.interface_list.push(await EntityInterface.fromSchemaToInstance(definition));
-      case SchemaTypeKind.ENUM:
-      // this.enum_list.push(EntityEnum.fromSchemaToInstance(type));
-      // break;
-      case SchemaTypeKind.LIST:
-      case SchemaTypeKind.OBJECT:
-      // this.object_list.push(EntityObject.fromSchemaToInstance(type));
-      // break;
-      case SchemaTypeKind.NON_NULL:
-      case SchemaTypeKind.UNION:
-      case SchemaTypeKind.SCALAR:
-      case SchemaTypeKind.INPUT_OBJECT:
-        return;
-    }
+    
+    return null;
   }
   
   public toString() {
-    const value = [] as string[];
-    for (let entity of this.interface_list) {
-      value.push(entity.toString());
-    }
-    for (let entity of this.object_list.filter(v => !EntitySchema.reserved_object_keyword_list.includes(v.name))) {
-      value.push(entity.toString());
-    }
-    for (let entity of this.enum_list.filter(v => !EntitySchema.reserved_enum_keyword_list.includes(v.name))) {
-      value.push(entity.toString());
-    }
-    return value.join("\n\n");
+    let value = [];
+    value.push(this.scalar_list.join("\n"));
+    value.push("");
+    value.push(this.interface_list.join("\n\n"));
+    value.push(this.enum_list.join("\n\n"));
+    
+    return value.join("\n");
   }
   
+  public toJSON() {
+    return {
+      enum_list: this.enum_list,
+      interface_list: this.interface_list
+    };
+  }
+  
+}
+
+interface EntitySchemaInitializer {
+  schema: string;
 }

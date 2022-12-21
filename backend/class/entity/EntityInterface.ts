@@ -1,59 +1,65 @@
-import * as fs from "fs";
-import SuperAgent from "superagent";
-import {SchemaType, SchemaTypeKind, TypeResponse} from "../../interfaces/Globals";
+import {InputObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, Kind, ObjectTypeDefinitionNode} from "graphql/language";
 import {EntityField} from "./EntityField";
 
 export class EntityInterface {
   
   public name: string;
   public field_list: EntityField[];
-  public interface_list: EntityInterface[];
+  public interface_list: string[];
   
   public static collection: {[name: string]: EntityInterface} = {};
   
   constructor(initializer: EntityInterfaceInitializer) {
+    
     this.name = initializer.name;
-    this.field_list = initializer.field_list;
-    this.interface_list = initializer.interface_list;
+    this.field_list = initializer.field_list ?? [];
+    this.interface_list = initializer.interface_list ?? [];
   }
   
-  public static async fromSchemaToInstance(definition: SchemaType) {
-    if (this.collection[definition.name]) return this.collection[definition.name];
-    if (definition.kind !== SchemaTypeKind.INTERFACE) {
-      throw new Error(`Trying to instantiate an EntityInterface using SchemaType definition with kind ${definition.kind}`);
+  public static instantiate(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode | InputObjectTypeDefinitionNode): EntityInterface {
+    const name = node.name.value;
+    if (this.collection[name]) return this.collection[name];
+    
+    const field_list: EntityField[] = [];
+    for (let definition of node.fields ?? []) {
+      field_list.push(EntityField.instantiate(definition));
     }
     
-    const query = fs.readFileSync("./query/__type.gql").toString().replace("$name", definition.name);
-    const response = await SuperAgent.post("http://localhost:4000/graphql").send({query});
-    const data = response.body.data as TypeResponse;
-    
-    const name = data.__type.name;
-    const interface_list = [] as EntityInterface[];
-    for (let definition of data.__type.interfaces ?? []) {
-      interface_list.push(await this.fromSchemaToInstance(definition));
+    const interface_list: string[] = [];
+    if (node.kind !== Kind.INPUT_OBJECT_TYPE_DEFINITION) {
+      for (let definition of node.interfaces ?? []) {
+        interface_list.push(definition.name.value);
+      }
     }
     
-    const field_list = [] as EntityField[];
-    for (let definition of data.__type.fields ?? []) {
-      field_list.push(await EntityField.fromSchemaToInstance(definition));
-    }
-    
-    return this.collection[definition.name] ?? (this.collection[definition.name] = new EntityInterface({name, field_list, interface_list}));
+    return this.collection[name] = new this({name, field_list, interface_list});
   }
   
   public toString() {
-    let value = `export interface ${this.name} {\n`;
-    for (let field of this.field_list) {
-      value += `  ${field}\n`;
+    const field_list = [...this.field_list];
+  
+    for (let name of this.interface_list) {
+      const definition = EntityInterface.collection[name];
+      for (let i = field_list.length - 1; i > 0; i--) {
+        const field = field_list[i];
+        if (definition.field_list.some(value => value.name === field.name)) {
+          console.log("removing", field.name);
+          field_list.splice(i, 1);
+        }
+      }
     }
-    value += "}";
-    return value;
+  
+    if (!this.interface_list.length) {
+      return `export interface ${this.name} {\n  ${field_list.join("\n  ")}\n}`;
+    }
+  
+    return `export interface ${this.name} extends ${this.interface_list.join(", ")} {\n  ${field_list.join("\n  ")}\n}`;
   }
   
 }
 
-export interface EntityInterfaceInitializer {
+interface EntityInterfaceInitializer {
   name: string;
   field_list: EntityField[];
-  interface_list: EntityInterface[];
+  interface_list: string[];
 }

@@ -36,24 +36,32 @@ export class EntityInterface {
   }
   
   public toString() {
-    const field_list = [...this.field_list];
-  
+    const interface_list = [...this.interface_list];
     for (let name of this.interface_list) {
+      const node = EntityInterface.collection[name];
+    
+      for (let sub_name of node.interface_list) {
+        const index = interface_list.findIndex(name => name === sub_name);
+        interface_list.splice(index, 1);
+      }
+    }
+  
+    const field_list = [...this.field_list];
+    for (let name of interface_list) {
       const definition = EntityInterface.collection[name];
-      for (let i = field_list.length - 1; i > 0; i--) {
+      for (let i = field_list.length - 1; i >= 0; i--) {
         const field = field_list[i];
         if (definition.field_list.some(value => value.name === field.name)) {
-          console.log("removing", field.name);
           field_list.splice(i, 1);
         }
       }
     }
   
-    if (!this.interface_list.length) {
+    if (!interface_list.length) {
       return `export interface ${this.name} {\n  ${field_list.join("\n  ")}\n}`;
     }
   
-    return `export interface ${this.name} extends ${this.interface_list.join(", ")} {\n  ${field_list.join("\n  ")}\n}`;
+    return `export interface ${this.name} extends ${interface_list.join(", ")} {\n  ${field_list.join("\n  ")}\n}`;
   }
   
 }

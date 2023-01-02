@@ -1,5 +1,8 @@
 import React, {HTMLAttributes, useEffect, useState} from "react";
+import {io, Socket} from "socket.io-client";
 import {EncounterDTO} from "../../../shared/interfaces/dto/Encounter.dto";
+import {ClientToServer} from "../../../shared/interfaces/sockets/ClientToServer";
+import {ServerToClient} from "../../../shared/interfaces/sockets/ServerToClient";
 import Style from "./EncounterScene.module.scss";
 
 function EncounterScene(props: EncounterSceneProps) {
@@ -7,20 +10,23 @@ function EncounterScene(props: EncounterSceneProps) {
   const classes = [Style.Component];
   if (className) classes.push(className);
   
-  const isBrowser = typeof window !== "undefined";
+  const [socket] = useState<Socket<ServerToClient, ClientToServer>>(io(`http://localhost:${process.env.NEXT_PUBLIC_PORT_BACKEND}`));
+  const [encounter, setEncounter] = useState<EncounterDTO>();
   
-  const [socket, setSocket] = useState<WebSocket>();
-  const [encounter] = useState<EncounterDTO>();
-  
-  useEffect(() => {
-    if (!isBrowser) return;
-    setSocket(new WebSocket(`ws://127.0.0.1:${process.env.NEXT_PUBLIC_PORT_BACKEND}`));
-    
-    return () => {
-      if (!socket || socket.readyState === 3) return;
-      socket?.close();
-    };
-  }, []);
+  useEffect(
+    () => {
+      socket.on("connect", () => {
+        console.log("Connected");
+        socket.emit("game_start", id);
+        
+        socket.on("game_start", encounter => {
+          setEncounter(encounter);
+          console.log(encounter);
+        });
+      });
+    },
+    [socket]
+  );
   
   return (
     <div {...component_props} className={classes.join(" ")}>

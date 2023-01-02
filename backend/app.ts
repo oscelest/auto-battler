@@ -1,26 +1,24 @@
 require("dotenv").config({path: "../.env"});
-import FastifyWebSocket, {SocketStream} from "@fastify/websocket";
 import Fastify, {FastifyReply, FastifyRequest} from "fastify";
+import {Server} from "socket.io";
+import {ClientToServer} from "../shared/interfaces/sockets/ClientToServer";
+import {ServerToClient} from "../shared/interfaces/sockets/ServerToClient";
 
 export const script = (async () => {
   
   const app = Fastify({logger: false});
   const port = +(process.env.SERVER_BACKEND_PORT || 4000);
   
+  app.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, done) => {
+    reply.header("Access-Control-Allow-Origin", "*");
+    reply.header("Access-Control-Allow-Methods", "*");
+    done();
+  });
+  
   const ico: string = Buffer.from(
     "AAABAAEAEBACAAEAAQCwAAAAFgAAACgAAAAQAAAAIAAAAAEAAQAAAAAAQAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     "base64"
   ).toString("binary");
-  
-  app.register(FastifyWebSocket);
-  
-  app.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, done) => {
-    reply.header("Access-Control-Allow-Origin", "*");
-    reply.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-    reply.header("Access-Control-Allow-Credentials", "true");
-    reply.header("Content-Security-Policy", "default-src 'none'");
-    done();
-  });
   
   app.get("/favicon.ico", (request: FastifyRequest, reply: FastifyReply) => {
     reply.header("Content-Security-Policy", "default-src 'none'; img-src '*'");
@@ -28,21 +26,23 @@ export const script = (async () => {
     reply.send(ico);
   });
   
-  app.get("/", {websocket: true}, (connection: SocketStream, req: FastifyRequest) => {
-    console.log("test?");
-    
-    connection.socket.send(`Hello there!`);
-    
-    // connection.socket.on("message", message => {
-    //   console.log("message", message);
-    //   // message.toString() === 'hi from client'
-    //   connection.socket.send("hi from server", (e) => {
-    //     console.log(e);
-    //   });
-    // });
+  app.setNotFoundHandler((request: FastifyRequest, reply: FastifyReply) => {
+    reply.send("Not found");
   });
   
-  app.listen({port});
+  app.ready().then(() => {
+    const io = new Server<ClientToServer, ServerToClient>(app.server, {
+      cors: {origin: "*"}
+    });
+    
+    io.on("connection", socket => {
+      socket.on("game_start", () => {
+        console.log(app.printRoutes());
+      });
+    });
+    
+    io.listeners("game_start");
+  });
   
-  console.log("Server started and listening on", port);
+  await app.listen({port});
 })();

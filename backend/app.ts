@@ -8,6 +8,7 @@ export const script = (async () => {
   
   const app = Fastify({logger: false});
   const port = +(process.env.SERVER_BACKEND_PORT || 4000);
+  const host = "127.0.0.1";
   
   app.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, done) => {
     reply.header("Access-Control-Allow-Origin", "*");
@@ -36,13 +37,13 @@ export const script = (async () => {
     });
     
     io.on("connection", socket => {
-      socket.on("game_start", () => {
-        console.log(app.printRoutes());
+      socket.on("game_start", id => {
+        socket.emit("game_start", {id: id, unit_list: []});
       });
     });
     
     io.listeners("game_start");
   });
   
-  await app.listen({port});
+  await app.listen({port, host});
 })();

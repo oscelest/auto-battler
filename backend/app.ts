@@ -3,18 +3,15 @@ import Fastify, {FastifyReply, FastifyRequest} from "fastify";
 import {Server} from "socket.io";
 import {ClientToServer} from "../shared/interfaces/sockets/ClientToServer";
 import {ServerToClient} from "../shared/interfaces/sockets/ServerToClient";
+import {EncounterSocket} from "./sockets/Encounter.socket";
 
 export const script = (async () => {
+  
+  let io: Server<ClientToServer, ServerToClient>;
   
   const app = Fastify({logger: false});
   const port = +(process.env.SERVER_BACKEND_PORT || 4000);
   const host = "127.0.0.1";
-  
-  app.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, done) => {
-    reply.header("Access-Control-Allow-Origin", "*");
-    reply.header("Access-Control-Allow-Methods", "*");
-    done();
-  });
   
   const ico: string = Buffer.from(
     "AAABAAEAEBACAAEAAQCwAAAAFgAAACgAAAAQAAAAIAAAAAEAAQAAAAAAQAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -31,18 +28,14 @@ export const script = (async () => {
     reply.send("Not found");
   });
   
+  app.addHook("onClose", (instance, done) => {
+    io.close();
+    done();
+  });
+  
   app.ready().then(() => {
-    const io = new Server<ClientToServer, ServerToClient>(app.server, {
-      cors: {origin: "*"}
-    });
-    
-    io.on("connection", socket => {
-      socket.on("game_start", id => {
-        socket.emit("game_start", {id: id, unit_list: []});
-      });
-    });
-    
-    io.listeners("game_start");
+    io = new Server<ClientToServer, ServerToClient>(app.server, {cors: {origin: "*"}});
+    io.on("connection", EncounterSocket.onConnection.bind(io));
   });
   
   await app.listen({port, host});

@@ -18,12 +18,16 @@ function EncounterScene(props: EncounterSceneProps) {
       socket.on("connect", () => {
         console.log("Connected");
         socket.emit("game_start", id);
-        
+    
         socket.on("game_start", encounter => {
           setEncounter(encounter);
           console.log(encounter);
         });
       });
+  
+      return () => {
+        socket.close();
+      };
     },
     [socket]
   );

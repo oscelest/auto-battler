@@ -1,39 +1,44 @@
-import React, {HTMLAttributes} from "react";
-import {Encounter, Unit} from "../../classes";
-import {UnitAlignmentType} from "../../enums";
-import CombatLog from "../UI/Encounter/CombatLog/CombatLog";
-import UnitPortrait from "../Unit/UnitPortrait";
+import React, {HTMLAttributes, useEffect, useState} from "react";
+import {EncounterDTO} from "../../../shared/interfaces/dto/Encounter.dto";
 import Style from "./EncounterScene.module.scss";
 
 function EncounterScene(props: EncounterSceneProps) {
-  const {encounter, className, children, ...component_props} = props;
-  
-  const enemy_unit_list = encounter.unit_list.filter(unit => unit.alignment === UnitAlignmentType.ENEMY);
-  const player_unit_list = encounter.unit_list.filter(unit => unit.alignment === UnitAlignmentType.PLAYER);
-  
+  const {id, className, children, ...component_props} = props;
   const classes = [Style.Component];
   if (className) classes.push(className);
   
+  const isBrowser = typeof window !== "undefined";
+  
+  const [socket, setSocket] = useState<WebSocket>();
+  const [encounter] = useState<EncounterDTO>();
+  
+  useEffect(() => {
+    if (!isBrowser) return;
+    setSocket(new WebSocket(`ws://127.0.0.1:${process.env.NEXT_PUBLIC_PORT_BACKEND}`));
+    
+    return () => {
+      if (!socket || socket.readyState === 3) return;
+      socket?.close();
+    };
+  }, []);
+  
   return (
     <div {...component_props} className={classes.join(" ")}>
-      <div className={Style.Field}>
-        <div className={Style.EnemyList}>{enemy_unit_list.map(renderUnit)}</div>
-        <div className={Style.PlayerList}>{player_unit_list.map(renderUnit)}</div>
-      </div>
-      <CombatLog className={Style.CombatLog} log={encounter.log}></CombatLog>
+      {renderEncounter(encounter)}
     </div>
   );
+}
+
+function renderEncounter(encounter?: EncounterDTO) {
+  if (!encounter) return null;
   
-  function renderUnit(unit: Unit, index: number = 0) {
-    return (
-      <UnitPortrait className={Style.Unit} key={index} unit={unit}/>
-    );
-  }
-  
+  return (
+    <div>{encounter.id}</div>
+  );
 }
 
 export interface EncounterSceneProps extends HTMLAttributes<HTMLDivElement> {
-  encounter: Encounter;
+  id: string;
 }
 
 export default EncounterScene;

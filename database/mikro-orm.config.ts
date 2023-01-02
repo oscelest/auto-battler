@@ -1,8 +1,5 @@
 import {Options} from "@mikro-orm/core";
 import {TsMorphMetadataProvider} from "@mikro-orm/reflection";
-import * as dotenv from "dotenv";
-
-dotenv.config();
 
 export const DatabaseConfig: Options = {
   type: "mysql",

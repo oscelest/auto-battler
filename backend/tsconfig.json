@@ -23,14 +23,16 @@
     "strictNullChecks":                 true,
     "strictPropertyInitialization":     true,
     "skipLibCheck":                     true,
-    "target":                           "ESNext"
+    "target":                           "ESNext",
+    "types":                            [
+      "./types/fastify.d.ts"
+    ]
   },
   "include":         [
     "./**/*.ts",
-    "interfaces/Globals.ts"
+    "../shared/**/*.ts"
   ],
   "exclude":         [
-    "**/node_modules/*",
-    "interface.ts"
+    "**/node_modules/*"
   ]
 }

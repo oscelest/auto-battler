@@ -1,0 +1,24 @@
+{
+  "name":            "@noxy/auto-battler-shared",
+  "author":          "oscelest",
+  "version":         "0.1.0",
+  "description":     "Shared interfaces between frontend, backend, and database.",
+  "license":         "MIT",
+  "publishConfig":   {
+    "access": "public"
+  },
+  "main":            "dist/cjs/index.js",
+  "files":           [
+    "dist"
+  ],
+  "scripts":         {
+    "update": "npx npm-check-updates -u && npm i"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.9",
+    "typescript":  "^4.9.3"
+  },
+  "dependencies":    {
+    "socket.io": "^4.5.4"
+  }
+}

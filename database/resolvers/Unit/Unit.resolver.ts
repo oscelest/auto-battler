@@ -16,8 +16,11 @@ export class UnitResolver {
   
   @Query(() => [UnitEntity])
   public async getUnitList(@Arg("pagination") pagination: UnitPaginationValidator, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo) {
+    console.log("hello");
     const {fields, populate} = UnitEntity.fromContextToFieldsAndPopulate(info);
+    console.log("hello2");
     const {offset, limit, orderBy} = pagination;
+    console.log("hello3");
     
     return await ctx.entity_manager.find(UnitEntity, {}, {fields, populate, offset, limit, orderBy});
   }

@@ -7,9 +7,10 @@
 /**/build
 /**/dist
 
-/**/.env
+/.env
 
 /**/package-lock.json
 /**/node_modules
 /**/migrations
 /**/temp
+/backend/gql/sdk.ts

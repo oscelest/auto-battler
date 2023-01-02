@@ -15,23 +15,30 @@
   "publishConfig":   {
     "access": "public"
   },
-  "scripts":      {
-    "start":  "ts-node app.ts",
-    "update": "npx npm-check-updates -u && npm i"
+  "scripts":         {
+    "start":                "ts-node app.ts",
+    "update":               "npx npm-check-updates -u && npm i",
+    "generate-graphql-sdk": "graphql-codegen --verbose"
   },
-  "dependencies": {
-    "dotenv":          "^16.0.3",
-    "graphql-yoga":    "^3.1.2",
-    "koa":             "^2.14.1",
-    "superagent":      "^8.0.6",
-    "ts-node":         "^10.9.1",
-    "uuid":            "^9.0.0",
-    "graphql-request": "^5.1.0"
+  "dependencies":    {
+    "dotenv":             "^16.0.3",
+    "fastify":            "^4.11.0",
+    "@fastify/websocket": "^7.1.1",
+    "@fastify/cors":      "^8.2.0",
+    "graphql-request":    "^5.1.0",
+    "humanize-duration":  "^3.27.3",
+    "ts-node":            "^10.9.1",
+    "socket.io":          "^4.5.4",
+    "uuid":               "^9.0.0"
   },
   "devDependencies": {
-    "@types/koa":        "^2.13.5",
-    "@types/superagent": "^4.1.16",
-    "@types/uuid":       "^9.0.0",
-    "typescript":        "^4.9.4"
+    "@graphql-codegen/cli":                        "^2.16.2",
+    "@graphql-codegen/typescript":                 "^2.8.6",
+    "@graphql-codegen/typescript-graphql-request": "^4.5.8",
+    "@graphql-codegen/typescript-operations":      "^2.5.11",
+    "@types/humanize-duration":                    "^3.27.1",
+    "@types/uuid":                                 "^9.0.0",
+    "@types/node":                                 "^18.11.18",
+    "typescript":                                  "^4.9.4"
   }
 }

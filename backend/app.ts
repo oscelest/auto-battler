@@ -1,43 +1,48 @@
-import * as fs from "fs";
-import SuperAgent from "superagent";
-import {Schema} from "./class/entity/Schema";
-import {ArithmeticalType, createArithmeticalModifier, ModifierCategoryType} from "./interface";
+require("dotenv").config({path: "../.env"});
+import FastifyWebSocket, {SocketStream} from "@fastify/websocket";
+import Fastify, {FastifyReply, FastifyRequest} from "fastify";
 
 export const script = (async () => {
   
-  const response = await SuperAgent.get("http://localhost:4000/schema").send();
+  const app = Fastify({logger: false});
+  const port = +(process.env.SERVER_BACKEND_PORT || 4000);
   
-  const schema = new Schema({schema: response.text, scalar_map: {DateTime: Date}});
+  const ico: string = Buffer.from(
+    "AAABAAEAEBACAAEAAQCwAAAAFgAAACgAAAAQAAAAIAAAAAEAAQAAAAAAQAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "base64"
+  ).toString("binary");
   
-  await fs.writeFileSync("./interface.ts", schema.toString());
+  app.register(FastifyWebSocket);
   
-  Query(createArithmeticalModifier)
-  ({arithmetical: ArithmeticalType.ADDITIVE, value: 1, category: ModifierCategoryType.CHARGE_SKILL_MAX, value_per_level: 1})
-  (["arithmetical", "type"]);
+  app.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, done) => {
+    reply.header("Access-Control-Allow-Origin", "*");
+    reply.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    reply.header("Access-Control-Allow-Credentials", "true");
+    reply.header("Content-Security-Policy", "default-src 'none'");
+    done();
+  });
   
+  app.get("/favicon.ico", (request: FastifyRequest, reply: FastifyReply) => {
+    reply.header("Content-Security-Policy", "default-src 'none'; img-src '*'");
+    reply.header("Content-Type", "image/x-icon");
+    reply.send(ico);
+  });
+  
+  app.get("/", {websocket: true}, (connection: SocketStream, req: FastifyRequest) => {
+    console.log("test?");
+    
+    connection.socket.send(`Hello there!`);
+    
+    // connection.socket.on("message", message => {
+    //   console.log("message", message);
+    //   // message.toString() === 'hi from client'
+    //   connection.socket.send("hi from server", (e) => {
+    //     console.log(e);
+    //   });
+    // });
+  });
+  
+  app.listen({port});
+  
+  console.log("Server started and listening on", port);
 })();
-
-type GenericFunction = (...args: any[]) => any
-
-type Unwrap<A> = A extends Array<infer B> ? Unwrap<B> : A
-
-type DeepKey<T, K extends keyof T = keyof T> =
-  0 extends 1 & T ? never :
-  K extends string
-  ? T[K] extends undefined | null | never ? never :
-    T[K] extends Array<infer V> ? `${K}.${DeepKey<V>}` :
-    T[K] extends Date ? K :
-    T[K] extends object ? `${K}.${DeepKey<T[K]>}` :
-    K
-  : never
-
-type FieldList<T extends GenericFunction> = DeepKey<Unwrap<ReturnType<T>>>[]
-
-export function Query<Fn extends GenericFunction>(fn: Fn) {
-  return (...args: Parameters<Fn>) => {
-    const value = fn(...args);
-    return (field_list: FieldList<Fn>) => {
-      console.log(value, field_list);
-    };
-  };
-}

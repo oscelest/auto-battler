@@ -33,12 +33,8 @@
     "skipLibCheck":                     true,
     "target":                           "ESNext"
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "Globals.d.ts",
-    "next-env.d.ts",
-    "../shared/**/*.ts"
+  "include":         [
+    "**/*.ts"
   ],
   "exclude":         [
     "**/node_modules/*"

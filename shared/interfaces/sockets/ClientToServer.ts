@@ -1,5 +1,5 @@
 export interface ClientToServer {
-  
-  game_start: (id: string) => void;
-  
+  getGameData(): void;
+  getEncounterData(): void;
+  startEncounter(): void;
 }

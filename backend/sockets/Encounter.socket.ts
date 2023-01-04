@@ -1,16 +1,15 @@
-import {Server, Socket} from "socket.io";
+import {Socket} from "socket.io";
 import {ClientToServer} from "../../shared/interfaces/sockets/ClientToServer";
 import {ServerToClient} from "../../shared/interfaces/sockets/ServerToClient";
+import {Encounter} from "../classes";
 
 export module EncounterSocket {
   
-  export function onConnection(this: Server<ClientToServer, ServerToClient>, socket: Socket<ClientToServer, ServerToClient>) {
-    socket.on("game_start", onGameStart.bind(socket));
+  export function onEncounterStart(this: Socket<ClientToServer, ServerToClient>) {
+    this.data.encounter = new Encounter({});
+    this.on("getEncounterData", getEncounterData.bind(this));
   }
   
-  function onGameStart(this: Socket<ClientToServer, ServerToClient>, id: string) {
-    this.emit("game_start", {id: id, unit_list: []});
+  function getEncounterData(this: Socket<ClientToServer, ServerToClient>) {
   }
-  
-  
 }

@@ -36,7 +36,7 @@ export default abstract class EventElement<Collection extends EventElementCollec
   }
 }
 
-export type EventElementCollection = {[key: string]: Fn}
+export type EventElementCollection = {[key: string]: (...args: any[]) => void}
 
 export interface EventElementInitializer extends ElementInitializer {
   active?: boolean;

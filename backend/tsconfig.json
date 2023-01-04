@@ -24,9 +24,6 @@
     "strictPropertyInitialization":     true,
     "skipLibCheck":                     true,
     "target":                           "ESNext",
-    "types":                            [
-      "./types/fastify.d.ts"
-    ]
   },
   "include":         [
     "./**/*.ts",

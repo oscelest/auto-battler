@@ -1,5 +1,8 @@
 import {EncounterDTO} from "../dto/Encounter.dto";
+import {GameDTO} from "../dto/Game.dto";
 
 export interface ServerToClient {
-  game_start: (encounter: EncounterDTO) => void;
+  getGameData(game: GameDTO): void;
+  getEncounterData(encounter: EncounterDTO): void;
+  startEncounter(encounter: EncounterDTO): void;
 }

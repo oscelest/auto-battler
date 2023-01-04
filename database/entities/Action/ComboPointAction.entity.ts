@@ -24,6 +24,13 @@ export class ComboPointActionEntity extends ActionEntity<ComboPointActionEntity>
     this.retained = initializer.retained ?? false;
   }
   
+  public static generate(initializer: Partial<ComboPointActionEntityInitializer>) {
+    return new this({
+      ...ActionEntity.generate(initializer),
+      retained: initializer.retained ?? false,
+      base_value: initializer.base_value ?? 0
+    });
+  }
   
 }
 

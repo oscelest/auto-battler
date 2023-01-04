@@ -1,7 +1,8 @@
 import type {GetStaticPropsContext, NextPage} from "next";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import React from "react";
-import EncounterSimulator from "../components/Simulator/EncounterSimulator";
+import Login from "../components/Application/Login";
+import HomeScene from "../components/Scene/HomeScene";
 import {i18n} from "../next-i18next.config";
 import Style from "./index.module.scss";
 
@@ -16,7 +17,9 @@ export async function getStaticProps({locale}: GetStaticPropsContext) {
 const IndexPage: NextPage = () => {
   return (
     <div className={Style.Component}>
-      <EncounterSimulator/>
+      <Login>
+        <HomeScene/>
+      </Login>
     </div>
   );
 };

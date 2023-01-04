@@ -1,6 +1,6 @@
 import EventElement, {EventElementCollection, EventElementInitializer} from "./EventElement";
 
-export default abstract class EntityEventElement<Entity extends ClassInstance, Collection extends EventElementCollection> extends EventElement<Collection> {
+export default abstract class EntityEventElement<Entity extends object, Collection extends EventElementCollection> extends EventElement<Collection> {
   
   public entity: Entity;
   
@@ -10,6 +10,6 @@ export default abstract class EntityEventElement<Entity extends ClassInstance, C
   }
 }
 
-export interface EntityEventElementInitializer<Entity extends ClassInstance> extends EventElementInitializer {
+export interface EntityEventElementInitializer<Entity extends object> extends EventElementInitializer {
   entity: Entity;
 }

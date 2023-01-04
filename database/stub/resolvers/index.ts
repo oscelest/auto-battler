@@ -1,6 +1,5 @@
 import {NonEmptyArray} from "type-graphql/dist/interfaces/NonEmptyArray";
 import {ComboPointActionResolver, DamageActionResolver, EffectActionResolver, HealActionResolver} from "./Action";
-import {UserResolver} from "./Auth";
 import {EffectResolver} from "./Effect";
 import {ArithmeticalModifierResolver, AttributeModifierResolver} from "./Modifier";
 import {OperationResolver} from "./Operation";
@@ -9,7 +8,6 @@ import {DamageReceivedTriggerResolver, ExpirationTriggerResolver, HealingReceive
 import {UnitResolver, UnitTypeResolver} from "./Unit";
 
 export * from "./Action";
-export * from "./Auth";
 export * from "./Effect";
 export * from "./Modifier";
 export * from "./Operation";
@@ -19,7 +17,6 @@ export * from "./Unit";
 
 export const resolver_list: NonEmptyArray<Function> = [
   ComboPointActionResolver, DamageActionResolver, EffectActionResolver, HealActionResolver,
-  UserResolver,
   EffectResolver,
   ArithmeticalModifierResolver, AttributeModifierResolver,
   OperationResolver,

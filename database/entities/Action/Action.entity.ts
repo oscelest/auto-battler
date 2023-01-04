@@ -26,6 +26,13 @@ export abstract class ActionEntity<E extends ActionEntity = any> extends CoreEnt
     this.periodic = initializer.periodic ?? false;
     this.modifier_list = this.toCollectionFromList(initializer.modifier_list);
   }
+  
+  public static generate(initializer: Partial<ActionEntityInitializer>): ActionEntityInitializer {
+    return {
+      periodic: initializer.periodic,
+      modifier_list: initializer.modifier_list
+    };
+  }
 }
 
 export interface ActionEntityInitializer extends CoreEntityInitializer {

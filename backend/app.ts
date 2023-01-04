@@ -3,7 +3,7 @@ import Fastify, {FastifyReply, FastifyRequest} from "fastify";
 import {Server} from "socket.io";
 import {ClientToServer} from "../shared/interfaces/sockets/ClientToServer";
 import {ServerToClient} from "../shared/interfaces/sockets/ServerToClient";
-import {EncounterSocket} from "./sockets/Encounter.socket";
+import {GameSocket} from "./sockets/Game.socket";
 
 export const script = (async () => {
   
@@ -14,7 +14,10 @@ export const script = (async () => {
   const host = "127.0.0.1";
   
   const ico: string = Buffer.from(
-    "AAABAAEAEBACAAEAAQCwAAAAFgAAACgAAAAQAAAAIAAAAAEAAQAAAAAAQAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "AAABAAEAEBACAAEAAQCwAAAAFgAAACgAAAAQAAAAIAAAAAEAAQAAAAAAQAAAAAAAAAAAAAA" +
+    "AAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     "base64"
   ).toString("binary");
   
@@ -35,7 +38,7 @@ export const script = (async () => {
   
   app.ready().then(() => {
     io = new Server<ClientToServer, ServerToClient>(app.server, {cors: {origin: "*"}});
-    io.on("connection", EncounterSocket.onConnection.bind(io));
+    io.on("connection", GameSocket.onConnection.bind(io));
   });
   
   await app.listen({port, host});

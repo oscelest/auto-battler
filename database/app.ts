@@ -1,80 +1,51 @@
 require("dotenv").config({path: "../.env"});
 import {MikroORM} from "@mikro-orm/core";
 import {fastify, FastifyReply, FastifyRequest} from "fastify";
-import {createYoga} from "graphql-yoga";
+import {createYoga, YogaLogger, YogaServerInstance} from "graphql-yoga";
+import {YogaInitialContext} from "graphql-yoga/typings/types";
 import {buildSchema} from "type-graphql";
+import {NonEmptyArray} from "type-graphql/dist/interfaces/NonEmptyArray";
 import {GraphQLContext} from "./Globals";
 import {DatabaseConfig} from "./mikro-orm.config";
-import {
-  ArithmeticalModifierResolver,
-  AttributeModifierResolver,
-  ComboPointActionResolver,
-  DamageActionResolver,
-  DamageReceivedTriggerResolver,
-  EffectActionResolver,
-  EffectResolver,
-  ExpirationTriggerResolver,
-  HealActionResolver,
-  HealingReceivedTriggerResolver,
-  OperationResolver,
-  PeriodicTriggerResolver,
-  SkillResolver,
-  UnitResolver,
-  UnitTypeResolver
-} from "./resolvers";
+import {Database} from "./modules/Database";
 
 (async () => {
-  await MikroORM.init(DatabaseConfig);
-  const orm = await MikroORM.init(DatabaseConfig);
+  let yoga: YogaServerInstance<{req: FastifyRequest, reply: FastifyReply}, {}>;
+  let context: undefined | ((initialContext: YogaInitialContext & {req: FastifyRequest, reply: FastifyReply}) => {});
+  let resolvers: NonEmptyArray<Function>;
   
-  const migrator = orm.getMigrator();
-  if (!(await orm.isConnected()) || !(await migrator.getStorage().executed())) {
-    await migrator.createInitialMigration();
+  const logging: YogaLogger = {
+    debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
+    info: (...args) => args.forEach((arg) => app.log.info(arg)),
+    warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
+    error: (...args) => args.forEach((arg) => app.log.error(arg))
+  };
+  
+  if (process.env.stub?.toLowerCase() !== "true") {
+    const orm = await MikroORM.init(DatabaseConfig);
+    const entity_manager = orm.em.fork();
+    await Database.migrate(orm);
+    
+    context = ctx => ({...ctx, entity_manager}) as GraphQLContext;
+    resolvers = (await import("./resolvers")).resolver_list;
   }
   else {
-    await migrator.createMigration();
+    resolvers = (await import("./stub/resolvers")).resolver_list;
   }
   
-  const migrations = await migrator.getPendingMigrations();
-  if (migrations && migrations.length > 0) {
-    await migrator.up();
-  }
-  
+  const app = fastify({logger: true});
   const schema = await buildSchema({
-    resolvers: [
-      ComboPointActionResolver, DamageActionResolver, EffectActionResolver, HealActionResolver,
-      EffectResolver,
-      ArithmeticalModifierResolver, AttributeModifierResolver,
-      OperationResolver,
-      SkillResolver,
-      PeriodicTriggerResolver, DamageReceivedTriggerResolver, HealingReceivedTriggerResolver, ExpirationTriggerResolver,
-      UnitResolver, UnitTypeResolver
-    ],
+    resolvers,
     dateScalarMode: "isoDate"
   });
   
-  const app = fastify({logger: true});
-  
-  const yoga = createYoga<{
-    req: FastifyRequest
-    reply: FastifyReply
-  }>({
-    logging: {
-      debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
-      info: (...args) => args.forEach((arg) => app.log.info(arg)),
-      warn: (...args) => args.forEach((arg) => app.log.warn(arg)),
-      error: (...args) => args.forEach((arg) => app.log.error(arg))
-    },
-    schema,
-    context: ctx => ({...ctx, entity_manager: orm.em.fork()}) as GraphQLContext
-  });
+  yoga = createYoga<{req: FastifyRequest, reply: FastifyReply}>({logging, schema, context});
   
   app.route({
     url: "/graphql",
     method: ["GET", "POST", "OPTIONS"],
     handler: async (req, reply) => {
       const response = await yoga.handleNodeRequest(req, {req, reply});
-      
       response.headers.forEach((value, key) => reply.header(key, value));
       
       reply.status(response.status);

@@ -1,25 +1,27 @@
-import React, {HTMLAttributes, useEffect, useState} from "react";
-import {io, Socket} from "socket.io-client";
+import React, {HTMLAttributes, useContext, useEffect, useState} from "react";
 import {EncounterDTO} from "../../../shared/interfaces/dto/Encounter.dto";
-import {ClientToServer} from "../../../shared/interfaces/sockets/ClientToServer";
-import {ServerToClient} from "../../../shared/interfaces/sockets/ServerToClient";
+import {SiteContext} from "../../pages/_app";
 import Style from "./EncounterScene.module.scss";
 
 function EncounterScene(props: EncounterSceneProps) {
+  const {socket} = useContext(SiteContext);
   const {id, className, children, ...component_props} = props;
+  
   const classes = [Style.Component];
   if (className) classes.push(className);
   
-  const [socket] = useState<Socket<ServerToClient, ClientToServer>>(io(`http://localhost:${process.env.NEXT_PUBLIC_PORT_BACKEND}`));
   const [encounter, setEncounter] = useState<EncounterDTO>();
   
   useEffect(
     () => {
-      socket.on("connect", () => {
-        console.log("Connected");
-        socket.emit("game_start", id);
+      socket.on("disconnect", () => {
+        console.log("rip");
+      });
+  
+      socket.once("connect", () => {
+        socket.emit("startEncounter");
     
-        socket.on("game_start", encounter => {
+        socket.on("startEncounter", encounter => {
           setEncounter(encounter);
           console.log(encounter);
         });

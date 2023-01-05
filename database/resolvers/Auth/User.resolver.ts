@@ -31,10 +31,12 @@ export class UserResolver {
   public async signup(@Arg("data") data: UserSignupValidator, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo) {
     const salt = Crypto.randomBytes(64);
     const hash = Crypto.pbkdf2Sync(data.password, salt, 10000, 255, "sha512");
-    
+  
     const entity = new UserEntity({...data, salt, hash});
+  
+    console.log(entity);
+  
     await ctx.entity_manager.persistAndFlush(entity);
-    
     return entity;
   }
   

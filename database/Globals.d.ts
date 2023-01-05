@@ -1,9 +1,11 @@
 import {Collection, EntityManager} from "@mikro-orm/core";
+import {FastifyReply, FastifyRequest} from "fastify";
 import {YogaInitialContext} from "graphql-yoga/typings/types";
-import Koa from "koa";
 import {CoreEntity} from "./entities";
 
-interface GraphQLContext extends Koa.ParameterizedContext, YogaInitialContext {
+interface GraphQLContext extends YogaInitialContext {
+  req: FastifyRequest;
+  reply: FastifyReply;
   entity_manager: EntityManager;
 }
 

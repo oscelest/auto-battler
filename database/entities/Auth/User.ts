@@ -1,20 +1,21 @@
 import {Entity, Property} from "@mikro-orm/core";
-import {Field, InterfaceType} from "type-graphql";
+import {Field, ObjectType} from "type-graphql";
 import {CoreEntity, CoreEntityInitializer} from "../Core.entity";
 
-@InterfaceType({implements: CoreEntity})
-@Entity({})
+@ObjectType({implements: CoreEntity})
+@Entity()
 export class UserEntity extends CoreEntity<UserEntity> {
   
-  @Property({length: 512})
   @Field(() => String)
+  @Property({length: 512})
   public email: string;
   
-  @Property({length: 64})
   @Field(() => String)
+  @Property({length: 64})
   public username: string;
   
   @Field()
+  @Property()
   public login_at: Date;
   
   @Property({hidden: true})

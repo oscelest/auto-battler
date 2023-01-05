@@ -17,7 +17,7 @@ export * from "./Skill";
 export * from "./Trigger";
 export * from "./Unit";
 
-export const resolver_list: NonEmptyArray<Function> = [
+export const resolvers: NonEmptyArray<Function> = [
   ComboPointActionResolver, DamageActionResolver, EffectActionResolver, HealActionResolver,
   UserResolver,
   EffectResolver,

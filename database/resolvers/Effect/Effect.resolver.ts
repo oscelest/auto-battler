@@ -1,12 +1,13 @@
 import {GraphQLResolveInfo} from "graphql/type";
-import {Arg, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, Authorized, Ctx, Info, Mutation, Query, Resolver} from "type-graphql";
 import {EffectEntity} from "../../entities";
 import {GraphQLContext} from "../../Globals";
-import {EffectCreateValidator, EffectPaginationValidator, EffectUpdateValidator} from "../../validators/Effect/Effect.validator";
+import {EffectCreateValidator, EffectPaginationValidator, EffectUpdateValidator} from "../../validators";
 
 @Resolver(() => EffectEntity)
 export class EffectResolver {
   
+  @Authorized()
   @Query(() => EffectEntity, {nullable: true})
   public async getEffect(@Arg("id") id: string, @Ctx() ctx: GraphQLContext, @Info() info: GraphQLResolveInfo) {
     const {fields, populate} = EffectEntity.fromContextToFieldsAndPopulate(info);

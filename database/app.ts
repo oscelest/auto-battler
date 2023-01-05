@@ -1,19 +1,14 @@
 require("dotenv").config({path: "../.env"});
 import {MikroORM} from "@mikro-orm/core";
 import {fastify, FastifyReply, FastifyRequest} from "fastify";
-import {createYoga, YogaLogger, YogaServerInstance} from "graphql-yoga";
-import {YogaInitialContext} from "graphql-yoga/typings/types";
-import {buildSchema} from "type-graphql";
-import {NonEmptyArray} from "type-graphql/dist/interfaces/NonEmptyArray";
+import {createYoga, YogaLogger} from "graphql-yoga";
+import {buildSchema, ResolverData} from "type-graphql";
 import {GraphQLContext} from "./Globals";
 import {DatabaseConfig} from "./mikro-orm.config";
 import {Database} from "./modules/Database";
+import {resolvers} from "./resolvers";
 
 (async () => {
-  let yoga: YogaServerInstance<{req: FastifyRequest, reply: FastifyReply}, {}>;
-  let context: undefined | ((initialContext: YogaInitialContext & {req: FastifyRequest, reply: FastifyReply}) => {});
-  let resolvers: NonEmptyArray<Function>;
-  
   const logging: YogaLogger = {
     debug: (...args) => args.forEach((arg) => app.log.debug(arg)),
     info: (...args) => args.forEach((arg) => app.log.info(arg)),
@@ -21,25 +16,27 @@ import {Database} from "./modules/Database";
     error: (...args) => args.forEach((arg) => app.log.error(arg))
   };
   
-  if (process.env.stub?.toLowerCase() !== "true") {
-    const orm = await MikroORM.init(DatabaseConfig);
-    const entity_manager = orm.em.fork();
-    await Database.migrate(orm);
-    
-    context = ctx => ({...ctx, entity_manager}) as GraphQLContext;
-    resolvers = (await import("./resolvers")).resolver_list;
-  }
-  else {
-    resolvers = (await import("./stub/resolvers")).resolver_list;
-  }
+  const orm = await MikroORM.init(DatabaseConfig);
+  const entity_manager = orm.em.fork();
+  await Database.migrate(orm);
   
-  const app = fastify({logger: true});
+  const app = fastify();
+  
   const schema = await buildSchema({
     resolvers,
-    dateScalarMode: "isoDate"
+    dateScalarMode: "isoDate",
+    authMode: "null",
+    authChecker: ({root, args, context, info}: ResolverData<GraphQLContext>, roles) => {
+      // console.log(context.req.headers)
+      // console.log(roles)
+      return false;
+    }
   });
   
-  yoga = createYoga<{req: FastifyRequest, reply: FastifyReply}>({logging, schema, context});
+  const yoga = createYoga<{req: FastifyRequest, reply: FastifyReply}>({
+    logging, schema,
+    context: ctx => ({...ctx, entity_manager}) as GraphQLContext
+  });
   
   app.route({
     url: "/graphql",
